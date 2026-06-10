@@ -105,6 +105,11 @@
   .sidebar-submit:hover { background: #333; }
   .firebase-setup { font-size: 12px; color: #888; line-height: 1.55; }
   .firebase-setup a { color: #666; }
+  .form-info { font-size: 12px; color: #888; line-height: 1.5; margin-bottom: 10px; }
+  .form-info a { color: #666; }
+  .form-info strong { color: #1a1a18; }
+  .form-error { font-size: 12px; color: #b03a2e; margin-top: 8px; }
+  .form-error:empty { display: none; }
   @media (max-width: 480px) {
     #comment-sidebar { width: 100%; }
     #comment-overlay { display: none !important; }
@@ -158,17 +163,12 @@
     <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Sulje">✕</button>
   </div>
   <div id="comments-list"><p class="comment-empty">Ei vielä kommentteja. Ole ensimmäinen!</p></div>
-  <div class="sidebar-form-wrap">
-    <form id="comment-form">
-      <input id="c-nick" type="text" placeholder="Nimimerkki *" maxlength="30" required autocomplete="nickname">
-      <textarea id="c-text" placeholder="Kirjoita kommentti…" maxlength="500" required></textarea>
-      <button type="submit" class="sidebar-submit">Lähetä</button>
-    </form>
-  </div>
+  <div class="sidebar-form-wrap" id="form-area"></div>
 </aside>
 
 <script src="https://www.gstatic.com/firebasejs/12.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.14.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.14.0/firebase-auth-compat.js"></script>
 <script>
 // TODO: Täytä alla olevaan objektiin oma Firebase-konfiguraatiosi.
 // 1. Luo projekti: https://console.firebase.google.com
@@ -195,7 +195,7 @@ function toggleSidebar() {
 }
 
 function escapeHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function formatTime(ts) {
@@ -224,27 +224,155 @@ function renderComments(comments) {
   el.scrollTop = el.scrollHeight;
 }
 
-const savedNick = localStorage.getItem('mm2026_nick');
-if (savedNick) document.getElementById('c-nick').value = savedNick;
+// --- Nimimerkin rekisteröinti & kirjautuminen ---
+// Nimimerkki lukitaan käyttäjätiliin: kommentointi vaatii kirjautumisen
+// sähköpostiin lähetettävällä linkillä (ei salasanaa). Tietokantasäännöt
+// estävät kommentoinnin toisen rekisteröimällä nimimerkillä.
+const NICK_RE = /^[A-Za-z0-9_åäöÅÄÖ-]{2,30}$/;
+
+function formArea() { return document.getElementById('form-area'); }
+function showFormError(msg) {
+  const el = document.getElementById('form-error');
+  if (el) el.textContent = msg;
+}
+
+function renderSignedOut() {
+  formArea().innerHTML = `
+    <p class="form-info">Kommentointi vaatii kirjautumisen: saat sähköpostiisi linkin, ei salasanaa.
+      Nimimerkki annetaan vain ensimmäisellä kerralla – se lukitaan sinulle.</p>
+    <form id="login-form">
+      <input id="l-nick" type="text" placeholder="Nimimerkki (vain ensikertalaiselle)" maxlength="30" autocomplete="nickname">
+      <input id="l-email" type="email" placeholder="Sähköpostiosoite *" required autocomplete="email">
+      <button type="submit" class="sidebar-submit">Lähetä kirjautumislinkki</button>
+      <p id="form-error" class="form-error"></p>
+    </form>`;
+  document.getElementById('login-form').addEventListener('submit', sendLoginLink);
+}
+
+async function sendLoginLink(e) {
+  e.preventDefault();
+  const email = document.getElementById('l-email').value.trim();
+  const nick = document.getElementById('l-nick').value.trim();
+  if (nick) {
+    if (!NICK_RE.test(nick)) {
+      showFormError('Nimimerkissä sallitut merkit: kirjaimet, numerot, _ ja - (2–30 merkkiä).');
+      return;
+    }
+    const taken = (await firebase.database().ref('nicks/' + nick).once('value')).exists();
+    if (taken) { showFormError('Nimimerkki on jo varattu.'); return; }
+  }
+  try {
+    await firebase.auth().sendSignInLinkToEmail(email, {
+      url: location.origin + location.pathname,
+      handleCodeInApp: true
+    });
+    localStorage.setItem('mm2026_pending_email', email);
+    if (nick) localStorage.setItem('mm2026_pending_nick', nick);
+    formArea().innerHTML = `
+      <p class="form-info">Kirjautumislinkki lähetetty osoitteeseen <strong>${escapeHtml(email)}</strong>.
+        Avaa linkki tällä laitteella, niin pääset kommentoimaan.</p>
+      <button type="button" class="sidebar-submit" onclick="renderSignedOut()">Takaisin</button>`;
+  } catch (err) {
+    showFormError('Linkin lähetys epäonnistui: ' + err.message);
+  }
+}
+
+function renderNickForm(errMsg) {
+  formArea().innerHTML = `
+    <p class="form-info">Olet kirjautunut. Valitse vielä nimimerkki – se lukitaan tilillesi.</p>
+    <form id="nick-form">
+      <input id="n-nick" type="text" placeholder="Nimimerkki *" maxlength="30" required autocomplete="nickname">
+      <button type="submit" class="sidebar-submit">Varaa nimimerkki</button>
+      <p id="form-error" class="form-error">${errMsg ? escapeHtml(errMsg) : ''}</p>
+    </form>`;
+  document.getElementById('nick-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const nick = document.getElementById('n-nick').value.trim();
+    if (!NICK_RE.test(nick)) {
+      showFormError('Nimimerkissä sallitut merkit: kirjaimet, numerot, _ ja - (2–30 merkkiä).');
+      return;
+    }
+    try {
+      await claimNick(nick, firebase.auth().currentUser.uid);
+      renderSignedIn(nick);
+    } catch (err) {
+      showFormError('Nimimerkki on jo varattu tai varaus epäonnistui.');
+    }
+  });
+}
+
+async function claimNick(nick, uid) {
+  await firebase.database().ref('nicks/' + nick).set(uid);
+  await firebase.database().ref('users/' + uid).set({ nick });
+}
+
+function renderSignedIn(nick) {
+  formArea().innerHTML = `
+    <p class="form-info">Kirjoitat nimellä <strong>${escapeHtml(nick)}</strong> ·
+      <a href="#" id="logout-link">Kirjaudu ulos</a></p>
+    <form id="comment-form">
+      <textarea id="c-text" placeholder="Kirjoita kommentti…" maxlength="500" required></textarea>
+      <button type="submit" class="sidebar-submit">Lähetä</button>
+      <p id="form-error" class="form-error"></p>
+    </form>`;
+  document.getElementById('logout-link').addEventListener('click', e => {
+    e.preventDefault();
+    firebase.auth().signOut();
+  });
+  document.getElementById('comment-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const text = document.getElementById('c-text').value.trim();
+    if (!text) return;
+    firebase.database().ref('comments').push({
+      nick, text,
+      ts: firebase.database.ServerValue.TIMESTAMP,
+      uid: firebase.auth().currentUser.uid
+    })
+    .then(() => { document.getElementById('c-text').value = ''; })
+    .catch(err => showFormError('Lähetys epäonnistui: ' + err.message));
+  });
+}
+
+async function handleAuthState(user) {
+  if (!user) { renderSignedOut(); return; }
+  const snap = await firebase.database().ref('users/' + user.uid + '/nick').once('value');
+  let nick = snap.val();
+  if (!nick) {
+    const pending = localStorage.getItem('mm2026_pending_nick');
+    localStorage.removeItem('mm2026_pending_nick');
+    if (pending && NICK_RE.test(pending)) {
+      try { await claimNick(pending, user.uid); nick = pending; } catch (e) { /* varattu välissä */ }
+    }
+  }
+  if (nick) renderSignedIn(nick);
+  else renderNickForm();
+}
+
+async function completeEmailLink() {
+  const auth = firebase.auth();
+  if (!auth.isSignInWithEmailLink(location.href)) return;
+  let email = localStorage.getItem('mm2026_pending_email');
+  if (!email) email = prompt('Vahvista sähköpostiosoitteesi kirjautumista varten:');
+  try {
+    await auth.signInWithEmailLink(email, location.href);
+    localStorage.removeItem('mm2026_pending_email');
+  } catch (err) {
+    alert('Kirjautuminen epäonnistui: ' + err.message);
+  }
+  history.replaceState(null, '', location.pathname);
+}
 
 if (FIREBASE_CONFIG.apiKey) {
   firebase.initializeApp(FIREBASE_CONFIG);
-  const commentsRef = firebase.database().ref('comments');
 
-  commentsRef.orderByChild('ts').on('value', snap => {
+  firebase.database().ref('comments').orderByChild('ts').on('value', snap => {
     const list = [];
     snap.forEach(child => { list.push(child.val()); });
     renderComments(list);
   });
 
-  document.getElementById('comment-form').addEventListener('submit', e => {
-    e.preventDefault();
-    const nick = document.getElementById('c-nick').value.trim();
-    const text = document.getElementById('c-text').value.trim();
-    if (!nick || !text) return;
-    localStorage.setItem('mm2026_nick', nick);
-    commentsRef.push({ nick, text, ts: firebase.database.ServerValue.TIMESTAMP });
-    document.getElementById('c-text').value = '';
+  completeEmailLink().finally(() => {
+    firebase.auth().onAuthStateChanged(handleAuthState);
   });
 } else {
   document.getElementById('comments-list').innerHTML = `
