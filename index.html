@@ -24,6 +24,8 @@
   .badge { font-size: 12px; font-weight: 500; padding: 3px 11px; border-radius: 999px; white-space: nowrap; }
   .badge-mtv { background: #fdeee8; color: #8b3315; }
   .badge-yle { background: #e0f5ec; color: #0a6644; }
+  .badge-paid { background: #fdf3d7; color: #8a6a0f; display: inline-flex; align-items: center; gap: 5px; cursor: help; }
+  .badge-paid svg, .pig-legend svg { display: inline-block; vertical-align: -3px; }
   .no-results { color: #888; font-size: 14px; padding: 1rem 0; }
   footer { text-align: center; font-size: 12px; color: #aaa; padding: 2rem 0 1rem; }
   @media (max-width: 480px) {
@@ -47,9 +49,27 @@
   </div>
   <div id="schedule"></div>
 </main>
-<footer>Lähde: puoliaika.com &amp; MTV Uutiset · Ajat Suomen aikaa (EEST)</footer>
+<footer><span class="pig-legend"></span> = maksumuurin takana, vain MTV Katsomo+ Urheilu<br>Lähde: puoliaika.com &amp; MTV Uutiset · Ajat Suomen aikaa (EEST)</footer>
 
 <script>
+const PIG = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rikas sika">
+  <path d="M5 9 L4 4.5 L9 6.5 Z" fill="#e8839e"/>
+  <path d="M19 9 L20 4.5 L15 6.5 Z" fill="#e8839e"/>
+  <circle cx="12" cy="13.5" r="8" fill="#f4a7b9"/>
+  <rect x="8" y="0" width="8" height="5.5" rx="1" fill="#2b2b2b"/>
+  <rect x="5.8" y="4.6" width="12.4" height="2" rx="1" fill="#2b2b2b"/>
+  <rect x="8" y="3" width="8" height="1.6" fill="#d4a017"/>
+  <circle cx="9" cy="12.5" r="0.9" fill="#3a2430"/>
+  <circle cx="15" cy="12.5" r="0.9" fill="#3a2430"/>
+  <circle cx="15" cy="12.5" r="2.1" fill="none" stroke="#d4a017" stroke-width="0.7"/>
+  <line x1="16.5" y1="14.1" x2="17.7" y2="16.6" stroke="#d4a017" stroke-width="0.6"/>
+  <ellipse cx="12" cy="16.3" rx="3.4" ry="2.5" fill="#e8839e"/>
+  <circle cx="10.8" cy="16.3" r="0.7" fill="#b05a76"/>
+  <circle cx="13.2" cy="16.3" r="0.7" fill="#b05a76"/>
+  <circle cx="19.5" cy="19.5" r="3.6" fill="#f2c14e" stroke="#d4a017" stroke-width="0.8"/>
+  <text x="19.5" y="21.4" font-size="5.2" font-weight="700" text-anchor="middle" fill="#8a6a0f">€</text>
+</svg>`;
+
 const matches = [
   {date:'To 11.6.',ts:1,time:'22:00',match:'Meksiko – Etelä-Afrikka',ch:'MTV'},
   {date:'Pe 12.6.',ts:2,time:'05:00',match:'Etelä-Korea – Tshekki',ch:'MTV'},
@@ -57,48 +77,48 @@ const matches = [
   {date:'La 13.6.',ts:3,time:'04:00',match:'USA – Paraguay',ch:'Yle'},
   {date:'La 13.6.',ts:3,time:'22:00',match:'Qatar – Sveitsi',ch:'MTV'},
   {date:'Su 14.6.',ts:4,time:'01:00',match:'Brasilia – Marokko',ch:'MTV'},
-  {date:'Su 14.6.',ts:4,time:'04:00',match:'Haiti – Skotlanti',ch:'MTV'},
-  {date:'Su 14.6.',ts:4,time:'07:00',match:'Australia – Turkki',ch:'MTV'},
+  {date:'Su 14.6.',ts:4,time:'04:00',match:'Haiti – Skotlanti',ch:'MTV',paid:1},
+  {date:'Su 14.6.',ts:4,time:'07:00',match:'Australia – Turkki',ch:'MTV',paid:1},
   {date:'Su 14.6.',ts:4,time:'20:00',match:'Saksa – Curaçao',ch:'Yle'},
   {date:'Su 14.6.',ts:4,time:'23:00',match:'Hollanti – Japani',ch:'Yle'},
   {date:'Ma 15.6.',ts:5,time:'02:00',match:'Norsunluurannikko – Ecuador',ch:'Yle'},
   {date:'Ma 15.6.',ts:5,time:'05:00',match:'Ruotsi – Tunisia',ch:'Yle'},
   {date:'Ma 15.6.',ts:5,time:'19:00',match:'Espanja – Kap Verde',ch:'MTV'},
   {date:'Ma 15.6.',ts:5,time:'22:00',match:'Belgia – Egypti',ch:'MTV'},
-  {date:'Ti 16.6.',ts:6,time:'01:00',match:'Saudi-Arabia – Uruguay',ch:'MTV'},
-  {date:'Ti 16.6.',ts:6,time:'04:00',match:'Iran – Uusi-Seelanti',ch:'MTV'},
+  {date:'Ti 16.6.',ts:6,time:'01:00',match:'Saudi-Arabia – Uruguay',ch:'MTV',paid:1},
+  {date:'Ti 16.6.',ts:6,time:'04:00',match:'Iran – Uusi-Seelanti',ch:'MTV',paid:1},
   {date:'Ti 16.6.',ts:6,time:'22:00',match:'Ranska – Senegal',ch:'Yle'},
   {date:'Ke 17.6.',ts:7,time:'01:00',match:'Irak – Norja',ch:'Yle'},
   {date:'Ke 17.6.',ts:7,time:'04:00',match:'Argentiina – Algeria',ch:'Yle'},
   {date:'Ke 17.6.',ts:7,time:'07:00',match:'Itävalta – Jordania',ch:'Yle'},
   {date:'Ke 17.6.',ts:7,time:'20:00',match:'Portugali – Kongon dem. tasavalta',ch:'MTV'},
   {date:'Ke 17.6.',ts:7,time:'23:00',match:'Englanti – Kroatia',ch:'MTV'},
-  {date:'To 18.6.',ts:8,time:'02:00',match:'Ghana – Panama',ch:'MTV'},
-  {date:'To 18.6.',ts:8,time:'05:00',match:'Uzbekistan – Kolumbia',ch:'MTV'},
+  {date:'To 18.6.',ts:8,time:'02:00',match:'Ghana – Panama',ch:'MTV',paid:1},
+  {date:'To 18.6.',ts:8,time:'05:00',match:'Uzbekistan – Kolumbia',ch:'MTV',paid:1},
   {date:'To 18.6.',ts:8,time:'19:00',match:'Tshekki – Etelä-Afrikka',ch:'Yle'},
   {date:'To 18.6.',ts:8,time:'22:00',match:'Sveitsi – Bosnia ja Hertsegovina',ch:'Yle'},
   {date:'Pe 19.6.',ts:9,time:'01:00',match:'Kanada – Qatar',ch:'Yle'},
   {date:'Pe 19.6.',ts:9,time:'04:00',match:'Meksiko – Etelä-Korea',ch:'Yle'},
   {date:'Pe 19.6.',ts:9,time:'22:00',match:'USA – Australia',ch:'MTV'},
   {date:'La 20.6.',ts:10,time:'01:00',match:'Skotlanti – Marokko',ch:'MTV'},
-  {date:'La 20.6.',ts:10,time:'04:00',match:'Brasilia – Haiti',ch:'MTV'},
-  {date:'La 20.6.',ts:10,time:'07:00',match:'Turkki – Paraguay',ch:'MTV'},
+  {date:'La 20.6.',ts:10,time:'04:00',match:'Brasilia – Haiti',ch:'MTV',paid:1},
+  {date:'La 20.6.',ts:10,time:'07:00',match:'Turkki – Paraguay',ch:'MTV',paid:1},
   {date:'La 20.6.',ts:10,time:'20:00',match:'Hollanti – Ruotsi',ch:'Yle'},
   {date:'La 20.6.',ts:10,time:'23:00',match:'Saksa – Norsunluurannikko',ch:'Yle'},
   {date:'Su 21.6.',ts:11,time:'03:00',match:'Ecuador – Curaçao',ch:'Yle'},
   {date:'Su 21.6.',ts:11,time:'07:00',match:'Tunisia – Japani',ch:'Yle'},
   {date:'Su 21.6.',ts:11,time:'19:00',match:'Espanja – Saudi-Arabia',ch:'MTV'},
   {date:'Su 21.6.',ts:11,time:'22:00',match:'Belgia – Iran',ch:'MTV'},
-  {date:'Ma 22.6.',ts:12,time:'01:00',match:'Uruguay – Kap Verde',ch:'MTV'},
-  {date:'Ma 22.6.',ts:12,time:'04:00',match:'Uusi-Seelanti – Egypti',ch:'MTV'},
+  {date:'Ma 22.6.',ts:12,time:'01:00',match:'Uruguay – Kap Verde',ch:'MTV',paid:1},
+  {date:'Ma 22.6.',ts:12,time:'04:00',match:'Uusi-Seelanti – Egypti',ch:'MTV',paid:1},
   {date:'Ma 22.6.',ts:12,time:'20:00',match:'Argentiina – Itävalta',ch:'Yle'},
   {date:'Ti 23.6.',ts:13,time:'00:00',match:'Ranska – Irak',ch:'Yle'},
   {date:'Ti 23.6.',ts:13,time:'03:00',match:'Norja – Senegal',ch:'Yle'},
   {date:'Ti 23.6.',ts:13,time:'06:00',match:'Jordania – Algeria',ch:'Yle'},
   {date:'Ti 23.6.',ts:13,time:'20:00',match:'Portugali – Uzbekistan',ch:'MTV'},
   {date:'Ti 23.6.',ts:13,time:'23:00',match:'Englanti – Ghana',ch:'MTV'},
-  {date:'Ke 24.6.',ts:14,time:'02:00',match:'Panama – Kroatia',ch:'MTV'},
-  {date:'Ke 24.6.',ts:14,time:'05:00',match:'Kolumbia – Kongon dem. tasavalta',ch:'MTV'},
+  {date:'Ke 24.6.',ts:14,time:'02:00',match:'Panama – Kroatia',ch:'MTV',paid:1},
+  {date:'Ke 24.6.',ts:14,time:'05:00',match:'Kolumbia – Kongon dem. tasavalta',ch:'MTV',paid:1},
   {date:'Ke 24.6.',ts:14,time:'22:00',match:'Sveitsi – Kanada',ch:'Yle'},
   {date:'Ke 24.6.',ts:14,time:'22:00',match:'Bosnia ja Hertsegovina – Qatar',ch:'Yle'},
   {date:'To 25.6.',ts:15,time:'01:00',match:'Skotlanti – Brasilia',ch:'Yle'},
@@ -107,10 +127,10 @@ const matches = [
   {date:'To 25.6.',ts:15,time:'04:00',match:'Etelä-Afrikka – Etelä-Korea',ch:'Yle'},
   {date:'To 25.6.',ts:15,time:'23:00',match:'Curaçao – Norsunluurannikko',ch:'MTV'},
   {date:'To 25.6.',ts:15,time:'23:00',match:'Ecuador – Saksa',ch:'MTV'},
-  {date:'Pe 26.6.',ts:16,time:'02:00',match:'Japani – Ruotsi',ch:'MTV'},
-  {date:'Pe 26.6.',ts:16,time:'02:00',match:'Tunisia – Hollanti',ch:'MTV'},
-  {date:'Pe 26.6.',ts:16,time:'05:00',match:'Turkki – USA',ch:'MTV'},
-  {date:'Pe 26.6.',ts:16,time:'05:00',match:'Paraguay – Australia',ch:'MTV'},
+  {date:'Pe 26.6.',ts:16,time:'02:00',match:'Japani – Ruotsi',ch:'MTV',paid:1},
+  {date:'Pe 26.6.',ts:16,time:'02:00',match:'Tunisia – Hollanti',ch:'MTV',paid:1},
+  {date:'Pe 26.6.',ts:16,time:'05:00',match:'Turkki – USA',ch:'MTV',paid:1},
+  {date:'Pe 26.6.',ts:16,time:'05:00',match:'Paraguay – Australia',ch:'MTV',paid:1},
   {date:'Pe 26.6.',ts:16,time:'22:00',match:'Norja – Ranska',ch:'Yle'},
   {date:'Pe 26.6.',ts:16,time:'22:00',match:'Senegal – Irak',ch:'Yle'},
   {date:'La 27.6.',ts:17,time:'03:00',match:'Kap Verde – Saudi-Arabia',ch:'Yle'},
@@ -119,10 +139,10 @@ const matches = [
   {date:'La 27.6.',ts:17,time:'06:00',match:'Uusi-Seelanti – Belgia',ch:'Yle'},
   {date:'Su 28.6.',ts:18,time:'00:00',match:'Panama – Englanti',ch:'MTV'},
   {date:'Su 28.6.',ts:18,time:'00:00',match:'Kroatia – Ghana',ch:'MTV'},
-  {date:'Su 28.6.',ts:18,time:'02:30',match:'Kolumbia – Portugali',ch:'MTV'},
-  {date:'Su 28.6.',ts:18,time:'02:30',match:'Kongon dem. tasavalta – Uzbekistan',ch:'MTV'},
-  {date:'Su 28.6.',ts:18,time:'05:00',match:'Algeria – Itävalta',ch:'MTV'},
-  {date:'Su 28.6.',ts:18,time:'05:00',match:'Jordania – Argentiina',ch:'MTV'},
+  {date:'Su 28.6.',ts:18,time:'02:30',match:'Kolumbia – Portugali',ch:'MTV',paid:1},
+  {date:'Su 28.6.',ts:18,time:'02:30',match:'Kongon dem. tasavalta – Uzbekistan',ch:'MTV',paid:1},
+  {date:'Su 28.6.',ts:18,time:'05:00',match:'Algeria – Itävalta',ch:'Yle'},
+  {date:'Su 28.6.',ts:18,time:'05:00',match:'Jordania – Argentiina',ch:'Yle'},
 ];
 
 let currentFilter = 'all';
@@ -150,13 +170,18 @@ function render() {
         <div class="match-row">
           <span class="time">${m.time}</span>
           <span class="match-name">${m.match}</span>
-          <span class="badge ${m.ch === 'MTV' ? 'badge-mtv' : 'badge-yle'}">${m.ch === 'MTV' ? 'MTV3' : 'Yle TV2'}</span>
+          ${m.ch === 'Yle'
+            ? '<span class="badge badge-yle">Yle TV2</span>'
+            : m.paid
+              ? `<span class="badge badge-paid" title="Maksumuurin takana – vain MTV Katsomo+ Urheilu">${PIG}Katsomo+</span>`
+              : '<span class="badge badge-mtv">MTV3</span>'}
         </div>
       `).join('')}
     </div>
   `).join('');
 }
 render();
+document.querySelector('.pig-legend').innerHTML = PIG;
 </script>
 </body>
 </html>
