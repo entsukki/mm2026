@@ -27,7 +27,11 @@
   .badge-paid { background: #fdf3d7; color: #8a6a0f; display: inline-flex; align-items: center; gap: 5px; cursor: help; }
   .badge-paid svg, .pig-legend svg { display: inline-block; vertical-align: -3px; }
   .no-results { color: #888; font-size: 14px; padding: 1rem 0; }
-  footer { text-align: center; font-size: 12px; color: #aaa; padding: 2rem 0 1rem; }
+  footer { max-width: 720px; margin: 0 auto; text-align: center; font-size: 12px; color: #aaa; padding: 2rem 1rem 1.5rem; }
+  footer .disclaimer { font-size: 11px; color: #b0aea5; line-height: 1.55; text-align: left; margin: 0.9rem 0; }
+  footer .sources { margin-top: 0.5rem; }
+  footer a { color: #999; text-decoration: underline; text-underline-offset: 2px; }
+  footer a:hover { color: #555; }
   @media (max-width: 480px) {
     .match-name { font-size: 14px; }
     .time { font-size: 14px; }
@@ -49,7 +53,25 @@
   </div>
   <div id="schedule"></div>
 </main>
-<footer><span class="pig-legend"></span> = maksumuurin takana, vain MTV Katsomo+ Urheilu<br>Lähde: puoliaika.com &amp; MTV Uutiset · Ajat Suomen aikaa (EEST)</footer>
+<footer>
+  <p><span class="pig-legend"></span> = maksumuurin takana, vain MTV Katsomo+ Urheilu</p>
+  <p class="disclaimer">
+    Kanavatiedot perustuvat MTV:n ilmoittamaan jakoon: MTV3 näyttää ilmaiseksi kunkin MTV:n ottelupäivän
+    kaksi ensimmäistä ottelua, ja saman päivän muut MTV:n ottelut näkyvät vain maksullisessa MTV Katsomo+
+    Urheilussa. Lähteissä on pieniä ristiriitoja samaan aikaan alkavien lohkojen päätöskierroksen otteluiden
+    osalta (esim. Curaçao–Norsunluurannikko 25.6. ja Kroatia–Ghana 28.6.) – ne on tässä tulkittu ilmaisiksi,
+    koska ne ovat ottelupäivänsä ensimmäisiä alkamisaikoja. Algeria–Itävalta ja Jordania–Argentiina (28.6.)
+    on merkitty Ylelle MTV Uutisten ottelulistan mukaisesti, vaikka osa lähteistä listaa ne MTV:lle.
+    Tarkista lähetystiedot kanavien omista ohjelmatiedoista kisojen edetessä.
+  </p>
+  <p class="sources">Lähteet:
+    <a href="https://www.mtvuutiset.fi/artikkeli/jalkapallon-mm-kisat-2026-otteluohjelma/9332094" target="_blank" rel="noopener">MTV Uutiset – otteluohjelma</a> ·
+    <a href="https://puoliaika.com/jalkapallon-mm-kisat-2026-otteluohjelma/" target="_blank" rel="noopener">puoliaika.com</a> ·
+    <a href="https://vpn-suomi.fi/jalkapallo/mm/" target="_blank" rel="noopener">vpn-suomi.fi</a> ·
+    <a href="https://faneille.com/futis/mm-futis/jalkapallon-mm-kisat-2026-lahestyvat-tassa-ohjelma-ja-nain-katsot-ottelut-suomessa/" target="_blank" rel="noopener">faneille.com</a>
+    &nbsp;·&nbsp; Ajat Suomen aikaa (EEST)
+  </p>
+</footer>
 
 <script>
 const PIG = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rikas sika">
