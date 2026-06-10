@@ -233,7 +233,7 @@ if (FIREBASE_CONFIG.apiKey) {
 
   commentsRef.orderByChild('ts').on('value', snap => {
     const list = [];
-    snap.forEach(child => list.push(child.val()));
+    snap.forEach(child => { list.push(child.val()); });
     renderComments(list);
   });
 
