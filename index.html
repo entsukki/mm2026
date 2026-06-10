@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MM 2026 – Otteluohjelma Suomen ajoilla</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; color: #1a1a18; min-height: 100vh; }
+  header { background: #fff; border-bottom: 1px solid #e0dfd8; padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 12px; }
+  header h1 { font-size: 18px; font-weight: 500; }
+  header span { font-size: 13px; color: #888; }
+  main { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .filter-btn { font-size: 13px; padding: 6px 16px; border-radius: 999px; border: 1px solid #ccc; background: #fff; color: #555; cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover { border-color: #999; }
+  .filter-btn.active { background: #1a1a18; color: #fff; border-color: #1a1a18; font-weight: 500; }
+  .day-group { margin-bottom: 1.75rem; }
+  .day-header { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.07em; padding: 0 0 8px; border-bottom: 1px solid #e0dfd8; margin-bottom: 4px; }
+  .match-row { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 12px; padding: 9px 8px; border-radius: 8px; transition: background 0.1s; }
+  .match-row:hover { background: #eceae3; }
+  .time { font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; color: #1a1a18; }
+  .match-name { font-size: 15px; color: #1a1a18; }
+  .badge { font-size: 12px; font-weight: 500; padding: 3px 11px; border-radius: 999px; white-space: nowrap; }
+  .badge-mtv { background: #fdeee8; color: #8b3315; }
+  .badge-yle { background: #e0f5ec; color: #0a6644; }
+  .no-results { color: #888; font-size: 14px; padding: 1rem 0; }
+  footer { text-align: center; font-size: 12px; color: #aaa; padding: 2rem 0 1rem; }
+  @media (max-width: 480px) {
+    .match-name { font-size: 14px; }
+    .time { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>⚽ MM 2026 – Otteluohjelma</h1>
+    <span>Suomen ajat &amp; TV-kanavat</span>
+  </div>
+</header>
+<main>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filter('all', this)">Kaikki</button>
+    <button class="filter-btn" onclick="filter('MTV', this)">MTV3</button>
+    <button class="filter-btn" onclick="filter('Yle', this)">Yle TV2</button>
+  </div>
+  <div id="schedule"></div>
+</main>
+<footer>Lähde: puoliaika.com &amp; MTV Uutiset · Ajat Suomen aikaa (EEST)</footer>
+
+<script>
+const matches = [
+  {date:'To 11.6.',ts:1,time:'22:00',match:'Meksiko – Etelä-Afrikka',ch:'MTV'},
+  {date:'Pe 12.6.',ts:2,time:'05:00',match:'Etelä-Korea – Tshekki',ch:'MTV'},
+  {date:'Pe 12.6.',ts:2,time:'22:00',match:'Kanada – Bosnia ja Hertsegovina',ch:'Yle'},
+  {date:'La 13.6.',ts:3,time:'04:00',match:'USA – Paraguay',ch:'Yle'},
+  {date:'La 13.6.',ts:3,time:'22:00',match:'Qatar – Sveitsi',ch:'MTV'},
+  {date:'Su 14.6.',ts:4,time:'01:00',match:'Brasilia – Marokko',ch:'MTV'},
+  {date:'Su 14.6.',ts:4,time:'04:00',match:'Haiti – Skotlanti',ch:'MTV'},
+  {date:'Su 14.6.',ts:4,time:'07:00',match:'Australia – Turkki',ch:'MTV'},
+  {date:'Su 14.6.',ts:4,time:'20:00',match:'Saksa – Curaçao',ch:'Yle'},
+  {date:'Su 14.6.',ts:4,time:'23:00',match:'Hollanti – Japani',ch:'Yle'},
+  {date:'Ma 15.6.',ts:5,time:'02:00',match:'Norsunluurannikko – Ecuador',ch:'Yle'},
+  {date:'Ma 15.6.',ts:5,time:'05:00',match:'Ruotsi – Tunisia',ch:'Yle'},
+  {date:'Ma 15.6.',ts:5,time:'19:00',match:'Espanja – Kap Verde',ch:'MTV'},
+  {date:'Ma 15.6.',ts:5,time:'22:00',match:'Belgia – Egypti',ch:'MTV'},
+  {date:'Ti 16.6.',ts:6,time:'01:00',match:'Saudi-Arabia – Uruguay',ch:'MTV'},
+  {date:'Ti 16.6.',ts:6,time:'04:00',match:'Iran – Uusi-Seelanti',ch:'MTV'},
+  {date:'Ti 16.6.',ts:6,time:'22:00',match:'Ranska – Senegal',ch:'Yle'},
+  {date:'Ke 17.6.',ts:7,time:'01:00',match:'Irak – Norja',ch:'Yle'},
+  {date:'Ke 17.6.',ts:7,time:'04:00',match:'Argentiina – Algeria',ch:'Yle'},
+  {date:'Ke 17.6.',ts:7,time:'07:00',match:'Itävalta – Jordania',ch:'Yle'},
+  {date:'Ke 17.6.',ts:7,time:'20:00',match:'Portugali – Kongon dem. tasavalta',ch:'MTV'},
+  {date:'Ke 17.6.',ts:7,time:'23:00',match:'Englanti – Kroatia',ch:'MTV'},
+  {date:'To 18.6.',ts:8,time:'02:00',match:'Ghana – Panama',ch:'MTV'},
+  {date:'To 18.6.',ts:8,time:'05:00',match:'Uzbekistan – Kolumbia',ch:'MTV'},
+  {date:'To 18.6.',ts:8,time:'19:00',match:'Tshekki – Etelä-Afrikka',ch:'Yle'},
+  {date:'To 18.6.',ts:8,time:'22:00',match:'Sveitsi – Bosnia ja Hertsegovina',ch:'Yle'},
+  {date:'Pe 19.6.',ts:9,time:'01:00',match:'Kanada – Qatar',ch:'Yle'},
+  {date:'Pe 19.6.',ts:9,time:'04:00',match:'Meksiko – Etelä-Korea',ch:'Yle'},
+  {date:'Pe 19.6.',ts:9,time:'22:00',match:'USA – Australia',ch:'MTV'},
+  {date:'La 20.6.',ts:10,time:'01:00',match:'Skotlanti – Marokko',ch:'MTV'},
+  {date:'La 20.6.',ts:10,time:'04:00',match:'Brasilia – Haiti',ch:'MTV'},
+  {date:'La 20.6.',ts:10,time:'07:00',match:'Turkki – Paraguay',ch:'MTV'},
+  {date:'La 20.6.',ts:10,time:'20:00',match:'Hollanti – Ruotsi',ch:'Yle'},
+  {date:'La 20.6.',ts:10,time:'23:00',match:'Saksa – Norsunluurannikko',ch:'Yle'},
+  {date:'Su 21.6.',ts:11,time:'03:00',match:'Ecuador – Curaçao',ch:'Yle'},
+  {date:'Su 21.6.',ts:11,time:'07:00',match:'Tunisia – Japani',ch:'Yle'},
+  {date:'Su 21.6.',ts:11,time:'19:00',match:'Espanja – Saudi-Arabia',ch:'MTV'},
+  {date:'Su 21.6.',ts:11,time:'22:00',match:'Belgia – Iran',ch:'MTV'},
+  {date:'Ma 22.6.',ts:12,time:'01:00',match:'Uruguay – Kap Verde',ch:'MTV'},
+  {date:'Ma 22.6.',ts:12,time:'04:00',match:'Uusi-Seelanti – Egypti',ch:'MTV'},
+  {date:'Ma 22.6.',ts:12,time:'20:00',match:'Argentiina – Itävalta',ch:'Yle'},
+  {date:'Ti 23.6.',ts:13,time:'00:00',match:'Ranska – Irak',ch:'Yle'},
+  {date:'Ti 23.6.',ts:13,time:'03:00',match:'Norja – Senegal',ch:'Yle'},
+  {date:'Ti 23.6.',ts:13,time:'06:00',match:'Jordania – Algeria',ch:'Yle'},
+  {date:'Ti 23.6.',ts:13,time:'20:00',match:'Portugali – Uzbekistan',ch:'MTV'},
+  {date:'Ti 23.6.',ts:13,time:'23:00',match:'Englanti – Ghana',ch:'MTV'},
+  {date:'Ke 24.6.',ts:14,time:'02:00',match:'Panama – Kroatia',ch:'MTV'},
+  {date:'Ke 24.6.',ts:14,time:'05:00',match:'Kolumbia – Kongon dem. tasavalta',ch:'MTV'},
+  {date:'Ke 24.6.',ts:14,time:'22:00',match:'Sveitsi – Kanada',ch:'Yle'},
+  {date:'Ke 24.6.',ts:14,time:'22:00',match:'Bosnia ja Hertsegovina – Qatar',ch:'Yle'},
+  {date:'To 25.6.',ts:15,time:'01:00',match:'Skotlanti – Brasilia',ch:'Yle'},
+  {date:'To 25.6.',ts:15,time:'01:00',match:'Marokko – Haiti',ch:'Yle'},
+  {date:'To 25.6.',ts:15,time:'04:00',match:'Tshekki – Meksiko',ch:'Yle'},
+  {date:'To 25.6.',ts:15,time:'04:00',match:'Etelä-Afrikka – Etelä-Korea',ch:'Yle'},
+  {date:'To 25.6.',ts:15,time:'23:00',match:'Curaçao – Norsunluurannikko',ch:'MTV'},
+  {date:'To 25.6.',ts:15,time:'23:00',match:'Ecuador – Saksa',ch:'MTV'},
+  {date:'Pe 26.6.',ts:16,time:'02:00',match:'Japani – Ruotsi',ch:'MTV'},
+  {date:'Pe 26.6.',ts:16,time:'02:00',match:'Tunisia – Hollanti',ch:'MTV'},
+  {date:'Pe 26.6.',ts:16,time:'05:00',match:'Turkki – USA',ch:'MTV'},
+  {date:'Pe 26.6.',ts:16,time:'05:00',match:'Paraguay – Australia',ch:'MTV'},
+  {date:'Pe 26.6.',ts:16,time:'22:00',match:'Norja – Ranska',ch:'Yle'},
+  {date:'Pe 26.6.',ts:16,time:'22:00',match:'Senegal – Irak',ch:'Yle'},
+  {date:'La 27.6.',ts:17,time:'03:00',match:'Kap Verde – Saudi-Arabia',ch:'Yle'},
+  {date:'La 27.6.',ts:17,time:'03:00',match:'Uruguay – Espanja',ch:'Yle'},
+  {date:'La 27.6.',ts:17,time:'06:00',match:'Egypti – Iran',ch:'Yle'},
+  {date:'La 27.6.',ts:17,time:'06:00',match:'Uusi-Seelanti – Belgia',ch:'Yle'},
+  {date:'Su 28.6.',ts:18,time:'00:00',match:'Panama – Englanti',ch:'MTV'},
+  {date:'Su 28.6.',ts:18,time:'00:00',match:'Kroatia – Ghana',ch:'MTV'},
+  {date:'Su 28.6.',ts:18,time:'02:30',match:'Kolumbia – Portugali',ch:'MTV'},
+  {date:'Su 28.6.',ts:18,time:'02:30',match:'Kongon dem. tasavalta – Uzbekistan',ch:'MTV'},
+  {date:'Su 28.6.',ts:18,time:'05:00',match:'Algeria – Itävalta',ch:'MTV'},
+  {date:'Su 28.6.',ts:18,time:'05:00',match:'Jordania – Argentiina',ch:'MTV'},
+];
+
+let currentFilter = 'all';
+
+function filter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  const filtered = currentFilter === 'all' ? matches : matches.filter(m => m.ch === currentFilter);
+  const groups = {};
+  filtered.forEach(m => {
+    if (!groups[m.date]) groups[m.date] = [];
+    groups[m.date].push(m);
+  });
+  const el = document.getElementById('schedule');
+  if (!filtered.length) { el.innerHTML = '<p class="no-results">Ei otteluita valitulla suodattimella.</p>'; return; }
+  el.innerHTML = Object.entries(groups).map(([date, ms]) => `
+    <div class="day-group">
+      <div class="day-header">${date}</div>
+      ${ms.map(m => `
+        <div class="match-row">
+          <span class="time">${m.time}</span>
+          <span class="match-name">${m.match}</span>
+          <span class="badge ${m.ch === 'MTV' ? 'badge-mtv' : 'badge-yle'}">${m.ch === 'MTV' ? 'MTV3' : 'Yle TV2'}</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+render();
+</script>
+</body>
+</html>
