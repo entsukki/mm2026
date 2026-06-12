@@ -18,6 +18,8 @@
   .toggle-played { margin-left: auto; }
   .match-played { opacity: 0.55; }
   .day-group { margin-bottom: 1.75rem; }
+  .stage-header { font-size: 15px; font-weight: 700; color: #1a1a18; margin: 2.5rem 0 1rem; padding-top: 1.5rem; border-top: 2px solid #d8d6cc; }
+  .stage-header:first-child { margin-top: 0; padding-top: 0; border-top: none; }
   .day-header { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.07em; padding: 0 0 8px; border-bottom: 1px solid #e0dfd8; margin-bottom: 4px; }
   .match-row { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 12px; padding: 9px 8px; border-radius: 8px; transition: background 0.1s; }
   .match-row:hover { background: #eceae3; }
@@ -143,6 +145,8 @@
     osalta (esim. Curaçao–Norsunluurannikko 25.6. ja Kroatia–Ghana 28.6.) – ne on tässä tulkittu ilmaisiksi,
     koska ne ovat ottelupäivänsä ensimmäisiä alkamisaikoja. Algeria–Itävalta ja Jordania–Argentiina (28.6.)
     on merkitty Ylelle MTV Uutisten ottelulistan mukaisesti, vaikka osa lähteistä listaa ne MTV:lle.
+    Pudotuspeleissä jako on sama: MTV:n ottelupäivän kaksi ensimmäistä ottelua MTV3:lla ja kolmas vain
+    Katsomo+:ssa (aamuyön ottelut 2.7. ja 4.7.). Pudotusvaiheen parit täydentyvät lohkojen ratkettua.
     Tarkista lähetystiedot kanavien omista ohjelmatiedoista kisojen edetessä.
   </p>
   <p class="sources">Lähteet:
@@ -481,6 +485,39 @@ const matches = [
   {date:'Su 28.6.',ts:18,time:'02:30',match:'Kongon dem. tasavalta – Uzbekistan',ch:'MTV',paid:1},
   {date:'Su 28.6.',ts:18,time:'05:00',match:'Algeria – Itävalta',ch:'Yle'},
   {date:'Su 28.6.',ts:18,time:'05:00',match:'Jordania – Argentiina',ch:'Yle'},
+  // Pudotusvaihe – parit selviävät alkulohkojen päätyttyä
+  {date:'Su 28.6.',time:'22:00',match:'A-lohkon 2. – B-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
+  {date:'Ma 29.6.',time:'20:00',match:'C-lohkon 1. – F-lohkon 2.',ch:'MTV',stage:'1/16-välierät'},
+  {date:'Ma 29.6.',time:'23:30',match:'E-lohkon 1. – paras kolmonen (A/B/C/D/F)',ch:'MTV',stage:'1/16-välierät'},
+  {date:'Ti 30.6.',time:'04:00',match:'F-lohkon 1. – C-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
+  {date:'Ti 30.6.',time:'20:00',match:'E-lohkon 2. – I-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
+  {date:'Ke 1.7.',time:'00:00',match:'I-lohkon 1. – paras kolmonen (C/D/F/G/H)',ch:'Yle',stage:'1/16-välierät'},
+  {date:'Ke 1.7.',time:'04:00',match:'A-lohkon 1. – paras kolmonen (C/E/F/H/I)',ch:'Yle',stage:'1/16-välierät'},
+  {date:'Ke 1.7.',time:'19:00',match:'L-lohkon 1. – paras kolmonen (E/H/I/J/K)',ch:'MTV',stage:'1/16-välierät'},
+  {date:'Ke 1.7.',time:'23:00',match:'G-lohkon 1. – paras kolmonen (A/E/H/I/J)',ch:'MTV',stage:'1/16-välierät'},
+  {date:'To 2.7.',time:'03:00',match:'D-lohkon 1. – paras kolmonen (B/E/F/I/J)',ch:'MTV',paid:1,stage:'1/16-välierät'},
+  {date:'To 2.7.',time:'22:00',match:'H-lohkon 1. – J-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
+  {date:'Pe 3.7.',time:'02:00',match:'K-lohkon 2. – L-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
+  {date:'Pe 3.7.',time:'06:00',match:'B-lohkon 1. – paras kolmonen (E/F/G/I/J)',ch:'Yle',stage:'1/16-välierät'},
+  {date:'Pe 3.7.',time:'21:00',match:'D-lohkon 2. – G-lohkon 2.',ch:'MTV',stage:'1/16-välierät'},
+  {date:'La 4.7.',time:'01:00',match:'J-lohkon 1. – H-lohkon 2.',ch:'MTV',stage:'1/16-välierät'},
+  {date:'La 4.7.',time:'04:30',match:'K-lohkon 1. – paras kolmonen (D/E/I/J/L)',ch:'MTV',paid:1,stage:'1/16-välierät'},
+  {date:'La 4.7.',time:'20:00',match:'Kahdeksannesvälierä 1',ch:'MTV',stage:'Kahdeksannesvälierät'},
+  {date:'Su 5.7.',time:'00:00',match:'Kahdeksannesvälierä 2',ch:'MTV',stage:'Kahdeksannesvälierät'},
+  {date:'Su 5.7.',time:'23:00',match:'Kahdeksannesvälierä 3',ch:'Yle',stage:'Kahdeksannesvälierät'},
+  {date:'Ma 6.7.',time:'03:00',match:'Kahdeksannesvälierä 4',ch:'Yle',stage:'Kahdeksannesvälierät'},
+  {date:'Ma 6.7.',time:'22:00',match:'Kahdeksannesvälierä 5',ch:'MTV',stage:'Kahdeksannesvälierät'},
+  {date:'Ti 7.7.',time:'03:00',match:'Kahdeksannesvälierä 6',ch:'MTV',stage:'Kahdeksannesvälierät'},
+  {date:'Ti 7.7.',time:'19:00',match:'Kahdeksannesvälierä 7',ch:'Yle',stage:'Kahdeksannesvälierät'},
+  {date:'Ti 7.7.',time:'23:00',match:'Kahdeksannesvälierä 8',ch:'Yle',stage:'Kahdeksannesvälierät'},
+  {date:'To 9.7.',time:'23:00',match:'Neljännesvälierä 1',ch:'Yle',stage:'Neljännesvälierät'},
+  {date:'Pe 10.7.',time:'22:00',match:'Neljännesvälierä 2',ch:'MTV',stage:'Neljännesvälierät'},
+  {date:'Su 12.7.',time:'00:00',match:'Neljännesvälierä 3',ch:'Yle',stage:'Neljännesvälierät'},
+  {date:'Su 12.7.',time:'04:00',match:'Neljännesvälierä 4',ch:'MTV',stage:'Neljännesvälierät'},
+  {date:'Ti 14.7.',time:'22:00',match:'Välierä 1',ch:'Yle',stage:'Välierät'},
+  {date:'Ke 15.7.',time:'22:00',match:'Välierä 2',ch:'MTV',stage:'Välierät'},
+  {date:'Su 19.7.',time:'00:00',match:'Pronssiottelu',ch:'MTV',stage:'Pronssi- ja loppuottelu'},
+  {date:'Su 19.7.',time:'22:00',match:'Loppuottelu',ch:'Yle',stage:'Pronssi- ja loppuottelu'},
 ];
 
 // Ottelu arkistoidaan (piilotetaan oletuksena) 4 tuntia aloitusajan jälkeen
@@ -519,14 +556,19 @@ function render() {
   tp.textContent = `🕓 ${showPlayed ? 'Piilota' : 'Näytä'} pelatut (${playedCount})`;
   tp.classList.toggle('active', showPlayed);
 
-  const groups = {};
+  // Ryhmittely: ensin vaihe (alkulohkot ilman otsikkoa, pudotusvaiheet otsikoituina), sitten päivä
+  const blocks = [];
   filtered.forEach(m => {
-    if (!groups[m.date]) groups[m.date] = [];
-    groups[m.date].push(m);
+    let b = blocks[blocks.length - 1];
+    if (!b || b.stage !== (m.stage || '')) { b = { stage: m.stage || '', days: new Map() }; blocks.push(b); }
+    if (!b.days.has(m.date)) b.days.set(m.date, []);
+    b.days.get(m.date).push(m);
   });
   const el = document.getElementById('schedule');
   if (!filtered.length) { el.innerHTML = '<p class="no-results">Ei otteluita valitulla suodattimella.</p>'; return; }
-  el.innerHTML = Object.entries(groups).map(([date, ms]) => `
+  el.innerHTML = blocks.map(b => `
+    ${b.stage ? `<h2 class="stage-header">${b.stage}</h2>` : ''}
+    ${[...b.days].map(([date, ms]) => `
     <div class="day-group">
       <div class="day-header">${date}</div>
       ${ms.map(m => `
@@ -541,6 +583,7 @@ function render() {
         </div>
       `).join('')}
     </div>
+    `).join('')}
   `).join('');
 }
 render();
