@@ -15,6 +15,8 @@
   .filter-btn { font-size: 13px; padding: 6px 16px; border-radius: 999px; border: 1px solid #ccc; background: #fff; color: #555; cursor: pointer; transition: all 0.15s; }
   .filter-btn:hover { border-color: #999; }
   .filter-btn.active { background: #1a1a18; color: #fff; border-color: #1a1a18; font-weight: 500; }
+  .toggle-played { margin-left: auto; }
+  .match-played { opacity: 0.55; }
   .day-group { margin-bottom: 1.75rem; }
   .day-header { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.07em; padding: 0 0 8px; border-bottom: 1px solid #e0dfd8; margin-bottom: 4px; }
   .match-row { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 12px; padding: 9px 8px; border-radius: 8px; transition: background 0.1s; }
@@ -128,6 +130,7 @@
     <button class="filter-btn active" onclick="filter('all', this)">Kaikki</button>
     <button class="filter-btn" onclick="filter('MTV', this)">MTV3</button>
     <button class="filter-btn" onclick="filter('Yle', this)">Yle TV2</button>
+    <button class="filter-btn toggle-played" id="toggle-played" onclick="togglePlayed()" style="display:none"></button>
   </div>
   <div id="schedule"></div>
 </main>
@@ -480,7 +483,24 @@ const matches = [
   {date:'Su 28.6.',ts:18,time:'05:00',match:'Jordania – Argentiina',ch:'Yle'},
 ];
 
+// Ottelu arkistoidaan (piilotetaan oletuksena) 4 tuntia aloitusajan jälkeen
+const ARCHIVE_AFTER_MS = 4 * 60 * 60 * 1000;
+
+function matchStartMs(m) {
+  const [, d, mo] = m.date.match(/(\d+)\.(\d+)\./);
+  return Date.parse(`2026-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}T${m.time}:00+03:00`);
+}
+matches.forEach(m => { m.start = matchStartMs(m); });
+
+const isPlayed = m => Date.now() > m.start + ARCHIVE_AFTER_MS;
+
 let currentFilter = 'all';
+let showPlayed = false;
+
+function togglePlayed() {
+  showPlayed = !showPlayed;
+  render();
+}
 
 function filter(type, btn) {
   currentFilter = type;
@@ -490,7 +510,15 @@ function filter(type, btn) {
 }
 
 function render() {
-  const filtered = currentFilter === 'all' ? matches : matches.filter(m => m.ch === currentFilter);
+  const byChannel = currentFilter === 'all' ? matches : matches.filter(m => m.ch === currentFilter);
+  const playedCount = byChannel.filter(isPlayed).length;
+  const filtered = showPlayed ? byChannel : byChannel.filter(m => !isPlayed(m));
+
+  const tp = document.getElementById('toggle-played');
+  tp.style.display = playedCount ? '' : 'none';
+  tp.textContent = `🕓 ${showPlayed ? 'Piilota' : 'Näytä'} pelatut (${playedCount})`;
+  tp.classList.toggle('active', showPlayed);
+
   const groups = {};
   filtered.forEach(m => {
     if (!groups[m.date]) groups[m.date] = [];
@@ -502,7 +530,7 @@ function render() {
     <div class="day-group">
       <div class="day-header">${date}</div>
       ${ms.map(m => `
-        <div class="match-row">
+        <div class="match-row${isPlayed(m) ? ' match-played' : ''}">
           <span class="time">${m.time}</span>
           <span class="match-name">${m.match}</span>
           ${m.ch === 'Yle'
@@ -516,6 +544,7 @@ function render() {
   `).join('');
 }
 render();
+setInterval(render, 60000);
 document.querySelector('.pig-legend').innerHTML = PIG;
 </script>
 </body>
