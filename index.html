@@ -414,8 +414,8 @@ const PIG = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w
 </svg>`;
 
 const matches = [
-  {date:'To 11.6.',ts:1,time:'22:00',match:'Meksiko – Etelä-Afrikka',ch:'MTV',result:'2–0'},
-  {date:'Pe 12.6.',ts:2,time:'05:00',match:'Etelä-Korea – Tshekki',ch:'MTV',result:'2–1'},
+  {date:'To 11.6.',ts:1,time:'22:00',match:'Meksiko – Etelä-Afrikka',ch:'MTV'},
+  {date:'Pe 12.6.',ts:2,time:'05:00',match:'Etelä-Korea – Tshekki',ch:'MTV'},
   {date:'Pe 12.6.',ts:2,time:'22:00',match:'Kanada – Bosnia ja Hertsegovina',ch:'Yle'},
   {date:'La 13.6.',ts:3,time:'04:00',match:'USA – Paraguay',ch:'Yle'},
   {date:'La 13.6.',ts:3,time:'22:00',match:'Qatar – Sveitsi',ch:'MTV'},
@@ -590,6 +590,25 @@ function render() {
 render();
 setInterval(render, 60000);
 document.querySelector('.pig-legend').innerHTML = PIG;
+
+// Tulokset haetaan tulokset.json-tiedostosta, jota GitHub Actions päivittää
+// automaattisesti (hae_tulokset.py: FIFA API + TheSportsDB-ristiintarkistus)
+fetch('tulokset.json?ts=' + Date.now())
+  .then(r => r.ok ? r.json() : null)
+  .then(data => {
+    if (!data || !data.tulokset) return;
+    const tulokset = new Map(data.tulokset
+      .filter(t => t.vahvistus !== 'RISTIRIITA')
+      .map(t => [t.pvm + '|' + t.ottelu, t.tulos]));
+    let muuttui = false;
+    matches.forEach(m => {
+      const pvm = new Date(m.start).toLocaleDateString('sv-SE', { timeZone: 'Europe/Helsinki' });
+      const tulos = tulokset.get(pvm + '|' + m.match);
+      if (tulos && m.result !== tulos) { m.result = tulos; muuttui = true; }
+    });
+    if (muuttui) render();
+  })
+  .catch(() => {});
 </script>
 </body>
 </html>

@@ -1,0 +1,43 @@
+{
+  "haettu": "2026-06-13T00:02:57+03:00",
+  "lahteet": {
+    "ensisijainen": "FIFA API",
+    "ristiintarkistus": "TheSportsDB"
+  },
+  "tuloksia": 3,
+  "tulokset": [
+    {
+      "pvm": "2026-06-11",
+      "aika_fi": "22:00",
+      "koti": "Meksiko",
+      "vieras": "Etelä-Afrikka",
+      "koti_maalit": 2,
+      "vieras_maalit": 0,
+      "tulos": "2–0",
+      "ottelu": "Meksiko – Etelä-Afrikka",
+      "vahvistus": "FIFA + TheSportsDB"
+    },
+    {
+      "pvm": "2026-06-12",
+      "aika_fi": "05:00",
+      "koti": "Etelä-Korea",
+      "vieras": "Tshekki",
+      "koti_maalit": 2,
+      "vieras_maalit": 1,
+      "tulos": "2–1",
+      "ottelu": "Etelä-Korea – Tshekki",
+      "vahvistus": "FIFA + TheSportsDB"
+    },
+    {
+      "pvm": "2026-06-12",
+      "aika_fi": "22:00",
+      "koti": "Kanada",
+      "vieras": "Bosnia ja Hertsegovina",
+      "koti_maalit": 1,
+      "vieras_maalit": 1,
+      "tulos": "1–1",
+      "ottelu": "Kanada – Bosnia ja Hertsegovina",
+      "vahvistus": "FIFA + TheSportsDB"
+    }
+  ]
+}
