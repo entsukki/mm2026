@@ -25,6 +25,7 @@
   .match-row:hover { background: #eceae3; }
   .time { font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; color: #1a1a18; }
   .match-name { font-size: 15px; color: #1a1a18; }
+  .result { font-weight: 700; margin-left: 6px; white-space: nowrap; }
   .badge { font-size: 12px; font-weight: 500; padding: 3px 11px; border-radius: 999px; white-space: nowrap; }
   .badge-mtv { background: #fdeee8; color: #8b3315; }
   .badge-yle { background: #e0f5ec; color: #0a6644; }
@@ -413,8 +414,8 @@ const PIG = `<svg width="17" height="17" viewBox="0 0 24 24" xmlns="http://www.w
 </svg>`;
 
 const matches = [
-  {date:'To 11.6.',ts:1,time:'22:00',match:'Meksiko – Etelä-Afrikka',ch:'MTV'},
-  {date:'Pe 12.6.',ts:2,time:'05:00',match:'Etelä-Korea – Tshekki',ch:'MTV'},
+  {date:'To 11.6.',ts:1,time:'22:00',match:'Meksiko – Etelä-Afrikka',ch:'MTV',result:'2–0'},
+  {date:'Pe 12.6.',ts:2,time:'05:00',match:'Etelä-Korea – Tshekki',ch:'MTV',result:'2–1'},
   {date:'Pe 12.6.',ts:2,time:'22:00',match:'Kanada – Bosnia ja Hertsegovina',ch:'Yle'},
   {date:'La 13.6.',ts:3,time:'04:00',match:'USA – Paraguay',ch:'Yle'},
   {date:'La 13.6.',ts:3,time:'22:00',match:'Qatar – Sveitsi',ch:'MTV'},
@@ -574,7 +575,7 @@ function render() {
       ${ms.map(m => `
         <div class="match-row${isPlayed(m) ? ' match-played' : ''}">
           <span class="time">${m.time}</span>
-          <span class="match-name">${m.match}</span>
+          <span class="match-name">${m.match}${m.result ? ` <strong class="result">${m.result}</strong>` : ''}</span>
           ${m.ch === 'Yle'
             ? '<span class="badge badge-yle">Yle TV2</span>'
             : m.paid
