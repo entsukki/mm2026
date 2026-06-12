@@ -2,8 +2,8 @@ name: Päivitä MM 2026 tulokset
 
 on:
   schedule:
-    # ~3 tunnin välein; viimeiset yöpelit päättyvät n. 08:30 Suomen aikaa
-    - cron: '15 */3 * * *'
+    # Vartin välein (minuutit 7, 22, 37, 52 - tasaminuutit ovat GitHubin ruuhka-aikaa)
+    - cron: '7-59/15 * * * *'
   workflow_dispatch:
 
 permissions:
