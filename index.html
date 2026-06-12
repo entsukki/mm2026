@@ -180,11 +180,8 @@
 <script src="https://www.gstatic.com/firebasejs/12.14.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.14.0/firebase-auth-compat.js"></script>
 <script>
-// TODO: Täytä alla olevaan objektiin oma Firebase-konfiguraatiosi.
-// 1. Luo projekti: https://console.firebase.google.com
-// 2. Lisää Realtime Database (valitse eurooppa-alue)
-// 3. Aseta säännöt: { "rules": { ".read": true, ".write": true } }
-// 4. Projektin asetuksista → "Lisää sovellus (Web)" → kopioi config tähän
+// Config on julkinen projektitunniste (ei salaisuus) - pääsyä rajaavat
+// Firebase Consolessa ylläpidettävät tietokantasäännöt, jotka eivät ole repossa.
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDyVXR8vW5uL9N4rCOBHmaAUEGYECHj5SQ",
   authDomain: "mm2026-8b6d5.firebaseapp.com",
@@ -234,10 +231,8 @@ function renderComments(comments) {
   el.scrollTop = el.scrollHeight;
 }
 
-// --- Nimimerkin rekisteröinti & kirjautuminen ---
-// Nimimerkki lukitaan käyttäjätiliin: kommentointi vaatii kirjautumisen
-// sähköpostiin lähetettävällä linkillä (ei salasanaa). Tietokantasäännöt
-// estävät kommentoinnin toisen rekisteröimällä nimimerkillä.
+// Kirjautuminen sähköpostilinkillä; nimimerkki lukitaan käyttäjätiliin.
+// Varsinainen suoja on tietokantasäännöissä - client-tarkistukset ovat vain käytettävyyttä.
 const NICK_RE = /^[A-Za-z0-9_åäöÅÄÖ-]{2,30}$/;
 
 function formArea() { return document.getElementById('form-area'); }
@@ -593,8 +588,7 @@ render();
 setInterval(render, 60000);
 document.querySelector('.pig-legend').innerHTML = PIG;
 
-// Tulokset haetaan tulokset.json-tiedostosta, jota GitHub Actions päivittää
-// automaattisesti (hae_tulokset.py: FIFA API + TheSportsDB-ristiintarkistus)
+// tulokset.json:ia päivittää GitHub Actions (hae_tulokset.py)
 fetch('tulokset.json?ts=' + Date.now())
   .then(r => r.ok ? r.json() : null)
   .then(data => {
