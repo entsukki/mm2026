@@ -15,7 +15,7 @@
   .filter-btn { font-size: 13px; padding: 6px 16px; border-radius: 999px; border: 1px solid #ccc; background: #fff; color: #555; cursor: pointer; transition: all 0.15s; }
   .filter-btn:hover { border-color: #999; }
   .filter-btn.active { background: #1a1a18; color: #fff; border-color: #1a1a18; font-weight: 500; }
-  .toggle-played { margin-left: auto; }
+  #played-row { margin: -0.9rem 0 1.5rem; }
   .match-played { opacity: 0.55; }
   .day-group { margin-bottom: 1.75rem; }
   .stage-header { font-size: 15px; font-weight: 700; color: #1a1a18; margin: 2.5rem 0 1rem; padding-top: 1.5rem; border-top: 2px solid #d8d6cc; }
@@ -133,7 +133,9 @@
     <button class="filter-btn active" onclick="filter('all', this)">Kaikki</button>
     <button class="filter-btn" onclick="filter('MTV', this)">MTV3</button>
     <button class="filter-btn" onclick="filter('Yle', this)">Yle TV2</button>
-    <button class="filter-btn toggle-played" id="toggle-played" onclick="togglePlayed()" style="display:none"></button>
+  </div>
+  <div class="filter-row" id="played-row" style="display:none">
+    <button class="filter-btn toggle-played" id="toggle-played" onclick="togglePlayed()"></button>
   </div>
   <div id="schedule"></div>
 </main>
@@ -553,7 +555,7 @@ function render() {
   const filtered = showPlayed ? byChannel : byChannel.filter(m => !isPlayed(m));
 
   const tp = document.getElementById('toggle-played');
-  tp.style.display = playedCount ? '' : 'none';
+  document.getElementById('played-row').style.display = playedCount ? '' : 'none';
   tp.textContent = `🕓 ${showPlayed ? 'Piilota' : 'Näytä'} pelatut (${playedCount})`;
   tp.classList.toggle('active', showPlayed);
 
