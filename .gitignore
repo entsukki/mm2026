@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Claude Code -työtila
+.claude/
+
+# Paikallinen tuloshaku (skripti kirjoittaa; versioidaan vain Actionsista)
+__pycache__/
