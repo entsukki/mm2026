@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MM 2026 – Veikkaustyylianalyysi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F4F3EF;
+  --bg-card: #FFFFFF;
+  --text: #18181B;
+  --text-muted: #6B6864;
+  --text-light: #A09C98;
+  --accent: #0F5C2E;
+  --border: #E5E3DE;
+  --border-light: #EDECE8;
+
+  --cautious: #185FA5;
+  --cautious-bg: #EBF3FB;
+  --draws: #7F77DD;
+  --draws-bg: #EEEDFE;
+  --bold: #C04A1F;
+  --bold-bg: #FAECE7;
+  --upset: #1D9E75;
+  --upset-bg: #E1F5EE;
+  --balanced: #6B6864;
+  --balanced-bg: #F1F0EB;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18181B;
+    --bg-card: #222225;
+    --text: #F0EFEB;
+    --text-muted: #9B9794;
+    --text-light: #6B6864;
+    --accent: #3CB06B;
+    --border: #2E2D2A;
+    --border-light: #282825;
+    --cautious-bg: #0C2845;
+    --draws-bg: #1E1A4E;
+    --bold-bg: #3A1506;
+    --upset-bg: #0B3320;
+    --balanced-bg: #232220;
+  }
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* HEADER */
+header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 3rem 0 2.5rem;
+}
+header .container { position: relative; }
+
+.eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 540px;
+  margin-bottom: 1.5rem;
+}
+
+.meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.meta-chip {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 4px 14px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* SECTIONS */
+section {
+  padding: 3rem 0;
+  border-bottom: 1px solid var(--border);
+}
+section:last-of-type { border-bottom: none; }
+
+h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.4rem;
+}
+
+h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+}
+
+.section-intro {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+  max-width: 620px;
+}
+
+/* ARCHETYPE LEGEND */
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.arch-card {
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  border: 1px solid transparent;
+}
+.arch-card .arch-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.arch-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.arch-card .arch-members {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.arch-card .arch-desc {
+  font-size: 11.5px;
+  margin-top: 6px;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+.arch-card.cautious  { background: var(--cautious-bg); color: var(--cautious); }
+.arch-card.draws     { background: var(--draws-bg);    color: var(--draws);    }
+.arch-card.bold      { background: var(--bold-bg);     color: var(--bold);     }
+.arch-card.upset     { background: var(--upset-bg);    color: var(--upset);    }
+.arch-card.balanced  { background: var(--balanced-bg); color: var(--balanced); }
+
+/* CHARTS */
+.chart-wrap { position: relative; width: 100%; }
+.chart-note {
+  font-size: 11px;
+  color: var(--text-light);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.bar-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+@media (max-width: 600px) {
+  .bar-charts-grid { grid-template-columns: 1fr; }
+}
+
+/* PLAYER SECTIONS */
+.archetype-block { margin-bottom: 3rem; }
+.archetype-block:last-child { margin-bottom: 0; }
+
+.archetype-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid;
+}
+.archetype-header h2 { font-size: 1.3rem; }
+.archetype-header .count {
+  font-size: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  opacity: 0.6;
+}
+.archetype-header.cautious { border-color: var(--cautious); color: var(--cautious); }
+.archetype-header.draws    { border-color: var(--draws);    color: var(--draws);    }
+.archetype-header.bold     { border-color: var(--bold);     color: var(--bold);     }
+.archetype-header.upset    { border-color: var(--upset);    color: var(--upset);    }
+.archetype-header.balanced { border-color: var(--balanced); color: var(--balanced); }
+
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 500px) {
+  .player-grid { grid-template-columns: 1fr; }
+}
+
+.player-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
+  border-left-width: 3px;
+}
+.player-card.cautious { border-left-color: var(--cautious); }
+.player-card.draws    { border-left-color: var(--draws);    }
+.player-card.bold     { border-left-color: var(--bold);     }
+.player-card.upset    { border-left-color: var(--upset);    }
+.player-card.balanced { border-left-color: var(--balanced); }
+
+.player-card-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.stat-bars { margin-bottom: 1rem; }
+.stat-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 42px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.stat-label { font-size: 11.5px; color: var(--text-muted); }
+.bar-track {
+  height: 5px;
+  background: var(--border-light);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+.stat-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.player-desc {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--border-light);
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+}
+.player-desc strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* PAIR TABLE */
+.pair-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.pair-table th {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.pair-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+}
+.pair-table tr:last-child td { border-bottom: none; }
+.pair-badge {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.pct-bar-wrap { display: flex; align-items: center; gap: 10px; }
+.pct-bar-track { flex: 1; height: 5px; background: var(--border-light); border-radius: 99px; overflow: hidden; }
+.pct-bar-fill  { height: 100%; border-radius: 99px; background: var(--accent); }
+.pct-num { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 500; white-space: nowrap; }
+
+/* FOOTER */
+footer {
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-light);
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="eyebrow">FIFA MM 2026 · Veikkaustyylianalyysi</div>
+    <h1>Kuka pelaa rohkeasti,<br>kuka varovaisesti?</h1>
+    <p class="subtitle">Kaveriporukan 14 veikkaajan pelityylien vertailu 72 alkulohkoottelun tulosveikkausten pohjalta.</p>
+    <div class="meta-chips">
+      <span class="meta-chip">14 veikkaajaa</span>
+      <span class="meta-chip">72 ottelua</span>
+      <span class="meta-chip">1 008 veikkausta</span>
+      <span class="meta-chip">5 arkkityyppiä</span>
+    </div>
+  </div>
+</header>
+
+<!-- ARCHETYPES -->
+<section>
+  <div class="container">
+    <h2>Veikkaajatyypit</h2>
+    <p class="section-intro">Jokainen veikkaaja sijoittuu johonkin viidestä arkkityypistä sen mukaan, miten he veikkaavat maalimääriä, tasapelejä ja yllätyksiä.</p>
+    <div class="arch-grid">
+      <div class="arch-card cautious">
+        <div class="arch-name"><span class="arch-dot" style="background:var(--cautious);"></span>Pelkuri</div>
+        <div class="arch-members">Pasi, Joonas</div>
+        <div class="arch-desc">Vähän maaleja, paljon tiukkoja tuloksia</div>
+      </div>
+      <div class="arch-card draws">
+        <div class="arch-name"><span class="arch-dot" style="background:var(--draws);"></span>Tasapelirakastaja</div>
+        <div class="arch-members">Vili, Rauli, Kalle</div>
+        <div class="arch-desc">Korkein tasapeliprosentti kaikista</div>
+      </div>
+      <div class="arch-card bold">
+        <div class="arch-name"><span class="arch-dot" style="background:var(--bold);"></span>Rohkea</div>
+        <div class="arch-members">Elska, Paavo, Erno, Justus</div>
+        <div class="arch-desc">Selkeät tulokset, isot voittomaalit</div>
+      </div>
+      <div class="arch-card upset">
+        <div class="arch-name"><span class="arch-dot" style="background:var(--upset);"></span>Yllätystenhakija</div>
+        <div class="arch-members">Tuomas, Sampo</div>
+        <div class="arch-desc">Eniten vierasjoukkueen voittoja</div>
+      </div>
+      <div class="arch-card balanced">
+        <div class="arch-name"><span class="arch-dot" style="background:var(--balanced);"></span>Tasapainoinen</div>
+        <div class="arch-members">Jakke, Kari, Keke</div>
+        <div class="arch-desc">Lähellä mediaania kaikissa mittareissa</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUBBLE CHART -->
+<section>
+  <div class="container">
+    <h2>Veikkaajien kartta</h2>
+    <p class="section-intro">Jokainen kupla on yksi veikkaaja. Sijainti kertoo maalikeskiarvon ja tasapeliriskin. Kuplakoko kuvaa suurten voittojen (3+ maaliero) osuutta.</p>
+    <div class="chart-wrap" style="height: 420px;">
+      <canvas id="bubbleChart" role="img" aria-label="Kuplakaavio veikkaajien pelityyleistä maalikeskiarvon ja tasapeli-%:n mukaan."></canvas>
+    </div>
+    <p class="chart-note">X = maaleja/ottelu &nbsp;·&nbsp; Y = tasapeli-% &nbsp;·&nbsp; kuplakoko = isojen voittojen osuus &nbsp;·&nbsp; vie osoitin kuplan päälle lisätiedoille</p>
+  </div>
+</section>
+
+<!-- BAR CHARTS -->
+<section>
+  <div class="container">
+    <div class="bar-charts-grid">
+      <div>
+        <h3>Maaleja per ottelu</h3>
+        <div class="chart-wrap" style="height: 560px;">
+          <canvas id="goalsBar" role="img" aria-label="Maalikeskiarvot veikkaajittain, Paavo johtaa 3.11:lla."></canvas>
+        </div>
+      </div>
+      <div>
+        <h3>Isot voitot (3+ maaliero) %</h3>
+        <div class="chart-wrap" style="height: 560px;">
+          <canvas id="bigBar" role="img" aria-label="Suurten voittojen osuudet, Elska johtaa 37.5%:lla."></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAYERS -->
+<section>
+  <div class="container">
+    <h2>Veikkaajat arkkityypeittäin</h2>
+    <p class="section-intro">Palkit kuvaavat kunkin mittarin suhteellista sijoittumista koko ryhmässä (vasen reuna = ryhmän minimi, oikea = maksimi).</p>
+
+    <!-- PELKURIT -->
+    <div class="archetype-block">
+      <div class="archetype-header cautious">
+        <h2>🐔 Pelkurit</h2>
+        <span class="count">Pasi · Joonas</span>
+      </div>
+      <div class="player-grid">
+        <div class="player-card cautious">
+          <div class="player-card-name">Pasi</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--cautious);"></div></div>
+              <span class="stat-value">1,86</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:73%; background:var(--cautious);"></div></div>
+              <span class="stat-value">25,0 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:29%; background:var(--cautious);"></div></div>
+              <span class="stat-value">16,7 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--cautious);"></div></div>
+              <span class="stat-value">26,4 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Ryhmän <strong>matalin maalikeskiarvo</strong>: 1,86 maalia/ottelu. Peräti 43 % otteluista tuottaa yhteensä 0–1 maalia. Kuusi nollatulosveikkausta (0-0). Kaikki 18 tasapeliä ovat joko 0-0 tai 1-1 — ei yhtään 2-2:ta. Pasin maailmassa jalkapallo-ottelu on useimmiten tylsä, tiukka taistelu ilman isoja maalimyrskyjä.</p>
+        </div>
+        <div class="player-card cautious">
+          <div class="player-card-name">Joonas</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:14%; background:var(--cautious);"></div></div>
+              <span class="stat-value">2,04</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:60%; background:var(--cautious);"></div></div>
+              <span class="stat-value">22,2 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--cautious);"></div></div>
+              <span class="stat-value">8,3 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:28%; background:var(--cautious);"></div></div>
+              <span class="stat-value">30,6 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Lähes identtinen tyyli Pasin kanssa — he jakavat <strong>25 % (18/72) täsmälleen samoista veikkauksista</strong>, mikä on toiseksi korkein parikohtainen samankaltaisuus. Joonasin suurin yksittäinen tulos on vain 3-1 (Hollanti–Japani). Vähiten suuria voittoja koko ryhmässä: 8,3 % ainoastaan.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASAPELIRAKASTAJAT -->
+    <div class="archetype-block">
+      <div class="archetype-header draws">
+        <h2>🤝 Tasapelirakastajat</h2>
+        <span class="count">Vili · Rauli · Kalle</span>
+      </div>
+      <div class="player-grid">
+        <div class="player-card draws">
+          <div class="player-card-name">Vili</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:82%; background:var(--draws);"></div></div>
+              <span class="stat-value">2,90</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--draws);"></div></div>
+              <span class="stat-value">30,6 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:47%; background:var(--draws);"></div></div>
+              <span class="stat-value">22,2 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--draws);"></div></div>
+              <span class="stat-value">26,4 %</span>
+            </div>
+          </div>
+          <p class="player-desc"><strong>Jaettu korkein tasapeliprosentti</strong> (30,6 %) mutta silti yllättävän maalikkaita veikkauksia (2,90/ottelu). Eniten 0-0-tuloksia: 7 kappaletta. Vili elää omassa maailmassaan — pelit päätyvät joko nollaan-nollaan tai aaltoilevaan 3-2:een.</p>
+        </div>
+        <div class="player-card draws">
+          <div class="player-card-name">Rauli</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:60%; background:var(--draws);"></div></div>
+              <span class="stat-value">2,61</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:87%; background:var(--draws);"></div></div>
+              <span class="stat-value">27,8 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:9%; background:var(--draws);"></div></div>
+              <span class="stat-value">11,1 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--draws);"></div></div>
+              <span class="stat-value">26,4 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Ryhmän <strong>pienin maaliero</strong> (1,25) — Rauli uskoo tiukkoihin otteluihin. Hänen erikoisuutensa on 7 × 2-2 -tulosta, selvästi eniten kaikista. Rauli ei kaipaa murskavoittoja, mutta haluaa pelien olevan avoimia molemmin puolin. Kaikista samankaltaisin Karin kanssa: 30,6 % identtisiä tuloksia.</p>
+        </div>
+        <div class="player-card draws">
+          <div class="player-card-name">Kalle</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:57%; background:var(--draws);"></div></div>
+              <span class="stat-value">2,57</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--draws);"></div></div>
+              <span class="stat-value">30,6 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--draws);"></div></div>
+              <span class="stat-value">30,6 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:18%; background:var(--draws);"></div></div>
+              <span class="stat-value">29,2 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Kilpailun <strong>paradoksaalisin veikkaaja</strong>: jaettu korkein tasapeliprosentti (30,6 %) JA korkein suurten voittojen osuus (30,6 %). Kalle joko veikkaa tiukan tasan tai ison murskan — harvoin mitään siltä väliltä. Mustavalkoinen maailmankatsomus.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROHKEAT -->
+    <div class="archetype-block">
+      <div class="archetype-header bold">
+        <h2>🦁 Rohkeat</h2>
+        <span class="count">Elska · Paavo · Erno · Justus</span>
+      </div>
+      <div class="player-grid">
+        <div class="player-card bold">
+          <div class="player-card-name">Elska</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:88%; background:var(--bold);"></div></div>
+              <span class="stat-value">2,96</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:40%; background:var(--bold);"></div></div>
+              <span class="stat-value">18,1 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--bold);"></div></div>
+              <span class="stat-value">37,5 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Maaliero (ka.)</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--bold);"></div></div>
+              <span class="stat-value">2,04</span>
+            </div>
+          </div>
+          <p class="player-desc"><strong>Eniten suuria voittoja</strong> (37,5 %) ja korkein maaliero (2,04) koko kilpailussa. Elskan veikkauksissa ei ole epävarmuutta — ottelu päättyy selvälle voittajalle. Luottaa suosikkeihin murskaamaan altavastaajat, muttei ole sokea kotisuosiolle: 30,6 % vierasvoittojakin.</p>
+        </div>
+        <div class="player-card bold">
+          <div class="player-card-name">Paavo</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--bold);"></div></div>
+              <span class="stat-value">3,11</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:7%; background:var(--bold);"></div></div>
+              <span class="stat-value">11,1 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:52%; background:var(--bold);"></div></div>
+              <span class="stat-value">23,6 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Kotivoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--bold);"></div></div>
+              <span class="stat-value">58,3 %</span>
+            </div>
+          </div>
+          <p class="player-desc"><strong>Korkein maalikeskiarvo</strong> kaikista (3,11 maalia/ottelu). Jaettu korkein kotivoitto-% (58,3 %), ei yhtään nollatulosta (0-0). Paavo haluaa otteluista maalikkaita ja kotisuosikkien hallitsevia — mutta ei aina tarvitse isoa eroa.</p>
+        </div>
+        <div class="player-card bold">
+          <div class="player-card-name">Erno</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:63%; background:var(--bold);"></div></div>
+              <span class="stat-value">2,65</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:14%; background:var(--bold);"></div></div>
+              <span class="stat-value">12,5 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:52%; background:var(--bold);"></div></div>
+              <span class="stat-value">23,6 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Kotivoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--bold);"></div></div>
+              <span class="stat-value">58,3 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Erno on kilpailun <strong>ainoa veikkaaja, joka ennusti todellisen yllätyksen</strong> suurta suosikkia vastaan: Algeria voittaa Argentiinan 1-2. Muuten jaettu korkein kotivoitto-% (58,3 %), ei yhtään 0-0-tulosta, harvimmat tasapelit. Kotisuosikin fani joka osaa myös pelata mutkia.</p>
+        </div>
+        <div class="player-card bold">
+          <div class="player-card-name">Justus</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:51%; background:var(--bold);"></div></div>
+              <span class="stat-value">2,50</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--bold);"></div></div>
+              <span class="stat-value">9,7 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:43%; background:var(--bold);"></div></div>
+              <span class="stat-value">20,8 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Kotivoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:84%; background:var(--bold);"></div></div>
+              <span class="stat-value">55,6 %</span>
+            </div>
+          </div>
+          <p class="player-desc"><strong>Jaettu matalin tasapeliprosentti</strong> (9,7 %, yhdessä Tuomaksen kanssa) — Justus haluaa selvän tuloksen. Rohkein yksittäisveikkaus: <em>Brasilia 7-0 Haiti</em>, toiseksi korkein maalimäärä kaikista 1 008 veikkauksesta. Kotisuosikki hallitsee useimmiten selvästi.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- YLLÄTYSTENHAKIJAT -->
+    <div class="archetype-block">
+      <div class="archetype-header upset">
+        <h2>🎲 Yllätystenhakijat</h2>
+        <span class="count">Tuomas · Sampo</span>
+      </div>
+      <div class="player-grid">
+        <div class="player-card upset">
+          <div class="player-card-name">Tuomas</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:45%; background:var(--upset);"></div></div>
+              <span class="stat-value">2,42</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:0%; background:var(--upset);"></div></div>
+              <span class="stat-value">9,7 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:43%; background:var(--upset);"></div></div>
+              <span class="stat-value">20,8 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:100%; background:var(--upset);"></div></div>
+              <span class="stat-value">41,7 %</span>
+            </div>
+          </div>
+          <p class="player-desc"><strong>Eniten vierasvoittoja kaikista</strong>: 41,7 % otteluista. Jaettu matalin tasapeliprosentti (9,7 %) ja nolla kertaakaan 0-0-tulosta. Tuomas ei usko kotisuosioetuun eikä tasapeleihin — hän haluaa selkeän tuloksen, ja usein vierasjoukkueen hyväksi. Kenties realistisin kuva nykyfutiksen tasapäisyydestä.</p>
+        </div>
+        <div class="player-card upset">
+          <div class="player-card-name">Sampo</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:85%; background:var(--upset);"></div></div>
+              <span class="stat-value">2,92</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:53%; background:var(--upset);"></div></div>
+              <span class="stat-value">20,8 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:24%; background:var(--upset);"></div></div>
+              <span class="stat-value">15,3 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:74%; background:var(--upset);"></div></div>
+              <span class="stat-value">37,5 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Toiseksi eniten vierasvoittoja (37,5 %) ja <strong>koko kilpailun rohkein yksittäinen veikkaus</strong>: <em>Brasilia 8-0 Haiti</em> — korkein maalimäärä kaikista 1 008 veikkauksesta. Sampo on myös Tuomasta tasapainoisempi: kotijoukkue voittaa silti enemmistön peleistä, mutta vieraisiin uskotaan reippaasti.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASAPAINOISET -->
+    <div class="archetype-block">
+      <div class="archetype-header balanced">
+        <h2>⚖️ Tasapainoiset</h2>
+        <span class="count">Jakke · Kari · Keke</span>
+      </div>
+      <div class="player-grid">
+        <div class="player-card balanced">
+          <div class="player-card-name">Jakke</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:91%; background:var(--balanced);"></div></div>
+              <span class="stat-value">2,99</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:60%; background:var(--balanced);"></div></div>
+              <span class="stat-value">22,2 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:14%; background:var(--balanced);"></div></div>
+              <span class="stat-value">12,5 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:45%; background:var(--balanced);"></div></div>
+              <span class="stat-value">33,3 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Jakke löytyy läheltä mediaania useimmissa mittareissa. Kohtuullisesti maaleja, maltillisesti tasapelejä. Ryhmän erikoisin yksittäinen veikkaus: <em>Ghana 5-2 Panama</em> — seitsemän maalin ottelu kahden aika tasaisen joukkueen välillä.</p>
+        </div>
+        <div class="player-card balanced">
+          <div class="player-card-name">Kari</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:54%; background:var(--balanced);"></div></div>
+              <span class="stat-value">2,54</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:66%; background:var(--balanced);"></div></div>
+              <span class="stat-value">23,6 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:9%; background:var(--balanced);"></div></div>
+              <span class="stat-value">11,1 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:9%; background:var(--balanced);"></div></div>
+              <span class="stat-value">27,8 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Kari ja Rauli ovat <strong>koko kilpailun samankaltaisin pari</strong>: 30,6 % täsmälleen identtisiä tuloksia (22/72). Molemmat veikkaavat maltillisesti — kotisuosikki voittaa useimmiten niukasti, tasapelit ovat yleisiä mutta eivät hallitsevia.</p>
+        </div>
+        <div class="player-card balanced">
+          <div class="player-card-name">Keke</div>
+          <div class="stat-bars">
+            <div class="stat-row">
+              <span class="stat-label">Maaleja/ottelu</span>
+              <div class="bar-track"><div class="bar-fill" style="width:37%; background:var(--balanced);"></div></div>
+              <span class="stat-value">2,32</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tasapelit</span>
+              <div class="bar-track"><div class="bar-fill" style="width:60%; background:var(--balanced);"></div></div>
+              <span class="stat-value">22,2 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Isot voitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:19%; background:var(--balanced);"></div></div>
+              <span class="stat-value">13,9 %</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Vierasvoitot</span>
+              <div class="bar-track"><div class="bar-fill" style="width:28%; background:var(--balanced);"></div></div>
+              <span class="stat-value">30,6 %</span>
+            </div>
+          </div>
+          <p class="player-desc">Keke kätkee pienen tilastollisen salaisuuden: <strong>ei yhtään 0-0-tulosta</strong>, ja kaikki 16 tasapeliä ovat 1-1 (14 kpl!) tai 2-2. Keke uskoo tasapeleihin, mutta haluaa jonkun sentään tehneen maalin ensin. 14 × 1-1 on koko kilpailun korkein yksittäisen tuloksen toistuvuus yhdellä veikkaajalla.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SIMILARITY TABLE -->
+<section>
+  <div class="container">
+    <h2>Samankaltaisimmat parit</h2>
+    <p class="section-intro">Kuinka monta täsmälleen samaa tulosveikkausta pareilla on 72 ottelusta.</p>
+    <table class="pair-table">
+      <thead>
+        <tr>
+          <th>Pari</th>
+          <th>Arkkityyppi</th>
+          <th>Samoja veikkauksia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Kari &amp; Rauli</strong></td>
+          <td><span class="pair-badge" style="background:var(--balanced);"></span>Tasapainoinen + <span class="pair-badge" style="background:var(--draws);"></span>Tasapelirakastaja</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar-track"><div class="pct-bar-fill" style="width:100%;"></div></div>
+              <span class="pct-num">22/72 &nbsp;(30,6 %)</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Tuomas &amp; Kalle</strong></td>
+          <td><span class="pair-badge" style="background:var(--upset);"></span>Yllätystenhakija + <span class="pair-badge" style="background:var(--draws);"></span>Tasapelirakastaja</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar-track"><div class="pct-bar-fill" style="width:87%;"></div></div>
+              <span class="pct-num">19/72 &nbsp;(26,4 %)</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Keke &amp; Joonas</strong></td>
+          <td><span class="pair-badge" style="background:var(--balanced);"></span>Tasapainoinen + <span class="pair-badge" style="background:var(--cautious);"></span>Pelkuri</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar-track"><div class="pct-bar-fill" style="width:87%;"></div></div>
+              <span class="pct-num">19/72 &nbsp;(26,4 %)</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Keke &amp; Kalle</strong></td>
+          <td><span class="pair-badge" style="background:var(--balanced);"></span>Tasapainoinen + <span class="pair-badge" style="background:var(--draws);"></span>Tasapelirakastaja</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar-track"><div class="pct-bar-fill" style="width:87%;"></div></div>
+              <span class="pct-num">19/72 &nbsp;(26,4 %)</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Joonas &amp; Erno</strong></td>
+          <td><span class="pair-badge" style="background:var(--cautious);"></span>Pelkuri + <span class="pair-badge" style="background:var(--bold);"></span>Rohkea</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar-track"><div class="pct-bar-fill" style="width:87%;"></div></div>
+              <span class="pct-num">19/72 &nbsp;(26,4 %)</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Pasi &amp; Joonas</strong></td>
+          <td><span class="pair-badge" style="background:var(--cautious);"></span>Pelkuri + <span class="pair-badge" style="background:var(--cautious);"></span>Pelkuri</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar-track"><div class="pct-bar-fill" style="width:81%;"></div></div>
+              <span class="pct-num">18/72 &nbsp;(25,0 %)</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Keke &amp; Justus</strong></td>
+          <td><span class="pair-badge" style="background:var(--balanced);"></span>Tasapainoinen + <span class="pair-badge" style="background:var(--bold);"></span>Rohkea</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar-track"><div class="pct-bar-fill" style="width:81%;"></div></div>
+              <span class="pct-num">18/72 &nbsp;(25,0 %)</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:1.25rem; font-size:13px; color:var(--text-light);">Huomio: Tuomas (yllätystenhakija) ja Kalle (tasapeliparadoksi) jakavat 26,4 % samoja tuloksia — ensi silmäyksellä epätodennäköinen yhdistelmä.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    MM 2026 · Tulosveikkaustyylianalyysi · Perustuu 72 alkulohkoottelun veikkauksiin
+  </div>
+</footer>
+
+<script>
+const COLORS = {
+  cautious: '#185FA5',
+  draws:    '#7F77DD',
+  bold:     '#C04A1F',
+  upset:    '#1D9E75',
+  balanced: '#888780'
+};
+
+const players = [
+  { name:'Jakke',  goals:2.99, draws:22.2, bigWins:12.5, awayWins:33.3, homeWins:44.4, avgDiff:1.32, type:'balanced' },
+  { name:'Pasi',   goals:1.86, draws:25.0, bigWins:16.7, awayWins:26.4, homeWins:48.6, avgDiff:1.33, type:'cautious' },
+  { name:'Tuomas', goals:2.42, draws:9.7,  bigWins:20.8, awayWins:41.7, homeWins:48.6, avgDiff:1.67, type:'upset'    },
+  { name:'Kari',   goals:2.54, draws:23.6, bigWins:11.1, awayWins:27.8, homeWins:48.6, avgDiff:1.38, type:'balanced' },
+  { name:'Rauli',  goals:2.61, draws:27.8, bigWins:11.1, awayWins:26.4, homeWins:45.8, avgDiff:1.25, type:'draws'    },
+  { name:'Vili',   goals:2.90, draws:30.6, bigWins:22.2, awayWins:26.4, homeWins:43.1, avgDiff:1.46, type:'draws'    },
+  { name:'Keke',   goals:2.32, draws:22.2, bigWins:13.9, awayWins:30.6, homeWins:47.2, avgDiff:1.46, type:'balanced' },
+  { name:'Joonas', goals:2.04, draws:22.2, bigWins:8.3,  awayWins:30.6, homeWins:47.2, avgDiff:1.26, type:'cautious' },
+  { name:'Kalle',  goals:2.57, draws:30.6, bigWins:30.6, awayWins:29.2, homeWins:40.3, avgDiff:1.74, type:'draws'    },
+  { name:'Elska',  goals:2.96, draws:18.1, bigWins:37.5, awayWins:30.6, homeWins:51.4, avgDiff:2.04, type:'bold'     },
+  { name:'Erno',   goals:2.65, draws:12.5, bigWins:23.6, awayWins:29.2, homeWins:58.3, avgDiff:1.65, type:'bold'     },
+  { name:'Sampo',  goals:2.92, draws:20.8, bigWins:15.3, awayWins:37.5, homeWins:41.7, avgDiff:1.56, type:'upset'    },
+  { name:'Justus', goals:2.50, draws:9.7,  bigWins:20.8, awayWins:34.7, homeWins:55.6, avgDiff:1.86, type:'bold'     },
+  { name:'Paavo',  goals:3.11, draws:11.1, bigWins:23.6, awayWins:30.6, homeWins:58.3, avgDiff:1.83, type:'bold'     }
+];
+
+function scaleR(bw) { return 7 + (bw - 8.3) / (37.5 - 8.3) * 16; }
+
+const typeOrder = ['cautious','draws','upset','balanced','bold'];
+const typeLabels = { cautious:'Pelkuri', draws:'Tasapelirakastaja', upset:'Yllätystenhakija', balanced:'Tasapainoinen', bold:'Rohkea' };
+
+const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+const tc = isDark ? '#888' : '#666';
+const tooltipBg = isDark ? '#2a2a2d' : '#ffffff';
+const tooltipBorder = isDark ? '#3e3e42' : '#e5e3de';
+const tooltipText = isDark ? '#f0efeb' : '#18181b';
+const tooltipMuted = isDark ? '#999' : '#6b6864';
+
+/* ── BUBBLE CHART ── */
+const labelPlugin = {
+  id: 'bubbleNames',
+  afterDraw(chart) {
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    chart.data.datasets.forEach((ds, di) => {
+      const meta = chart.getDatasetMeta(di);
+      ds.data.forEach((pt, i) => {
+        const el = meta.data[i];
+        if (!el) return;
+        const r = el.options.radius || 10;
+        ctx.font = '500 9.5px "Space Grotesk", system-ui, sans-serif';
+        if (r >= 14) {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillText(pt.name, el.x, el.y);
+        } else {
+          ctx.fillStyle = isDark ? '#d0cec9' : '#18181b';
+          ctx.fillText(pt.name, el.x, el.y - r - 7);
+        }
+      });
+    });
+    ctx.restore();
+  }
+};
+
+const bubbleDatasets = typeOrder.map(type => ({
+  label: typeLabels[type],
+  data: players.filter(p => p.type === type).map(p => ({
+    x: p.goals, y: p.draws, r: scaleR(p.bigWins), ...p
+  })),
+  backgroundColor: COLORS[type] + 'bb',
+  borderColor: COLORS[type],
+  borderWidth: 1.5
+}));
+
+new Chart(document.getElementById('bubbleChart'), {
+  type: 'bubble',
+  data: { datasets: bubbleDatasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: tooltipBg,
+        borderColor: tooltipBorder,
+        borderWidth: 1,
+        titleColor: tooltipText,
+        bodyColor: tooltipMuted,
+        padding: 12,
+        callbacks: {
+          title: items => items[0].raw.name,
+          label: item => {
+            const p = item.raw;
+            return [
+              ' Maaleja/ottelu: ' + p.goals.toFixed(2),
+              ' Tasapelit: ' + p.draws.toFixed(1) + '%',
+              ' Isot voitot: ' + p.bigWins.toFixed(1) + '%',
+              ' Vierasvoitot: ' + p.awayWins.toFixed(1) + '%',
+              ' Maaliero (ka.): ' + p.avgDiff.toFixed(2)
+            ];
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Maaleja / ottelu', color: tc, font: { size: 11 } },
+        min: 1.5, max: 3.4,
+        grid: { color: gc }, ticks: { color: tc, font: { size: 10 } }
+      },
+      y: {
+        title: { display: true, text: 'Tasapeli-%', color: tc, font: { size: 11 } },
+        min: 5, max: 36,
+        grid: { color: gc },
+        ticks: { color: tc, font: { size: 10 }, callback: v => v + '%' }
+      }
+    }
+  },
+  plugins: [labelPlugin]
+});
+
+/* ── BAR CHARTS ── */
+function makeHBar(canvasId, data, valueKey, unit) {
+  new Chart(document.getElementById(canvasId), {
+    type: 'bar',
+    data: {
+      labels: data.map(p => p.name),
+      datasets: [{
+        data: data.map(p => p[valueKey]),
+        backgroundColor: data.map(p => COLORS[p.type] + 'cc'),
+        borderColor: data.map(p => COLORS[p.type]),
+        borderWidth: 1,
+        borderRadius: 3
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: tooltipBg,
+          borderColor: tooltipBorder,
+          borderWidth: 1,
+          titleColor: tooltipText,
+          bodyColor: tooltipMuted,
+          callbacks: { label: i => ' ' + i.raw.toFixed(1) + unit }
+        }
+      },
+      scales: {
+        x: { grid: { color: gc }, ticks: { color: tc, font: { size: 10 }, callback: v => v + unit } },
+        y: { grid: { display: false }, ticks: { color: tc, font: { size: 11 }, autoSkip: false, maxRotation: 0 } }
+      }
+    }
+  });
+}
+
+const sorted_goals = [...players].sort((a, b) => b.goals - a.goals);
+const sorted_big   = [...players].sort((a, b) => b.bigWins - a.bigWins);
+
+makeHBar('goalsBar', sorted_goals, 'goals',   '');
+makeHBar('bigBar',   sorted_big,   'bigWins', '%');
+</script>
+</body>
+</html>
