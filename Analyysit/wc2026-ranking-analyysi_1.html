@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MM 2026 – Veikkaukset vs. FIFA & kertoimet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #F4F3EF;
+  --bg-card: #FFFFFF;
+  --text: #18181B;
+  --text-muted: #6B6864;
+  --text-light: #A09C98;
+  --accent: #14558A;
+  --accent-light: #E8F1F8;
+  --border: #E5E3DE;
+  --border-light: #EDECE8;
+  --green: #1B6B42;
+  --green-bg: #E4F5EC;
+  --red: #B83A1A;
+  --red-bg: #FAECEA;
+  --amber: #8B5C0A;
+  --amber-bg: #FEF5E4;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18181B; --bg-card: #222225; --text: #F0EFEB;
+    --text-muted: #9B9794; --text-light: #6B6864; --accent: #4B9FD8;
+    --accent-light: #0D2A3D; --border: #2E2D2A; --border-light: #282825;
+    --green: #3CB06B; --green-bg: #0A2E1A; --red: #E06040; --red-bg: #2A0F08;
+    --amber: #D4930C; --amber-bg: #2A1F00;
+  }
+}
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+.container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 3rem 0 2.5rem; }
+.eyebrow { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+.eyebrow::before { content: ''; display: inline-block; width: 18px; height: 2px; background: var(--accent); flex-shrink: 0; }
+h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1rem; }
+.subtitle { font-size: 1rem; color: var(--text-muted); max-width: 560px; margin-bottom: 1.5rem; }
+.meta-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.meta-chip { background: var(--bg); border: 1px solid var(--border); border-radius: 99px; padding: 4px 14px; font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+section { padding: 2.75rem 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
+h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
+h3 { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.section-intro { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.75rem; max-width: 640px; }
+.chart-wrap { position: relative; width: 100%; }
+.chart-note { font-size: 11px; color: var(--text-light); text-align: center; margin-top: 8px; }
+
+/* DATA SOURCES */
+.source-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 560px) { .source-grid { grid-template-columns: 1fr; } }
+.source-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.25rem; border-left: 3px solid var(--accent); }
+.source-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+.source-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+/* RANKING TABLE */
+.rank-row { display: grid; grid-template-columns: 120px 1fr 52px 52px; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border-light); }
+.rank-row:last-child { border-bottom: none; }
+.rank-name { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 500; }
+.bar-track { height: 7px; background: var(--border-light); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; }
+.rank-pct { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-muted); text-align: right; }
+.rank-margin { font-family: 'Space Grotesk', sans-serif; font-size: 12px; color: var(--text-light); text-align: right; }
+
+/* CONSENSUS MATCHES */
+.consensus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 600px) { .consensus-grid { grid-template-columns: 1fr; } }
+.consensus-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.25rem; }
+.consensus-card.agree { border-left: 3px solid var(--green); }
+.consensus-card.disagree { border-left: 3px solid var(--red); }
+.consensus-card.mixed { border-left: 3px solid var(--amber); }
+.match-title { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.ranking-line { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.verdict-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 500; margin-bottom: 8px; }
+.verdict-badge.agree { background: var(--green-bg); color: var(--green); }
+.verdict-badge.disagree { background: var(--red-bg); color: var(--red); }
+.verdict-badge.mixed { background: var(--amber-bg); color: var(--amber); }
+.vote-bars { display: flex; gap: 2px; height: 24px; border-radius: 6px; overflow: hidden; margin-bottom: 6px; }
+.vote-seg { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: white; transition: width 0.3s; white-space: nowrap; }
+.vote-seg.home { background: #185FA5; }
+.vote-seg.draw { background: #888780; }
+.vote-seg.away { background: #C04A1F; }
+.bookie-note { font-size: 11.5px; color: var(--text-muted); font-style: italic; line-height: 1.4; padding-top: 6px; border-top: 1px solid var(--border-light); }
+
+/* INDIVIDUAL UPSETS */
+.upset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+.upset-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.25rem; border-left: 3px solid var(--red); }
+.upset-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; color: var(--red); margin-bottom: 8px; }
+.upset-match { font-size: 13px; color: var(--text-muted); margin-bottom: 3px; }
+.upset-score { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); margin: 4px 0; }
+.upset-gap { font-size: 11px; color: var(--text-light); }
+
+/* SUMMARY TABLE */
+.summary-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.summary-table th { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.summary-table td { padding: 9px 10px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+.summary-table tr:last-child td { border-bottom: none; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 500; }
+.tag.conventional { background: var(--green-bg); color: var(--green); }
+.tag.contrarian { background: var(--red-bg); color: var(--red); }
+.tag.neutral { background: var(--accent-light); color: var(--accent); }
+
+footer { padding: 2rem 0; text-align: center; font-size: 12px; color: var(--text-light); border-top: 1px solid var(--border); }
+.nav-link { display: inline-block; margin-top: 1rem; font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 1px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="eyebrow">FIFA MM 2026 · Analytiikkavertailu</div>
+    <h1>Veikkaukset vs. FIFA-ranking<br>ja vedonlyöntikertoimet</h1>
+    <p class="subtitle">Kuinka hyvin kaveriporukan 1 008 veikkausta seuraavat FIFA-rankingeja ja vedonlyöntiyhtiöiden odotuksia? Kuka pelaa dataa vastaan?</p>
+    <div class="meta-chips">
+      <span class="meta-chip">72 ottelua</span>
+      <span class="meta-chip">14 veikkaajaa</span>
+      <span class="meta-chip">FIFA kesäkuu 2026</span>
+      <span class="meta-chip">bet365 kertoimet</span>
+    </div>
+  </div>
+</header>
+
+<!-- DATA SOURCES -->
+<section>
+  <div class="container">
+    <h2>Käytetty vertailudata</h2>
+    <p class="section-intro">Veikkauksia verrataan kahteen ulkopuoliseen tietolähteeseen: viralliseen FIFA-rankingiin ja vedonlyöntiyhtiö bet365:n kertoimiin.</p>
+    <div class="source-grid">
+      <div class="source-card">
+        <h4>🏆 FIFA-ranking, kesäkuu 2026</h4>
+        <p>Virallinen FIFA/Coca-Cola-ranking ennen turnausta. Argentiina #1, Espanja #2, Ranska #3. Suomi-joukkueen kannalta: Ghana #73, Panama #34 — FIFA pitää Panamaa 39 sijaa Ghanaa vahvempana.</p>
+      </div>
+      <div class="source-card">
+        <h4>📊 bet365 — ryhmävoitto- ja etenemiskertoimet</h4>
+        <p>Kansainvälisen vedonlyöntiyhtiön implisiittiset todennäköisyydet. Ei aina yhdy FIFA-rankingiin: Turkey +8 000 MM-voittoon, Australia +50 000 — vedonlyöntisivustot pitävät Turkkia parempana.</p>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--text-light); margin-top:1rem;">
+      * Turkin (~#47) ja Iranin (~#52) FIFA-rankingt ovat arvioita – nämä joukkueet eivät esiinny ESPN:n kesäkuun 2026 top 50 -listassa.<br>
+      * Kaikki kertoimet bet365:stä / Fox Sportsista turnausta edeltävältä viikolta.
+    </p>
+  </div>
+</section>
+
+<!-- RANKING ALIGNMENT CHART -->
+<section>
+  <div class="container">
+    <h2>Ranking-yhdenmukaisuus</h2>
+    <p class="section-intro">Kuinka usein kukin veikkaaja ennustaa FIFA-rankingin suosikkijoukkueen voittavan? Luku 100 % tarkoittaisi täydellistä noudattamista — kukaan ei ole siellä, eikä se ole tarkoituskaan.</p>
+    <div class="source-grid" style="margin-bottom:1.5rem;">
+      <div class="source-card">
+        <h4>Justus — 82,6 %</h4>
+        <p>Ranking-uskollisin veikkaaja. Noudattaa FIFA-järjestystä useammin kuin kukaan muu. Ei kertaakaan ennustanut selvää rankingyllätystä suurissa epäsuhta-otteluissa.</p>
+      </div>
+      <div class="source-card">
+        <h4>Sampo — 63,2 %</h4>
+        <p>Kaikkein kontrariaanisin. Eniten poikkeamia rankingista. Myös eniten yllätyksellisiä yksittäisveikkauksia (Englanti 1–2 Ghana, Sveitsi 1–2 Bosnia).</p>
+      </div>
+    </div>
+    <h3>Kaikki veikkaajat järjestyksessä</h3>
+    <div id="rankingRows"></div>
+    <p class="chart-note">Palkki = osuus otteluista, joissa veikkaaja valitsi FIFA-rankingin suosikkijoukkueen voittajaksi (tai tasapelin lähellä ranking-tasapaino). Väri = arkkityyppi.</p>
+  </div>
+</section>
+
+<!-- MISMATCH MARGINS -->
+<section>
+  <div class="container">
+    <h2>Maalineron ennustus selvissä epäsuhta-otteluissa</h2>
+    <p class="section-intro">22 ottelua, joissa FIFA-rankingeissa on yli 40 sijan ero (esim. Saksa vs. Curaçao, Brasilia vs. Haiti). Kuinka suurta maaleroa veikkaajat odottavat suosikille?</p>
+    <div class="chart-wrap" style="height:420px;">
+      <canvas id="marginBar" role="img" aria-label="Maalineron ennustukset epäsuhta-otteluissa."></canvas>
+    </div>
+    <p class="chart-note">Korkea arvo = suuret voittomaalit suosikeille (vedonlyöntisivustoja myötäilevä) · Matala arvo = yllättävän tasaiset tulokset (kontrariaaninen)</p>
+  </div>
+</section>
+
+<!-- COLLECTIVE UPSETS vs RANKING -->
+<section>
+  <div class="container">
+    <h2>Koko ryhmä vs. FIFA-ranking</h2>
+    <p class="section-intro">Neljä ottelua, joissa koko kaveriporukka (tai lähes koko) ennustaa ranking-yllätykseen. Näissä on myös kiinnostavin vertailu vedonlyöntisivustoihin.</p>
+    <div class="consensus-grid">
+
+      <!-- Australia vs Turkey -->
+      <div class="consensus-card disagree">
+        <div class="match-title">Australia vs. Turkki</div>
+        <div class="ranking-line">FIFA: Australia #27 · Turkki #47 → suosikki: <strong>Australia</strong></div>
+        <span class="verdict-badge disagree">🚨 Koko ryhmä vs. FIFA</span>
+        <div class="vote-bars">
+          <div class="vote-seg home" style="width:0%"></div>
+          <div class="vote-seg draw" style="width:28.6%">4 tasap.</div>
+          <div class="vote-seg away" style="width:71.4%">10 → Turkki</div>
+        </div>
+        <p class="bookie-note">✅ Vedonlyöntisivustot: samaa mieltä! Turkey +8 000 vs. Australia +50 000 MM-voittoon — vedonlyöntisivustot pitävät Turkkia selvästi vahvempana joukkueena, vaikka FIFA ranking sanoo muuta.</p>
+      </div>
+
+      <!-- Ghana vs Panama -->
+      <div class="consensus-card disagree">
+        <div class="match-title">Ghana vs. Panama</div>
+        <div class="ranking-line">FIFA: Ghana #73 · Panama #34 → suosikki: <strong>Panama</strong></div>
+        <span class="verdict-badge disagree">🚨 Lähes koko ryhmä vs. FIFA</span>
+        <div class="vote-bars">
+          <div class="vote-seg home" style="width:78.6%">11 → Ghana</div>
+          <div class="vote-seg draw" style="width:14.3%">2</div>
+          <div class="vote-seg away" style="width:7.1%">1</div>
+        </div>
+        <p class="bookie-note">✅ Vedonlyöntisivustot: samaa mieltä! Ghana +1 100 vs. Panama +5 000 lohkosta etenemiseen. Sekä veikkaajat että vedonlyöntisivustot hylkäävät FIFA-rankingin tässä.</p>
+      </div>
+
+      <!-- Bosnia vs Qatar -->
+      <div class="consensus-card disagree">
+        <div class="match-title">Bosnia vs. Qatar</div>
+        <div class="ranking-line">FIFA: Bosnia #64 · Qatar #56 → suosikki: <strong>Qatar</strong></div>
+        <span class="verdict-badge disagree">🚨 Koko ryhmä vs. FIFA</span>
+        <div class="vote-bars">
+          <div class="vote-seg home" style="width:85.7%">12 → Bosnia</div>
+          <div class="vote-seg draw" style="width:14.3%">2 tasap.</div>
+          <div class="vote-seg away" style="width:0%"></div>
+        </div>
+        <p class="bookie-note">✅ Kirjanpitäjät: suunnilleen samaa mieltä. Sveitsi hallitsee ryhmää, Bosnia ja Qatar molemmat altavastaajia — pieni ero rankingissa ei kerro totuutta.</p>
+      </div>
+
+      <!-- Turkey vs USA -->
+      <div class="consensus-card mixed">
+        <div class="match-title">Turkki vs. USA</div>
+        <div class="ranking-line">FIFA: Turkki #47 · USA #17 → suosikki: <strong>USA</strong></div>
+        <span class="verdict-badge mixed">⚠️ Ryhmä vs. SEKÄ FIFA että vedonlyöntisivustot</span>
+        <div class="vote-bars">
+          <div class="vote-seg home" style="width:57.1%">8 → Turkki</div>
+          <div class="vote-seg draw" style="width:35.7%">5 tasap.</div>
+          <div class="vote-seg away" style="width:7.1%">1 → USA</div>
+        </div>
+        <p class="bookie-note">🚨 Kirjanpitäjät: eri mieltä! USA -750 lohkosta etenemiseen = lähes 90 % todennäköisyys. Tämä on porukan suurin kollektiivinen "sokkopiste" — kaikki Karia lukuun ottamatta jättää USA:n huomiotta.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- JAPAN vs SWEDEN - extra interesting -->
+<section>
+  <div class="container">
+    <h2>Muita kiinnostavia jakautuneita otteluita</h2>
+    <p class="section-intro">Nämä ottelut jakavat porukan kahtia — toisin kuin yllä olevat "kaikki samaa mieltä" -tapaukset.</p>
+    <div class="consensus-grid">
+
+      <!-- Japani vs Ruotsi -->
+      <div class="consensus-card mixed">
+        <div class="match-title">Japani vs. Ruotsi</div>
+        <div class="ranking-line">FIFA: Japani #18 · Ruotsi #38 → suosikki: <strong>Japani</strong></div>
+        <span class="verdict-badge mixed">Veikkaajat jakautuneina</span>
+        <div class="vote-bars">
+          <div class="vote-seg home" style="width:21.4%">3 → Japani</div>
+          <div class="vote-seg draw" style="width:50.0%">7 tasap.</div>
+          <div class="vote-seg away" style="width:28.6%">4 → Ruotsi</div>
+        </div>
+        <p class="bookie-note">Vain 3/14 uskoo FIFA-suosikkiin (Japani). Neljä uskoo Ruotsiin, seitsemän tasapeliin. Japani on ranked 20 sijaa korkeammalle, silti epäilyksiä.</p>
+      </div>
+
+      <!-- Norway vs Senegal -->
+      <div class="consensus-card mixed">
+        <div class="match-title">Norja vs. Senegal</div>
+        <div class="ranking-line">FIFA: Norja #31 · Senegal #14 → suosikki: <strong>Senegal</strong></div>
+        <span class="verdict-badge mixed">Ryhmä suosii Norjaa</span>
+        <div class="vote-bars">
+          <div class="vote-seg home" style="width:50.0%">7 → Norja</div>
+          <div class="vote-seg draw" style="width:35.7%">5 tasap.</div>
+          <div class="vote-seg away" style="width:14.3%">2 → Senegal</div>
+        </div>
+        <p class="bookie-note">Norja on noussut MM-kisojen trendijoukkueeksi — bet365: Norja +280 voittaa ryhmän, Senegal +700. Kirjanpitäjätkin suosivat Norjaa rankingistaan huolimatta.</p>
+      </div>
+
+      <!-- Paraguay vs Australia -->
+      <div class="consensus-card mixed">
+        <div class="match-title">Paraguay vs. Australia</div>
+        <div class="ranking-line">FIFA: Paraguay #41 · Australia #27 → suosikki: <strong>Australia</strong></div>
+        <span class="verdict-badge mixed">Veikkaajat epäileväiset Australialle</span>
+        <div class="vote-bars">
+          <div class="vote-seg home" style="width:42.9%">6 → Paraguay</div>
+          <div class="vote-seg draw" style="width:42.9%">6 tasap.</div>
+          <div class="vote-seg away" style="width:14.3%">2 → Australia</div>
+        </div>
+        <p class="bookie-note">Yhdistettynä Australia vs. Turkki -otteluun: kukaan ei oikein usko Australiaan tässä turnauksessa, vaikka FIFA-ranking sanoo muuta.</p>
+      </div>
+
+      <!-- Ecuador vs Germany -->
+      <div class="consensus-card agree">
+        <div class="match-title">Ecuador vs. Saksa</div>
+        <div class="ranking-line">FIFA: Ecuador #23 · Saksa #10 → suosikki: <strong>Saksa</strong></div>
+        <span class="verdict-badge agree">Lähes yksimielinen</span>
+        <div class="vote-bars">
+          <div class="vote-seg home" style="width:0%"></div>
+          <div class="vote-seg draw" style="width:21.4%">3 tasap.</div>
+          <div class="vote-seg away" style="width:78.6%">11 → Saksa</div>
+        </div>
+        <p class="bookie-note">Vaikka ranking-ero on vain 13 sijaa, 11/14 veikkaajaa pitää Saksaa selvästi parempana. Ryhmä luottaa Saksan brändinvoimaan enemmän kuin pelkkä ranking antaisi olettaa.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INDIVIDUAL UPSETS -->
+<section>
+  <div class="container">
+    <h2>Yksittäiset suuret rankingyllätykset</h2>
+    <p class="section-intro">Yksittäiset veikkaukset, joissa selvästi heikommin rankattu joukkue (ranking-ero yli 40) voittaa. Nämä ovat tilastollisesti epätodennäköisimpiä yksittäisteknisistä veikkauksista.</p>
+    <div class="upset-grid">
+
+      <div class="upset-card">
+        <div class="upset-name">Sampo</div>
+        <div class="upset-match">Englanti (#4) vs. Ghana (#73) · Ero: 69 sijaa</div>
+        <div class="upset-score">1 – 2</div>
+        <div class="upset-gap">Ghana voittaa. Kirjanpitäjät: Englanti –300 etenemiseen, Ghana +1100. Tämä on koko kilpailun tilastollisesti epätodennäköisin yksittäisveikkaus.</div>
+      </div>
+
+      <div class="upset-card">
+        <div class="upset-name">Jakke</div>
+        <div class="upset-match">Kroatia (#11) vs. Ghana (#73) · Ero: 62 sijaa</div>
+        <div class="upset-score">2 – 3</div>
+        <div class="upset-gap">Ghana voittaa Kroatiaa. Kirjanpitäjät: Kroatia +300, Ghana +1100. Rohkea veikkaus maalikkaastakin pelistä.</div>
+      </div>
+
+      <div class="upset-card">
+        <div class="upset-name">Pasi</div>
+        <div class="upset-match">Kroatia (#11) vs. Ghana (#73) · Ero: 62 sijaa</div>
+        <div class="upset-score">0 – 1</div>
+        <div class="upset-gap">Sama yllätysjoukkue kuin Jakella, mutta tiukemmin. Harvinainen konservatiivisuudestaan tunnetulle Pasille.</div>
+      </div>
+
+      <div class="upset-card">
+        <div class="upset-name">Sampo</div>
+        <div class="upset-match">Sveitsi (#19) vs. Bosnia (#64) · Ero: 45 sijaa</div>
+        <div class="upset-score">1 – 2</div>
+        <div class="upset-gap">Bosnia päihittää Sveitsin — sekä FIFA että vedonlyöntisivustot (Sveitsi suosikki ryhmässä) ovat vastakkaista mieltä.</div>
+      </div>
+
+      <div class="upset-card">
+        <div class="upset-name">Tuomas</div>
+        <div class="upset-match">Meksiko (#14) vs. Etelä-Afrikka (#60) · Ero: 46 sijaa</div>
+        <div class="upset-score">1 – 2</div>
+        <div class="upset-gap">Etelä-Afrikka kaataa kotikisojen Meksikon. Ainoa tämä veikkaus koko porukassa — Tuomaksen yllätystenhaku toimii.</div>
+      </div>
+
+      <div class="upset-card">
+        <div class="upset-name">Erno</div>
+        <div class="upset-match">Argentiina (#1) vs. Algeria (#28) · Ero: 27 sijaa</div>
+        <div class="upset-score">1 – 2</div>
+        <div class="upset-gap">(Rankingero 27, ei "mismatch"-luokkaa, mutta silti rohkea.) Algeria kaataa maailmanmestarin — ainoa tällainen veikkaus koko kilpailussa.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FULL SUMMARY TABLE -->
+<section>
+  <div class="container">
+    <h2>Yhteenvetotaulukko: data vs. veikkaaja</h2>
+    <p class="section-intro">Jokaisen veikkaajan asema suhteessa FIFA-rankingiin, vedonlyöntisivustojen odotuksiin ja maalineron rohkeuteen.</p>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Veikkaaja</th>
+          <th>Ranking-% ↑</th>
+          <th>Mismatch-% ↑</th>
+          <th>Ka. maaliero</th>
+          <th>Profiili</th>
+        </tr>
+      </thead>
+      <tbody id="summaryBody"></tbody>
+    </table>
+    <p style="font-size:12px; color:var(--text-light); margin-top:1rem;">
+      Ranking-% = kuinka usein veikkaa FIFA-suosikkijoukkueen voittavaan · Mismatch-% = 22 selvästi epätasaisessa ottelussa (ero >40 sijaa) · Ka. maaliero = suosikin ero mismatch-otteluissa
+    </p>
+  </div>
+</section>
+
+<!-- KEY CONCLUSIONS -->
+<section>
+  <div class="container">
+    <h2>Tärkeimmät havainnot</h2>
+    <div class="source-grid" style="gap:1rem;">
+      <div class="source-card" style="border-left-color: var(--green);">
+        <h4 style="color:var(--green);">Porukan yhteinen sokkopiste</h4>
+        <p>Turkki vs. USA on ainoa ottelu, jossa lähes koko porukka (13/14) poikkeaa SEKÄ FIFA-rankingista ETTÄ vedonlyöntikertoimista. Vain Kari luottaa USA:han.</p>
+      </div>
+      <div class="source-card" style="border-left-color: var(--green);">
+        <h4 style="color:var(--green);">Porukka osaa lukea vedonlyöntisivustoja</h4>
+        <p>Australia–Turkki ja Ghana–Panama: koko porukka poikkeaa FIFA-rankingista mutta seuraa vedonlyöntisivustojen odotuksia. Tässä veikkaajat ovat datan terävällä reunalla.</p>
+      </div>
+      <div class="source-card" style="border-left-color: var(--amber);">
+        <h4 style="color:var(--amber);">Justus vs. Sampo — ääripäät</h4>
+        <p>Justus on ranking-uskollisin (82,6 %) ja ennustaa suurimmat maalinerot selvissä epäsuhdissa. Sampo poikkeaa rankingista eniten ja ennustaa ainoana Englanti 1–2 Ghana.</p>
+      </div>
+      <div class="source-card" style="border-left-color: var(--red);">
+        <h4 style="color:var(--red);">Kukaan ei ole täysin konventionaalinen</h4>
+        <p>Korkein ranking-yhdenmukaisuusprosentti on vain 82,6 % (Justus). Jokainen veikkaaja poikkeaa rankingista ainakin 17 % otteluissa — mikä tekee kisasta hauskaa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    MM 2026 · Veikkaustyylianalyysi · FIFA-ranking kesäkuu 2026 · bet365/Fox Sports kertoimet
+    <br>
+    <a href="wc2026-analyysi.html" class="nav-link">← Katso myös: pelityylianalyysi (rohkeat, pelkurit, yllätystenhakijat)</a>
+  </div>
+</footer>
+
+<script>
+const COLORS = {
+  cautious:'#185FA5', draws:'#7F77DD', bold:'#C04A1F', upset:'#1D9E75', balanced:'#888780'
+};
+const ARCH = {
+  Jakke:'balanced', Pasi:'cautious', Tuomas:'upset', Kari:'balanced', Rauli:'draws',
+  Vili:'draws', Keke:'balanced', Joonas:'cautious', Kalle:'draws', Elska:'bold',
+  Erno:'bold', Sampo:'upset', Justus:'bold', Paavo:'bold'
+};
+const ARCH_LABEL = {
+  cautious:'Pelkuri', draws:'Tasapelirakastaja', bold:'Rohkea',
+  upset:'Yllätystenhakija', balanced:'Tasapainoinen'
+};
+
+const playerStats = {
+  "Jakke":  { rankingPct: 68.8, mismatchPct: 81.8, avgFavMargin: 1.86, contrarian: -2.074 },
+  "Pasi":   { rankingPct: 67.4, mismatchPct: 86.4, avgFavMargin: 2.32, contrarian: -2.036 },
+  "Tuomas": { rankingPct: 81.2, mismatchPct: 90.9, avgFavMargin: 2.18, contrarian: -2.403 },
+  "Kari":   { rankingPct: 72.9, mismatchPct: 100.0, avgFavMargin: 2.05, contrarian: -2.390 },
+  "Rauli":  { rankingPct: 71.5, mismatchPct: 95.5, avgFavMargin: 1.91, contrarian: -2.354 },
+  "Vili":   { rankingPct: 68.1, mismatchPct: 77.3, avgFavMargin: 2.09, contrarian: -2.146 },
+  "Keke":   { rankingPct: 72.9, mismatchPct: 90.9, avgFavMargin: 2.18, contrarian: -2.294 },
+  "Joonas": { rankingPct: 72.2, mismatchPct: 95.5, avgFavMargin: 1.91, contrarian: -2.389 },
+  "Kalle":  { rankingPct: 72.9, mismatchPct: 100.0, avgFavMargin: 2.68, contrarian: -2.507 },
+  "Elska":  { rankingPct: 77.8, mismatchPct: 95.5, avgFavMargin: 2.95, contrarian: -2.461 },
+  "Erno":   { rankingPct: 77.1, mismatchPct: 100.0, avgFavMargin: 2.45, contrarian: -2.414 },
+  "Sampo":  { rankingPct: 63.2, mismatchPct: 86.4, avgFavMargin: 2.27, contrarian: -1.778 },
+  "Justus": { rankingPct: 82.6, mismatchPct: 95.5, avgFavMargin: 2.41, contrarian: -2.676 },
+  "Paavo":  { rankingPct: 79.9, mismatchPct: 100.0, avgFavMargin: 2.77, contrarian: -2.551 },
+};
+
+const sorted = Object.entries(playerStats).sort((a,b) => b[1].rankingPct - a[1].rankingPct);
+
+// Build ranking rows
+const rowsEl = document.getElementById('rankingRows');
+sorted.forEach(([name, s]) => {
+  const color = COLORS[ARCH[name]];
+  const pct = s.rankingPct;
+  const row = document.createElement('div');
+  row.className = 'rank-row';
+  row.innerHTML = `
+    <span class="rank-name">${name}</span>
+    <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color};"></div></div>
+    <span class="rank-pct">${pct.toFixed(1)} %</span>
+    <span class="rank-margin">${s.avgFavMargin.toFixed(2)}</span>
+  `;
+  rowsEl.appendChild(row);
+});
+
+// Build summary table
+const tbody = document.getElementById('summaryBody');
+sorted.forEach(([name, s]) => {
+  const arch = ARCH[name];
+  const color = COLORS[arch];
+  let profile, profileClass;
+  if (s.rankingPct >= 78) { profile = 'Konventionaalinen'; profileClass = 'conventional'; }
+  else if (s.rankingPct <= 68) { profile = 'Kontrariaaninen'; profileClass = 'contrarian'; }
+  else { profile = 'Tasapainoinen'; profileClass = 'neutral'; }
+
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="font-weight:500;font-family:'Space Grotesk',sans-serif;">${name}</td>
+    <td>${s.rankingPct.toFixed(1)} %</td>
+    <td>${s.mismatchPct.toFixed(0)} %</td>
+    <td>${s.avgFavMargin.toFixed(2)}</td>
+    <td><span class="tag ${profileClass}">${profile}</span></td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// Margin bar chart
+const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const gc = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+const tc = isDark ? '#888' : '#666';
+const tooltipBg = isDark ? '#2a2a2d' : '#ffffff';
+const tooltipBorder = isDark ? '#3e3e42' : '#e5e3de';
+const tooltipText = isDark ? '#f0efeb' : '#18181b';
+
+const sortedByMargin = Object.entries(playerStats).sort((a,b) => b[1].avgFavMargin - a[1].avgFavMargin);
+new Chart(document.getElementById('marginBar'), {
+  type: 'bar',
+  data: {
+    labels: sortedByMargin.map(([n]) => n),
+    datasets: [{
+      data: sortedByMargin.map(([,s]) => s.avgFavMargin),
+      backgroundColor: sortedByMargin.map(([n]) => COLORS[ARCH[n]] + 'cc'),
+      borderColor: sortedByMargin.map(([n]) => COLORS[ARCH[n]]),
+      borderWidth: 1, borderRadius: 3
+    }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: tooltipBg, borderColor: tooltipBorder, borderWidth: 1,
+        titleColor: tooltipText, bodyColor: tc,
+        callbacks: { label: i => ` Suosikin maaliero: ${i.raw.toFixed(2)}` }
+      }
+    },
+    scales: {
+      x: { grid: { color: gc }, ticks: { color: tc, font: { size: 10 } }, min: 1.5, max: 3.2 },
+      y: { grid: { display: false }, ticks: { color: tc, font: { size: 11 }, autoSkip: false, maxRotation: 0 } }
+    }
+  }
+});
+</script>
+</body>
+</html>
