@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-14T09:54:41+03:00",
+  "haettu": "2026-06-14T21:05:09+03:00",
   "lahteet": {
     "ensisijainen": "FIFA API",
     "ristiintarkistus": "TheSportsDB"
@@ -92,7 +92,7 @@
       "vieras_maalit": 0,
       "tulos": "2–0",
       "ottelu": "Australia – Turkki",
-      "vahvistus": "FIFA + TheSportsDB"
+      "vahvistus": "vain FIFA"
     }
   ]
 }
