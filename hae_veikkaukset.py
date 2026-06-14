@@ -3,10 +3,11 @@
 ja tallentaa ne veikkaukset.json-tiedostoon.
 
 Lähde: julkaistu Sheet CSV-exportina (72 ottelua × 14 veikkaajaa = 1008 veikkausta).
-Veikkaukset ovat lukittuja (esiturnaus), joten tämä ajetaan kertaluonteisesti
-käsin — EI GitHub Actionsiin. Ei riippuvuuksia: pelkkä standardikirjasto (3.9+).
+Lähde-URL annetaan ympäristömuuttujassa MM2026_SHEET_URL — sitä ei tallenneta
+tähän tiedostoon eikä versionhallintaan. Veikkaukset ovat lukittuja (esiturnaus),
+joten tämä ajetaan kertaluonteisesti käsin. Ei riippuvuuksia: standardikirjasto (3.9+).
 
-Käyttö: python3 hae_veikkaukset.py
+Käyttö: MM2026_SHEET_URL='<julkaistu sheet .../pub?output=csv>' python3 hae_veikkaukset.py
 """
 import csv
 import io
@@ -19,8 +20,7 @@ import urllib.request
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-CSV_URL = ("https://docs.google.com/spreadsheets/d/e/REDACTED"
-           "REDACTED/pub?output=csv")
+CSV_URL = os.environ.get("MM2026_SHEET_URL")  # annetaan ympäristömuuttujassa, ei repossa
 VEIKKAUSTIEDOSTO = "veikkaukset.json"
 INDEX_HTML = "index.html"
 AIKAVYOHYKE = ZoneInfo("Europe/Helsinki")
@@ -79,6 +79,10 @@ def index_ottelut():
 
 
 def main():
+    if not CSV_URL:
+        print("Aseta lähde-URL ympäristömuuttujaan MM2026_SHEET_URL.", file=sys.stderr)
+        print("Esim: MM2026_SHEET_URL='https://docs.google.com/.../pub?output=csv' python3 hae_veikkaukset.py", file=sys.stderr)
+        return 1
     print("Haetaan veikkaukset julkaistusta Sheetistä...")
     rivit = list(csv.reader(io.StringIO(hae_csv(CSV_URL))))
 
