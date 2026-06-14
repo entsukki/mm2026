@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-15T01:46:57+03:00",
+  "haettu": "2026-06-15T02:56:47+03:00",
   "lahteet": {
     "ensisijainen": "FIFA API",
     "ristiintarkistus": "TheSportsDB"
@@ -114,7 +114,7 @@
       "vieras_maalit": 2,
       "tulos": "2–2",
       "ottelu": "Hollanti – Japani",
-      "vahvistus": "FIFA + TheSportsDB"
+      "vahvistus": "vain FIFA"
     }
   ]
 }
