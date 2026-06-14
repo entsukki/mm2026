@@ -57,7 +57,8 @@
     <button class="filter-btn" onclick="filter('Yle', this)">Yle TV2</button>
   </div>
   <div class="filter-row" id="played-row" style="display:none">
-    <button class="filter-btn toggle-played" id="toggle-played" onclick="togglePlayed()"></button>
+    <button class="filter-btn" id="toggle-played" onclick="togglePlayed()"></button>
+    <button class="filter-btn" id="toggle-results" onclick="toggleResults()" style="display:none"></button>
   </div>
   <div id="schedule"></div>
 </main>
@@ -223,9 +224,15 @@ const isPlayed = m => Date.now() > m.start + ARCHIVE_AFTER_MS;
 
 let currentFilter = 'all';
 let showPlayed = false;
+let showResults = false;
 
 function togglePlayed() {
   showPlayed = !showPlayed;
+  render();
+}
+
+function toggleResults() {
+  showResults = !showResults;
   render();
 }
 
@@ -239,12 +246,20 @@ function filter(type, btn) {
 function render() {
   const byChannel = currentFilter === 'all' ? matches : matches.filter(m => m.ch === currentFilter);
   const playedCount = byChannel.filter(isPlayed).length;
+  const resultCount = byChannel.filter(m => m.result).length;
   const filtered = showPlayed ? byChannel : byChannel.filter(m => !isPlayed(m));
 
+  document.getElementById('played-row').style.display = (playedCount || resultCount) ? '' : 'none';
+
   const tp = document.getElementById('toggle-played');
-  document.getElementById('played-row').style.display = playedCount ? '' : 'none';
+  tp.style.display = playedCount ? '' : 'none';
   tp.textContent = `🕓 ${showPlayed ? 'Piilota' : 'Näytä'} pelatut (${playedCount})`;
   tp.classList.toggle('active', showPlayed);
+
+  const tr = document.getElementById('toggle-results');
+  tr.style.display = resultCount ? '' : 'none';
+  tr.textContent = `📊 ${showResults ? 'Piilota' : 'Näytä'} tulokset`;
+  tr.classList.toggle('active', showResults);
 
   // Ryhmittely: ensin vaihe (alkulohkot ilman otsikkoa, pudotusvaiheet otsikoituina), sitten päivä
   const blocks = [];
@@ -264,7 +279,7 @@ function render() {
       ${ms.map(m => `
         <div class="match-row${isPlayed(m) ? ' match-played' : ''}">
           <span class="time">${m.time}</span>
-          <span class="match-name">${m.match}${m.result ? ` <strong class="result">${m.result}</strong>` : ''}</span>
+          <span class="match-name">${m.match}${(showResults && m.result) ? ` <strong class="result">${m.result}</strong>` : ''}</span>
           ${m.ch === 'Yle'
             ? '<span class="badge badge-yle">Yle TV2</span>'
             : m.paid
