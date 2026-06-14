@@ -6,3 +6,6 @@
 
 # Paikallinen tuloshaku (skripti kirjoittaa; versioidaan vain Actionsista)
 __pycache__/
+
+# Selkokielinen veikkausdata: ei versionhallintaan (vain salattu veikkaukset.enc.json)
+veikkaukset.json
