@@ -26,6 +26,23 @@
   .time { font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; color: #1a1a18; }
   .match-name { font-size: 15px; color: #1a1a18; }
   .result { font-weight: 700; margin-left: 6px; white-space: nowrap; }
+  .match-row.has-veik { cursor: pointer; }
+  .veik-cue { margin-left: 8px; font-size: 12px; color: #8a6a0f; white-space: nowrap; }
+  .veik-cue .chev { display: inline-block; transition: transform 0.15s; }
+  .match-row.open .veik-cue .chev { transform: rotate(180deg); }
+  .veik-panel { display: none; padding: 4px 8px 16px 68px; }
+  .veik-panel.open { display: block; }
+  .veik-summary { font-size: 12.5px; color: #666; margin-bottom: 9px; }
+  .veik-summary strong { color: #1a1a18; font-weight: 600; }
+  .veik-list { display: grid; grid-template-columns: repeat(2, minmax(0, 200px)); gap: 3px 28px; font-size: 13px; }
+  .veik-row { display: flex; justify-content: space-between; gap: 12px; }
+  .veik-row .vnimi { color: #555; }
+  .veik-row .vtulos { font-variant-numeric: tabular-nums; font-weight: 500; color: #1a1a18; }
+  #veik-row { margin: -0.9rem 0 1.5rem; align-items: center; }
+  #veik-form { display: flex; align-items: center; gap: 8px; }
+  #veik-pw { font-family: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 999px; outline: none; width: 150px; }
+  #veik-pw:focus { border-color: #999; }
+  #veik-error { font-size: 12px; color: #b03a2e; }
   .badge { font-size: 12px; font-weight: 500; padding: 3px 11px; border-radius: 999px; white-space: nowrap; }
   .badge-mtv { background: #fdeee8; color: #8b3315; }
   .badge-yle { background: #e0f5ec; color: #0a6644; }
@@ -40,6 +57,8 @@
   @media (max-width: 480px) {
     .match-name { font-size: 14px; }
     .time { font-size: 14px; }
+    .veik-list { grid-template-columns: 1fr; }
+    .veik-panel { padding-left: 8px; }
   }
 </style>
 </head>
@@ -59,6 +78,14 @@
   <div class="filter-row" id="played-row" style="display:none">
     <button class="filter-btn" id="toggle-played" onclick="togglePlayed()"></button>
     <button class="filter-btn" id="toggle-results" onclick="toggleResults()" style="display:none"></button>
+  </div>
+  <div class="filter-row" id="veik-row">
+    <button class="filter-btn" id="veik-toggle">🔒 Näytä veikkaukset</button>
+    <form id="veik-form" style="display:none">
+      <input id="veik-pw" type="password" placeholder="Salasana" autocomplete="current-password">
+      <button class="filter-btn" type="submit">OK</button>
+      <span id="veik-error"></span>
+    </form>
   </div>
   <div id="schedule"></div>
 </main>
@@ -225,6 +252,7 @@ const isPlayed = m => Date.now() > m.start + ARCHIVE_AFTER_MS;
 let currentFilter = 'all';
 let showPlayed = false;
 let showResults = false;
+const expanded = new Set();  // avatut veikkauspaneelit (m.match)
 
 function togglePlayed() {
   showPlayed = !showPlayed;
@@ -241,6 +269,26 @@ function filter(type, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   render();
+}
+
+function veikPanelHtml(list) {
+  let koti = 0, tasa = 0, vieras = 0, maalit = 0;
+  const tally = {};
+  list.forEach(v => {
+    if (v.koti > v.vieras) koti++; else if (v.koti < v.vieras) vieras++; else tasa++;
+    maalit += v.koti + v.vieras;
+    const k = `${v.koti}–${v.vieras}`;
+    tally[k] = (tally[k] || 0) + 1;
+  });
+  let moodi = '', maxN = 0;
+  for (const [k, n] of Object.entries(tally)) if (n > maxN) { maxN = n; moodi = k; }
+  const ka = (maalit / list.length).toFixed(1).replace('.', ',');
+  const rows = list.map(v =>
+    `<div class="veik-row"><span class="vnimi">${v.nimi}</span><span class="vtulos">${v.koti}–${v.vieras}</span></div>`
+  ).join('');
+  return `<div class="veik-summary">Yleisin <strong>${moodi}</strong> (${maxN}×) · `
+    + `<strong>${koti}</strong> kotia / <strong>${tasa}</strong> tasap. / <strong>${vieras}</strong> vieras`
+    + ` · ka. ${ka} maalia</div><div class="veik-list">${rows}</div>`;
 }
 
 function render() {
@@ -276,17 +324,21 @@ function render() {
     ${[...b.days].map(([date, ms]) => `
     <div class="day-group">
       <div class="day-header">${date}</div>
-      ${ms.map(m => `
-        <div class="match-row${isPlayed(m) ? ' match-played' : ''}">
+      ${ms.map(m => {
+        const veik = m.veik;
+        const open = expanded.has(m.match);
+        return `
+        <div class="match-row${isPlayed(m) ? ' match-played' : ''}${veik ? ' has-veik' : ''}${open ? ' open' : ''}" data-match="${m.match.replace(/"/g, '&quot;')}">
           <span class="time">${m.time}</span>
-          <span class="match-name">${m.match}${(showResults && m.result) ? ` <strong class="result">${m.result}</strong>` : ''}</span>
+          <span class="match-name">${m.match}${(showResults && m.result) ? ` <strong class="result">${m.result}</strong>` : ''}${veik ? ` <span class="veik-cue">${veik.length} veikkausta <span class="chev">▾</span></span>` : ''}</span>
           ${m.ch === 'Yle'
             ? '<span class="badge badge-yle">Yle TV2</span>'
             : m.paid
               ? `<span class="badge badge-paid" title="Maksumuurin takana – vain MTV Katsomo+ Urheilu">${PIG}Katsomo+</span>`
               : '<span class="badge badge-mtv">MTV3</span>'}
         </div>
-      `).join('')}
+        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik)}</div>` : ''}`;
+      }).join('')}
     </div>
     `).join('')}
   `).join('');
@@ -294,6 +346,95 @@ function render() {
 render();
 setInterval(render, 60000);
 document.querySelector('.pig-legend').innerHTML = PIG;
+
+// Veikkauspaneelin avaus/sulku (delegoitu, säilyy uudelleenrenderöinnissä)
+document.getElementById('schedule').addEventListener('click', e => {
+  const row = e.target.closest('.match-row.has-veik');
+  if (!row) return;
+  const key = row.dataset.match;
+  const auki = !expanded.has(key);
+  if (auki) expanded.add(key); else expanded.delete(key);
+  row.classList.toggle('open', auki);
+  const panel = row.nextElementSibling;
+  if (panel && panel.classList.contains('veik-panel')) panel.classList.toggle('open', auki);
+});
+
+// --- Veikkaukset jaetun salasanan takana ---
+// veikkaukset.enc.json sisältää VAIN salatun datan (AES-256-GCM). Salasana on
+// purkuavain eikä sitä ole koodissa/historiassa — vain oikealla salasanalla
+// purku onnistuu. Muistetaan localStorageen (per-laite), ei toistuvaa syöttöä.
+const VEIK_PW_KEY = 'mm2026_veik_pw';
+let veikEnc = null;
+const b64ToBuf = b64 => Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+
+async function puraVeikkaukset(salasana) {
+  if (!veikEnc) {
+    const r = await fetch('veikkaukset.enc.json?ts=' + Date.now());
+    if (!r.ok) throw new Error('lataus epäonnistui');
+    veikEnc = await r.json();
+  }
+  const baseKey = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(salasana), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: b64ToBuf(veikEnc.salt), iterations: 200000, hash: 'SHA-256' },
+    baseKey, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const pt = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv: b64ToBuf(veikEnc.iv) }, key, b64ToBuf(veikEnc.ct));
+  return JSON.parse(new TextDecoder().decode(pt)); // heittää jos väärä salasana
+}
+
+function veikLukittuUI() {
+  document.getElementById('veik-toggle').textContent = '🔒 Näytä veikkaukset';
+  document.getElementById('veik-form').style.display = 'none';
+  document.getElementById('veik-error').textContent = '';
+}
+function veikAvattuUI() {
+  document.getElementById('veik-toggle').textContent = '🔓 Veikkaukset näkyvissä · Kirjaudu ulos';
+  document.getElementById('veik-form').style.display = 'none';
+}
+
+async function veikKirjaudu(salasana, tallenna) {
+  const data = await puraVeikkaukset(salasana); // heittää jos väärä
+  if (tallenna) localStorage.setItem(VEIK_PW_KEY, salasana);
+  matches.forEach(m => { const v = data.ottelut[m.match]; if (v && v.length) m.veik = v; });
+  render();
+  veikAvattuUI();
+}
+
+document.getElementById('veik-toggle').addEventListener('click', () => {
+  if (localStorage.getItem(VEIK_PW_KEY)) {          // kirjautuneena → ulos
+    localStorage.removeItem(VEIK_PW_KEY);
+    matches.forEach(m => delete m.veik);
+    expanded.clear();
+    render();
+    veikLukittuUI();
+    return;
+  }
+  const form = document.getElementById('veik-form');
+  const auki = form.style.display !== 'none';
+  form.style.display = auki ? 'none' : 'flex';
+  if (!auki) document.getElementById('veik-pw').focus();
+});
+
+document.getElementById('veik-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = document.getElementById('veik-error');
+  err.textContent = '';
+  try {
+    await veikKirjaudu(document.getElementById('veik-pw').value, true);
+    document.getElementById('veik-pw').value = '';
+  } catch {
+    err.textContent = 'Väärä salasana';
+  }
+});
+
+// Auto-purku jos salasana muistissa (ei toistuvaa syöttöä)
+(async () => {
+  const tallennettu = localStorage.getItem(VEIK_PW_KEY);
+  if (!tallennettu) return;
+  try { await veikKirjaudu(tallennettu, false); }
+  catch { localStorage.removeItem(VEIK_PW_KEY); veikLukittuUI(); }
+})();
 
 // tulokset.json:ia päivittää GitHub Actions (hae_tulokset.py)
 fetch('tulokset.json?ts=' + Date.now())
