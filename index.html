@@ -32,12 +32,15 @@
   .match-row.open .veik-cue .chev { transform: rotate(180deg); }
   .veik-panel { display: none; padding: 4px 8px 16px 68px; }
   .veik-panel.open { display: block; }
-  .veik-summary { font-size: 12.5px; color: #666; margin-bottom: 9px; }
-  .veik-summary strong { color: #1a1a18; font-weight: 600; }
-  .veik-list { display: grid; grid-template-columns: repeat(2, minmax(0, 200px)); gap: 3px 28px; font-size: 13px; }
-  .veik-row { display: flex; justify-content: space-between; gap: 12px; }
+  .veik-groups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; font-size: 13px; max-width: 560px; }
+  .veik-grp-head { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 9px; border-radius: 6px; margin-bottom: 7px; }
+  .veik-grp-koti   .veik-grp-head { background: #e7eee9; color: #446856; }
+  .veik-grp-tasa   .veik-grp-head { background: #edebe6; color: #6c665e; }
+  .veik-grp-vieras .veik-grp-head { background: #e7ecf1; color: #455f73; }
+  .veik-row { display: flex; justify-content: space-between; gap: 10px; padding: 1px 0; }
   .veik-row .vnimi { color: #555; }
   .veik-row .vtulos { font-variant-numeric: tabular-nums; font-weight: 500; color: #1a1a18; }
+  .veik-empty { color: #b3afa8; }
   #veik-row { margin: -0.9rem 0 1.5rem; align-items: center; }
   #veik-form { display: flex; align-items: center; gap: 8px; }
   #veik-pw { font-family: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 999px; outline: none; width: 150px; }
@@ -57,7 +60,7 @@
   @media (max-width: 480px) {
     .match-name { font-size: 14px; }
     .time { font-size: 14px; }
-    .veik-list { grid-template-columns: 1fr; }
+    .veik-groups { grid-template-columns: 1fr; gap: 12px; }
     .veik-panel { padding-left: 8px; }
   }
 </style>
@@ -272,23 +275,23 @@ function filter(type, btn) {
 }
 
 function veikPanelHtml(list) {
-  let koti = 0, tasa = 0, vieras = 0, maalit = 0;
-  const tally = {};
+  const ryhmat = { koti: [], tasa: [], vieras: [] };
   list.forEach(v => {
-    if (v.koti > v.vieras) koti++; else if (v.koti < v.vieras) vieras++; else tasa++;
-    maalit += v.koti + v.vieras;
-    const k = `${v.koti}–${v.vieras}`;
-    tally[k] = (tally[k] || 0) + 1;
+    const g = v.koti > v.vieras ? 'koti' : v.koti < v.vieras ? 'vieras' : 'tasa';
+    ryhmat[g].push(v);
   });
-  let moodi = '', maxN = 0;
-  for (const [k, n] of Object.entries(tally)) if (n > maxN) { maxN = n; moodi = k; }
-  const ka = (maalit / list.length).toFixed(1).replace('.', ',');
-  const rows = list.map(v =>
-    `<div class="veik-row"><span class="vnimi">${v.nimi}</span><span class="vtulos">${v.koti}–${v.vieras}</span></div>`
-  ).join('');
-  return `<div class="veik-summary">Yleisin <strong>${moodi}</strong> (${maxN}×) · `
-    + `<strong>${koti}</strong> kotia / <strong>${tasa}</strong> tasap. / <strong>${vieras}</strong> vieras`
-    + ` · ka. ${ka} maalia</div><div class="veik-list">${rows}</div>`;
+  const sarake = (avain, otsikko, lista) =>
+    `<div class="veik-grp veik-grp-${avain}">`
+    + `<span class="veik-grp-head">${otsikko} ${lista.length}</span>`
+    + (lista.length
+        ? lista.map(v => `<div class="veik-row"><span class="vnimi">${v.nimi}</span><span class="vtulos">${v.koti}–${v.vieras}</span></div>`).join('')
+        : '<div class="veik-empty">–</div>')
+    + `</div>`;
+  return `<div class="veik-groups">`
+    + sarake('koti', 'Kotivoitto', ryhmat.koti)
+    + sarake('tasa', 'Tasapeli', ryhmat.tasa)
+    + sarake('vieras', 'Vierasvoitto', ryhmat.vieras)
+    + `</div>`;
 }
 
 function render() {
