@@ -1,10 +1,10 @@
 {
-  "haettu": "2026-06-14T04:59:43+03:00",
+  "haettu": "2026-06-14T09:54:41+03:00",
   "lahteet": {
     "ensisijainen": "FIFA API",
     "ristiintarkistus": "TheSportsDB"
   },
-  "tuloksia": 6,
+  "tuloksia": 8,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -70,6 +70,28 @@
       "vieras_maalit": 1,
       "tulos": "1–1",
       "ottelu": "Brasilia – Marokko",
+      "vahvistus": "FIFA + TheSportsDB"
+    },
+    {
+      "pvm": "2026-06-14",
+      "aika_fi": "04:00",
+      "koti": "Haiti",
+      "vieras": "Skotlanti",
+      "koti_maalit": 0,
+      "vieras_maalit": 1,
+      "tulos": "0–1",
+      "ottelu": "Haiti – Skotlanti",
+      "vahvistus": "vain FIFA"
+    },
+    {
+      "pvm": "2026-06-14",
+      "aika_fi": "07:00",
+      "koti": "Australia",
+      "vieras": "Turkki",
+      "koti_maalit": 2,
+      "vieras_maalit": 0,
+      "tulos": "2–0",
+      "ottelu": "Australia – Turkki",
       "vahvistus": "FIFA + TheSportsDB"
     }
   ]
