@@ -1,9 +1,6 @@
 {
-  "haettu": "2026-06-15T14:33:41+03:00",
-  "lahteet": {
-    "ensisijainen": "FIFA API",
-    "ristiintarkistus": "TheSportsDB"
-  },
+  "haettu": "2026-06-15T17:38:59+03:00",
+  "lahde": "FIFA API",
   "tuloksia": 12,
   "tulokset": [
     {
@@ -14,8 +11,7 @@
       "koti_maalit": 2,
       "vieras_maalit": 0,
       "tulos": "2–0",
-      "ottelu": "Meksiko – Etelä-Afrikka",
-      "vahvistus": "FIFA + TheSportsDB"
+      "ottelu": "Meksiko – Etelä-Afrikka"
     },
     {
       "pvm": "2026-06-12",
@@ -25,8 +21,7 @@
       "koti_maalit": 2,
       "vieras_maalit": 1,
       "tulos": "2–1",
-      "ottelu": "Etelä-Korea – Tshekki",
-      "vahvistus": "FIFA + TheSportsDB"
+      "ottelu": "Etelä-Korea – Tshekki"
     },
     {
       "pvm": "2026-06-12",
@@ -36,8 +31,7 @@
       "koti_maalit": 1,
       "vieras_maalit": 1,
       "tulos": "1–1",
-      "ottelu": "Kanada – Bosnia ja Hertsegovina",
-      "vahvistus": "FIFA + TheSportsDB"
+      "ottelu": "Kanada – Bosnia ja Hertsegovina"
     },
     {
       "pvm": "2026-06-13",
@@ -47,8 +41,7 @@
       "koti_maalit": 4,
       "vieras_maalit": 1,
       "tulos": "4–1",
-      "ottelu": "USA – Paraguay",
-      "vahvistus": "FIFA + TheSportsDB"
+      "ottelu": "USA – Paraguay"
     },
     {
       "pvm": "2026-06-13",
@@ -58,8 +51,7 @@
       "koti_maalit": 1,
       "vieras_maalit": 1,
       "tulos": "1–1",
-      "ottelu": "Qatar – Sveitsi",
-      "vahvistus": "vain FIFA"
+      "ottelu": "Qatar – Sveitsi"
     },
     {
       "pvm": "2026-06-14",
@@ -69,8 +61,7 @@
       "koti_maalit": 1,
       "vieras_maalit": 1,
       "tulos": "1–1",
-      "ottelu": "Brasilia – Marokko",
-      "vahvistus": "FIFA + TheSportsDB"
+      "ottelu": "Brasilia – Marokko"
     },
     {
       "pvm": "2026-06-14",
@@ -80,8 +71,7 @@
       "koti_maalit": 0,
       "vieras_maalit": 1,
       "tulos": "0–1",
-      "ottelu": "Haiti – Skotlanti",
-      "vahvistus": "vain FIFA"
+      "ottelu": "Haiti – Skotlanti"
     },
     {
       "pvm": "2026-06-14",
@@ -91,8 +81,7 @@
       "koti_maalit": 2,
       "vieras_maalit": 0,
       "tulos": "2–0",
-      "ottelu": "Australia – Turkki",
-      "vahvistus": "vain FIFA"
+      "ottelu": "Australia – Turkki"
     },
     {
       "pvm": "2026-06-14",
@@ -102,8 +91,7 @@
       "koti_maalit": 7,
       "vieras_maalit": 1,
       "tulos": "7–1",
-      "ottelu": "Saksa – Curaçao",
-      "vahvistus": "vain FIFA"
+      "ottelu": "Saksa – Curaçao"
     },
     {
       "pvm": "2026-06-14",
@@ -113,8 +101,7 @@
       "koti_maalit": 2,
       "vieras_maalit": 2,
       "tulos": "2–2",
-      "ottelu": "Hollanti – Japani",
-      "vahvistus": "vain FIFA"
+      "ottelu": "Hollanti – Japani"
     },
     {
       "pvm": "2026-06-15",
@@ -124,8 +111,7 @@
       "koti_maalit": 1,
       "vieras_maalit": 0,
       "tulos": "1–0",
-      "ottelu": "Norsunluurannikko – Ecuador",
-      "vahvistus": "vain FIFA"
+      "ottelu": "Norsunluurannikko – Ecuador"
     },
     {
       "pvm": "2026-06-15",
@@ -135,8 +121,7 @@
       "koti_maalit": 5,
       "vieras_maalit": 1,
       "tulos": "5–1",
-      "ottelu": "Ruotsi – Tunisia",
-      "vahvistus": "FIFA + TheSportsDB"
+      "ottelu": "Ruotsi – Tunisia"
     }
   ]
 }

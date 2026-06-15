@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 """Hakee jalkapallon MM 2026 -otteluiden tulokset ja tallentaa ne tulokset.json-tiedostoon.
 
-Lähteet:
-  1. FIFA:n julkinen API (ensisijainen) - koko turnauksen kalenteri tuloksineen
-  2. TheSportsDB (ristiintarkistus) - ilmainen julkinen testiavain
-
-Tulos merkitään vahvistetuksi vain, jos molemmat lähteet ovat samaa mieltä.
+Lähde: FIFA:n julkinen API (koko turnauksen kalenteri tuloksineen).
 Ei riippuvuuksia: pelkkä Pythonin standardikirjasto (vaatii Python 3.9+).
 
 Käyttö: python3 hae_tulokset.py
@@ -15,13 +11,11 @@ import os
 import ssl
 import sys
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 FIFA_URL = ("https://api.fifa.com/api/v3/calendar/matches"
             "?idCompetition=17&idSeason=285023&language=en&count=200")
-TSDB_SEASON_URL = "https://www.thesportsdb.com/api/v1/json/3/eventsseason.php?id=4429&s=2026"
-TSDB_PAST_URL = "https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id=4429"
 TULOSTIEDOSTO = "tulokset.json"
 AIKAVYOHYKE = ZoneInfo("Europe/Helsinki")
 
@@ -88,7 +82,7 @@ def hae_json(url):
 
 
 def avain(pvm_fi, koti, vieras):
-    """Yksilöivä avain ottelulle ristiintarkistusta varten."""
+    """Yksilöivä avain ottelulle (dedup)."""
     return f"{pvm_fi}|{koti}|{vieras}"
 
 
@@ -114,51 +108,16 @@ def fifa_tulokset():
     return tulokset
 
 
-def tsdb_tulokset():
-    """Päättyneet ottelut TheSportsDB:stä (kausi + viimeksi pelatut yhdistettynä)."""
-    tapahtumat = []
-    for url in (TSDB_SEASON_URL, TSDB_PAST_URL):
-        try:
-            tapahtumat += hae_json(url).get("events") or []
-        except Exception as virhe:  # toissijainen lähde saa epäonnistua
-            print(f"  varoitus: TheSportsDB-haku epäonnistui ({virhe})", file=sys.stderr)
-    tulokset = {}
-    for e in tapahtumat:
-        if e.get("strStatus") not in ("FT", "AET", "PEN", "Match Finished"):
-            continue
-        koti = suomeksi(e["strHomeTeam"])
-        vieras = suomeksi(e["strAwayTeam"])
-        alku_utc = datetime.fromisoformat(e["strTimestamp"]).replace(tzinfo=timezone.utc)
-        alku_fi = alku_utc.astimezone(AIKAVYOHYKE)
-        tulokset[avain(alku_fi.date().isoformat(), koti, vieras)] = {
-            "koti_maalit": int(e["intHomeScore"]),
-            "vieras_maalit": int(e["intAwayScore"]),
-        }
-    return tulokset
-
-
 def main():
     print("Haetaan FIFA:n APIsta...")
     fifa = fifa_tulokset()
     print(f"  {len(fifa)} päättynyttä ottelua")
 
-    print("Haetaan TheSportsDB:stä (ristiintarkistus)...")
-    tsdb = tsdb_tulokset()
-    print(f"  {len(tsdb)} päättynyttä ottelua")
-
     tulokset = []
-    for k, f in sorted(fifa.items(), key=lambda x: (x[1]["pvm"], x[1]["aika_fi"])):
+    for f in sorted(fifa.values(), key=lambda x: (x["pvm"], x["aika_fi"])):
         rivi = dict(f)
         rivi["tulos"] = f"{f['koti_maalit']}–{f['vieras_maalit']}"
         rivi["ottelu"] = f"{f['koti']} – {f['vieras']}"
-        t = tsdb.get(k)
-        if t is None:
-            rivi["vahvistus"] = "vain FIFA"
-        elif (t["koti_maalit"], t["vieras_maalit"]) == (f["koti_maalit"], f["vieras_maalit"]):
-            rivi["vahvistus"] = "FIFA + TheSportsDB"
-        else:
-            rivi["vahvistus"] = "RISTIRIITA"
-            rivi["tsdb_tulos"] = f"{t['koti_maalit']}–{t['vieras_maalit']}"
         tulokset.append(rivi)
 
     # Kirjoitetaan vain jos tulokset muuttuivat - muuten haettu-aikaleima
@@ -174,7 +133,7 @@ def main():
 
     data = {
         "haettu": datetime.now(AIKAVYOHYKE).isoformat(timespec="seconds"),
-        "lahteet": {"ensisijainen": "FIFA API", "ristiintarkistus": "TheSportsDB"},
+        "lahde": "FIFA API",
         "tuloksia": len(tulokset),
         "tulokset": tulokset,
     }
@@ -183,12 +142,7 @@ def main():
 
     print(f"\nTallennettu {len(tulokset)} tulosta tiedostoon {TULOSTIEDOSTO}:")
     for r in tulokset:
-        merkki = "✓" if r["vahvistus"] == "FIFA + TheSportsDB" else "!"
-        print(f"  {merkki} {r['pvm']} {r['aika_fi']} {r['ottelu']} {r['tulos']} ({r['vahvistus']})")
-    ristiriidat = [r for r in tulokset if r["vahvistus"] == "RISTIRIITA"]
-    if ristiriidat:
-        print(f"\nHUOM: {len(ristiriidat)} ristiriitaista tulosta - tarkista käsin ennen käyttöä!")
-        return 1
+        print(f"  {r['pvm']} {r['aika_fi']} {r['ottelu']} {r['tulos']}")
     return 0
 
 

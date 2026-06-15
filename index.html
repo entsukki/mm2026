@@ -445,7 +445,6 @@ fetch('tulokset.json?ts=' + Date.now())
   .then(data => {
     if (!data || !data.tulokset) return;
     const tulokset = new Map(data.tulokset
-      .filter(t => t.vahvistus !== 'RISTIRIITA')
       .map(t => [t.pvm + '|' + t.ottelu, t.tulos]));
     let muuttui = false;
     matches.forEach(m => {
