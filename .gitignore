@@ -9,3 +9,6 @@ __pycache__/
 
 # Selkokielinen veikkausdata: ei versionhallintaan (vain salattu veikkaukset.enc.json)
 veikkaukset.json
+
+# Paikallinen kansio: ei mitään sen sisältöä versionhallintaan
+git-ignore/
