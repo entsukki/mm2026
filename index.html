@@ -285,6 +285,7 @@ function veikPanelHtml(list, tulos) {
   const merkki = v => {
     if (aktK === null) return '';
     if (v.koti === aktK && v.vieras === aktV) return ' <span class="veik-mark" title="Täysin oikein">🏆</span>';
+    if (v.koti - v.vieras === aktK - aktV) return ' <span class="veik-mark" title="Maaliero oikein">🎯</span>';
     const ulos = v.koti > v.vieras ? 'koti' : v.koti < v.vieras ? 'vieras' : 'tasa';
     return ulos === aktUlos ? ' <span class="veik-mark" title="Voittaja oikein">👍</span>' : '';
   };
