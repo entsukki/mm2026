@@ -41,6 +41,7 @@
   .veik-row .vnimi { color: #555; }
   .veik-row .vtulos { font-variant-numeric: tabular-nums; font-weight: 500; color: #1a1a18; }
   .veik-empty { color: #b3afa8; }
+  .veik-mark { margin-left: 4px; }
   #veik-row { margin: -0.9rem 0 1.5rem; align-items: center; }
   #veik-form { display: flex; align-items: center; gap: 8px; }
   #veik-pw { font-family: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 999px; outline: none; width: 150px; }
@@ -274,19 +275,33 @@ function filter(type, btn) {
   render();
 }
 
-function veikPanelHtml(list) {
+function veikPanelHtml(list, tulos) {
+  // tulos: oikea lopputulos "k–v" jos näkyvissä ja tiedossa, muuten null (ei spoilaa)
+  let aktK = null, aktV = null, aktUlos = null;
+  if (tulos) {
+    const mm = tulos.match(/(\d+)\s*[–-]\s*(\d+)/);
+    if (mm) { aktK = +mm[1]; aktV = +mm[2]; aktUlos = aktK > aktV ? 'koti' : aktK < aktV ? 'vieras' : 'tasa'; }
+  }
+  const merkki = v => {
+    if (aktK === null) return '';
+    if (v.koti === aktK && v.vieras === aktV) return ' <span class="veik-mark" title="Täysin oikein">🏆</span>';
+    const ulos = v.koti > v.vieras ? 'koti' : v.koti < v.vieras ? 'vieras' : 'tasa';
+    return ulos === aktUlos ? ' <span class="veik-mark" title="Voittaja oikein">👍</span>' : '';
+  };
   const ryhmat = { koti: [], tasa: [], vieras: [] };
   list.forEach(v => {
     const g = v.koti > v.vieras ? 'koti' : v.koti < v.vieras ? 'vieras' : 'tasa';
     ryhmat[g].push(v);
   });
-  const sarake = (avain, otsikko, lista) =>
-    `<div class="veik-grp veik-grp-${avain}">`
+  const sarake = (avain, otsikko, lista) => {
+    lista.sort((a, b) => a.koti - b.koti || a.vieras - b.vieras); // järjestä tuloksen mukaan
+    return `<div class="veik-grp veik-grp-${avain}">`
     + `<span class="veik-grp-head">${otsikko} ${lista.length}</span>`
     + (lista.length
-        ? lista.map(v => `<div class="veik-row"><span class="vnimi">${v.nimi}</span><span class="vtulos">${v.koti}–${v.vieras}</span></div>`).join('')
+        ? lista.map(v => `<div class="veik-row"><span class="vnimi">${v.nimi}</span><span class="vtulos">${v.koti}–${v.vieras}${merkki(v)}</span></div>`).join('')
         : '<div class="veik-empty">–</div>')
     + `</div>`;
+  };
   return `<div class="veik-groups">`
     + sarake('koti', 'Kotivoitto', ryhmat.koti)
     + sarake('tasa', 'Tasapeli', ryhmat.tasa)
@@ -340,7 +355,7 @@ function render() {
               ? `<span class="badge badge-paid" title="Maksumuurin takana – vain MTV Katsomo+ Urheilu">${PIG}Katsomo+</span>`
               : '<span class="badge badge-mtv">MTV3</span>'}
         </div>
-        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik)}</div>` : ''}`;
+        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik, (showResults && m.result) ? m.result : null)}</div>` : ''}`;
       }).join('')}
     </div>
     `).join('')}
