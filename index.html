@@ -42,6 +42,8 @@
   .veik-row .vtulos { font-variant-numeric: tabular-nums; font-weight: 500; color: #1a1a18; }
   .veik-empty { color: #b3afa8; }
   .veik-mark { margin-left: 4px; }
+  .vpisteet { margin-left: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .vpisteet .selite { font-weight: 400; color: #aaa; }
   #veik-row { margin: -0.9rem 0 1.5rem; align-items: center; }
   #veik-form { display: flex; align-items: center; gap: 8px; }
   #veik-pw { font-family: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 999px; outline: none; width: 150px; }
@@ -258,6 +260,47 @@ let showPlayed = false;
 let showResults = false;
 const expanded = new Set();  // avatut veikkauspaneelit (m.match)
 
+// Pisteytyslogiikka ladataan pisteytys.json:sta (lähde: TÄYTTÖOHJEET.pdf)
+let PISTEYTYS = null;
+const STAGE_AVAIN = {
+  '1/16-välierät': 'r32', 'Kahdeksannesvälierät': 'r16', 'Neljännesvälierät': 'qf', 'Välierät': 'valierat',
+};
+
+// Yhden veikkauksen ottelupisteet (additiivinen) vaiheessa s
+function otteluPisteet(v, aktK, aktV, s) {
+  const k = PISTEYTYS.ottelupisteet.komponentit;
+  let p = 0;
+  const ulos = x => x.koti > x.vieras ? 'koti' : x.koti < x.vieras ? 'vieras' : 'tasa';
+  if (ulos(v) === (aktK > aktV ? 'koti' : aktK < aktV ? 'vieras' : 'tasa')) p += k.oikea_merkki.pisteet[s];
+  if (v.koti - v.vieras === aktK - aktV) p += k.oikea_maaliero.pisteet[s];
+  if (v.koti === aktK) p += k.joukkueen_maalimaara_oikein.pisteet[s];
+  if (v.vieras === aktV) p += k.joukkueen_maalimaara_oikein.pisteet[s];
+  if (v.koti === aktK && v.vieras === aktV) p += k.tulos_oikein.pisteet[s];
+  return p;
+}
+
+// Laske kumulatiiviset saldot kronologisesti: m.pisteet[nimi] = {before, delta, total}
+function laskePisteet() {
+  if (!PISTEYTYS) return;
+  const saldo = {};  // nimi -> juokseva summa
+  const jarj = matches.filter(m => m.veik && m.result)
+    .sort((a, b) => a.start - b.start || a.match.localeCompare(b.match));
+  jarj.forEach(m => {
+    const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
+    if (!mm) return;
+    const aktK = +mm[1], aktV = +mm[2];
+    const s = m.stage ? (STAGE_AVAIN[m.stage] || 'alkusarja') : 'alkusarja';
+    m.pisteet = {};
+    m.veik.forEach(v => {
+      const before = saldo[v.nimi] || 0;
+      const delta = otteluPisteet(v, aktK, aktV, s);
+      const total = before + delta;
+      m.pisteet[v.nimi] = { before, delta, total };
+      saldo[v.nimi] = total;
+    });
+  });
+}
+
 function togglePlayed() {
   showPlayed = !showPlayed;
   render();
@@ -275,8 +318,9 @@ function filter(type, btn) {
   render();
 }
 
-function veikPanelHtml(list, tulos) {
+function veikPanelHtml(list, tulos, pisteet) {
   // tulos: oikea lopputulos "k–v" jos näkyvissä ja tiedossa, muuten null (ei spoilaa)
+  // pisteet: m.pisteet (nimi -> {before,delta,total}) kun saldo näytetään, muuten null
   let aktK = null, aktV = null, aktUlos = null;
   if (tulos) {
     const mm = tulos.match(/(\d+)\s*[–-]\s*(\d+)/);
@@ -299,7 +343,11 @@ function veikPanelHtml(list, tulos) {
     return `<div class="veik-grp veik-grp-${avain}">`
     + `<span class="veik-grp-head">${otsikko} ${lista.length}</span>`
     + (lista.length
-        ? lista.map(v => `<div class="veik-row"><span class="vnimi">${v.nimi}</span><span class="vtulos">${v.koti}–${v.vieras}${merkki(v)}</span></div>`).join('')
+        ? lista.map(v => {
+            const p = pisteet && pisteet[v.nimi];
+            const saldo = p ? ` <span class="vpisteet">${p.total} <span class="selite">(${p.before}+${p.delta})</span></span>` : '';
+            return `<div class="veik-row"><span class="vnimi">${v.nimi}${saldo}</span><span class="vtulos">${v.koti}–${v.vieras}${merkki(v)}</span></div>`;
+          }).join('')
         : '<div class="veik-empty">–</div>')
     + `</div>`;
   };
@@ -311,6 +359,7 @@ function veikPanelHtml(list, tulos) {
 }
 
 function render() {
+  laskePisteet();
   const byChannel = currentFilter === 'all' ? matches : matches.filter(m => m.ch === currentFilter);
   const playedCount = byChannel.filter(isPlayed).length;
   const resultCount = byChannel.filter(m => m.result).length;
@@ -356,7 +405,7 @@ function render() {
               ? `<span class="badge badge-paid" title="Maksumuurin takana – vain MTV Katsomo+ Urheilu">${PIG}Katsomo+</span>`
               : '<span class="badge badge-mtv">MTV3</span>'}
         </div>
-        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik, (showResults && m.result) ? m.result : null)}</div>` : ''}`;
+        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik, (showResults && m.result) ? m.result : null, (showResults && m.result) ? m.pisteet : null)}</div>` : ''}`;
       }).join('')}
     </div>
     `).join('')}
@@ -455,22 +504,33 @@ document.getElementById('veik-form').addEventListener('submit', async e => {
   catch { localStorage.removeItem(VEIK_PW_KEY); veikLukittuUI(); }
 })();
 
-// tulokset.json:ia päivittää GitHub Actions (hae_tulokset.py)
-fetch('tulokset.json?ts=' + Date.now())
+// Pisteytyslogiikka (staattinen) — haetaan kerran
+fetch('pisteytys.json?ts=' + Date.now())
   .then(r => r.ok ? r.json() : null)
-  .then(data => {
-    if (!data || !data.tulokset) return;
-    const tulokset = new Map(data.tulokset
-      .map(t => [t.pvm + '|' + t.ottelu, t.tulos]));
-    let muuttui = false;
-    matches.forEach(m => {
-      const pvm = new Date(m.start).toLocaleDateString('sv-SE', { timeZone: 'Europe/Helsinki' });
-      const tulos = tulokset.get(pvm + '|' + m.match);
-      if (tulos && m.result !== tulos) { m.result = tulos; muuttui = true; }
-    });
-    if (muuttui) render();
-  })
+  .then(data => { if (data) { PISTEYTYS = data; render(); } })
   .catch(() => {});
+
+// tulokset.json:ia päivittää GitHub Actions (hae_tulokset.py). Haetaan
+// toistuvasti, jotta avoinna olevan sivun tulokset ja pistesaldot päivittyvät.
+function haeTulokset() {
+  fetch('tulokset.json?ts=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data || !data.tulokset) return;
+      const tulokset = new Map(data.tulokset
+        .map(t => [t.pvm + '|' + t.ottelu, t.tulos]));
+      let muuttui = false;
+      matches.forEach(m => {
+        const pvm = new Date(m.start).toLocaleDateString('sv-SE', { timeZone: 'Europe/Helsinki' });
+        const tulos = tulokset.get(pvm + '|' + m.match);
+        if (tulos && m.result !== tulos) { m.result = tulos; muuttui = true; }
+      });
+      if (muuttui) render();  // vain kun jokin tulos oikeasti muuttui
+    })
+    .catch(() => {});
+}
+haeTulokset();
+setInterval(haeTulokset, 5 * 60 * 1000);  // 5 min välein
 </script>
 </body>
 </html>
