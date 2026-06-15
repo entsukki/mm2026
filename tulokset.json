@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-15T17:38:59+03:00",
+  "haettu": "2026-06-15T21:44:20+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 12,
+  "tuloksia": 13,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -122,6 +122,16 @@
       "vieras_maalit": 1,
       "tulos": "5–1",
       "ottelu": "Ruotsi – Tunisia"
+    },
+    {
+      "pvm": "2026-06-15",
+      "aika_fi": "19:00",
+      "koti": "Espanja",
+      "vieras": "Kap Verde",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "tulos": "0–0",
+      "ottelu": "Espanja – Kap Verde"
     }
   ]
 }
