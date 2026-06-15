@@ -1,0 +1,58 @@
+{
+  "kuvaus": "MM 2026 -veikkauskisan pisteytyslogiikka. Lähde: TÄYTTÖOHJEET.pdf, kohta 'Pisteet muodostuvat seuraavasti'.",
+  "vaiheet": ["alkusarja", "r32", "r16", "qf", "valierat", "pronssi", "finaali"],
+  "vaihenimet": {
+    "alkusarja": "Alkusarja",
+    "r32": "Round of 32 (1/16-välierät)",
+    "r16": "Round of 16 (kahdeksannesvälierät)",
+    "qf": "Q-F (neljännesvälierät)",
+    "valierat": "Välierät",
+    "pronssi": "Pronssiottelu",
+    "finaali": "Finaali"
+  },
+
+  "ottelupisteet": {
+    "kuvaus": "Yhden ottelun pisteet lasketaan komponenteittain YHTEEN (additiivinen). Komponentit eivät ole toisiaan poissulkevia: täysosuma antaa kaikki. Lasketaan varsinaisen peliajan tuloksesta.",
+    "komponentit": {
+      "oikea_merkki": {
+        "selite": "Oikea lopputulostyyppi: kotivoitto / tasapeli / vierasvoitto.",
+        "pisteet": { "alkusarja": 3, "r32": 6, "r16": 8, "qf": 12, "valierat": 16, "pronssi": 24, "finaali": 32 }
+      },
+      "oikea_maaliero": {
+        "selite": "Oikea etumerkillinen maaliero (koti − vieras).",
+        "pisteet": { "alkusarja": 2, "r32": 2, "r16": 3, "qf": 3, "valierat": 4, "pronssi": 4, "finaali": 5 }
+      },
+      "joukkueen_maalimaara_oikein": {
+        "selite": "Oikein veikattu joukkueen maalimäärä. Annetaan ERIKSEEN kummastakin joukkueesta, eli 0, 1 tai 2 kertaa per ottelu (alla oleva arvo on pisteet per joukkue).",
+        "per_joukkue": true,
+        "maksimi_kertaa": 2,
+        "pisteet": { "alkusarja": 1, "r32": 1, "r16": 1, "qf": 1, "valierat": 1, "pronssi": 2, "finaali": 2 }
+      },
+      "tulos_oikein": {
+        "selite": "Täsmälleen oikea lopputulos (molemmat maalimäärät oikein).",
+        "pisteet": { "alkusarja": 1, "r32": 1, "r16": 1, "qf": 1, "valierat": 2, "pronssi": 2, "finaali": 3 }
+      }
+    },
+    "max_per_ottelu": { "alkusarja": 8, "r32": 11, "r16": 14, "qf": 18, "valierat": 24, "pronssi": 34, "finaali": 44 }
+  },
+
+  "oikea_joukkue_jatkopeleissa": {
+    "kuvaus": "Ennen turnausta veikatun pudotuskaavion perusteella: pisteet jokaisesta oikein veikatusta joukkueesta, joka tosiasiassa pääsi kyseiselle kierrokselle.",
+    "pistetta_per_oikea_joukkue": { "r32": 1, "r16": 2, "qf": 3, "valierat": 4, "pronssi": 5, "finaali": 6 }
+  },
+
+  "muut_pisteet": {
+    "kuvaus": "Bonukset, veikataan ennen turnauksen alkua.",
+    "mestari": 50,
+    "paras_maalintekija": 25,
+    "turnauksen_maalimaara_lahin": 30,
+    "turnauksen_maalimaara_tasmalleen": 50
+  },
+
+  "huomiot": [
+    "Ottelupisteet lasketaan varsinaisen peliajan tuloksesta. Jatkoajalla tehdyt maalit eivät vaikuta ottelun tulospisteisiin — ne lasketaan vain veikkaajan turnauksen kokonaismaalimäärään.",
+    "Rangaistuspotkukilpailun maaleja ei lasketa mihinkään.",
+    "Jatkopeleissä, jos varsinainen peliaika päättyy tasan, veikkaaja on valinnut voittajan erikseen (pudotusvalikosta).",
+    "'turnauksen_maalimaara_tasmalleen' (50 p) ja '..._lahin' (30 p) ovat maalimääräbonuksen kaksi tasoa: täsmälleen oikea vs. lähimpänä oikeaa."
+  ]
+}
