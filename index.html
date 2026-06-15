@@ -49,6 +49,20 @@
   #veik-pw { font-family: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 999px; outline: none; width: 150px; }
   #veik-pw:focus { border-color: #999; }
   #veik-error { font-size: 12px; color: #b03a2e; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; z-index: 400; align-items: flex-start; justify-content: center; padding: 5vh 16px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 12px; width: 100%; max-width: 420px; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.2); }
+  .modal-head { position: sticky; top: 0; background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid #e0dfd8; }
+  .modal-head h2 { font-size: 16px; font-weight: 600; }
+  .modal-close { background: none; border: none; font-size: 19px; color: #aaa; cursor: pointer; line-height: 1; padding: 2px 4px; }
+  .modal-close:hover { color: #1a1a18; }
+  .standings-row { display: grid; grid-template-columns: 28px 1fr auto; align-items: baseline; gap: 12px; padding: 9px 1.25rem; border-bottom: 1px solid #f0ede6; }
+  .standings-row:last-child { border-bottom: none; }
+  .standings-row.top .st-nimi { font-weight: 600; }
+  .st-sija { font-size: 13px; color: #aaa; font-variant-numeric: tabular-nums; }
+  .st-nimi { font-size: 14px; color: #1a1a18; }
+  .st-pisteet { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: #1a1a18; }
+  .standings-empty { padding: 1.5rem 1.25rem; color: #888; font-size: 14px; text-align: center; }
   .badge { font-size: 12px; font-weight: 500; padding: 3px 11px; border-radius: 999px; white-space: nowrap; }
   .badge-mtv { background: #fdeee8; color: #8b3315; }
   .badge-yle { background: #e0f5ec; color: #0a6644; }
@@ -87,6 +101,7 @@
   </div>
   <div class="filter-row" id="veik-row">
     <button class="filter-btn" id="veik-toggle">🔒 Näytä veikkaukset</button>
+    <button class="filter-btn" id="standings-btn" style="display:none">🏆 Pistetilanne</button>
     <form id="veik-form" style="display:none">
       <input id="veik-pw" type="password" placeholder="Salasana" autocomplete="current-password">
       <button class="filter-btn" type="submit">OK</button>
@@ -95,6 +110,16 @@
   </div>
   <div id="schedule"></div>
 </main>
+
+<div class="modal-overlay" id="standings-overlay">
+  <div class="modal" id="standings-modal" role="dialog" aria-modal="true" aria-label="Pistetilanne">
+    <div class="modal-head">
+      <h2>Pistetilanne</h2>
+      <button class="modal-close" id="standings-close" aria-label="Sulje">✕</button>
+    </div>
+    <div id="standings-list"></div>
+  </div>
+</div>
 <footer>
   <p><span class="pig-legend"></span> = maksumuurin takana, vain MTV Katsomo+ Urheilu</p>
   <p class="disclaimer">
@@ -301,6 +326,44 @@ function laskePisteet() {
   });
 }
 
+// Kokonaispistetilanne laskevasti: [{nimi, pisteet}]
+function laskeTilanne() {
+  const saldo = {};
+  matches.filter(m => m.veik && m.result).forEach(m => {
+    const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
+    if (!mm) return;
+    const aktK = +mm[1], aktV = +mm[2];
+    const s = m.stage ? (STAGE_AVAIN[m.stage] || 'alkusarja') : 'alkusarja';
+    m.veik.forEach(v => { saldo[v.nimi] = (saldo[v.nimi] || 0) + otteluPisteet(v, aktK, aktV, s); });
+  });
+  return Object.entries(saldo)
+    .map(([nimi, pisteet]) => ({ nimi, pisteet }))
+    .sort((a, b) => b.pisteet - a.pisteet || a.nimi.localeCompare(b.nimi));
+}
+
+function avaaTilanne() {
+  const lista = laskeTilanne();
+  const el = document.getElementById('standings-list');
+  el.innerHTML = lista.length
+    ? lista.map((p, i) => `<div class="standings-row${i === 0 ? ' top' : ''}">`
+        + `<span class="st-sija">${i + 1}.</span>`
+        + `<span class="st-nimi">${p.nimi}</span>`
+        + `<span class="st-pisteet">${p.pisteet}</span></div>`).join('')
+    : '<p class="standings-empty">Ei vielä pelattuja otteluita.</p>';
+  document.getElementById('standings-overlay').classList.add('open');
+}
+
+function suljeTilanne() {
+  document.getElementById('standings-overlay').classList.remove('open');
+}
+
+document.getElementById('standings-btn').addEventListener('click', avaaTilanne);
+document.getElementById('standings-close').addEventListener('click', suljeTilanne);
+document.getElementById('standings-overlay').addEventListener('click', e => {
+  if (e.target.id === 'standings-overlay') suljeTilanne();  // vain tausta, ei modaali
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') suljeTilanne(); });
+
 function togglePlayed() {
   showPlayed = !showPlayed;
   render();
@@ -455,10 +518,12 @@ function veikLukittuUI() {
   document.getElementById('veik-toggle').textContent = '🔒 Näytä veikkaukset';
   document.getElementById('veik-form').style.display = 'none';
   document.getElementById('veik-error').textContent = '';
+  document.getElementById('standings-btn').style.display = 'none';
 }
 function veikAvattuUI() {
   document.getElementById('veik-toggle').textContent = '🔓 Veikkaukset näkyvissä · Kirjaudu ulos';
   document.getElementById('veik-form').style.display = 'none';
+  document.getElementById('standings-btn').style.display = '';
 }
 
 async function veikKirjaudu(salasana, tallenna) {
