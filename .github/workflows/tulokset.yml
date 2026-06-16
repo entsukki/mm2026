@@ -2,7 +2,9 @@ name: Päivitä MM 2026 tulokset
 
 on:
   schedule:
-    # Vartin välein (minuutit 7, 22, 37, 52 - tasaminuutit ovat GitHubin ruuhka-aikaa)
+    # Varakeino. HUOM: GitHub throttlaa schedule-triggeriä rajusti (todelliset ajot 1-6 h välein,
+    # ei 15 min). Ensisijainen herätin on ulkoinen cron (cron-job.org) joka kutsuu workflow_dispatchia
+    # ~5 min välein - sitä ei throttlata samoin. Minuutit 7,22,37,52 = pois GitHubin ruuhka-ajalta.
     - cron: '7-59/15 * * * *'
   workflow_dispatch:
 
