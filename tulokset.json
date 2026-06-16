@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-16T03:15:35+03:00",
+  "haettu": "2026-06-16T08:39:45+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 15,
+  "tuloksia": 16,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -152,6 +152,16 @@
       "vieras_maalit": 1,
       "tulos": "1–1",
       "ottelu": "Saudi-Arabia – Uruguay"
+    },
+    {
+      "pvm": "2026-06-16",
+      "aika_fi": "04:00",
+      "koti": "Iran",
+      "vieras": "Uusi-Seelanti",
+      "koti_maalit": 2,
+      "vieras_maalit": 2,
+      "tulos": "2–2",
+      "ottelu": "Iran – Uusi-Seelanti"
     }
   ]
 }
