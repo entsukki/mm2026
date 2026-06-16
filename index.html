@@ -17,6 +17,14 @@
   .filter-btn.active { background: #1a1a18; color: #fff; border-color: #1a1a18; font-weight: 500; }
   #played-row { margin: -0.9rem 0 1.5rem; }
   .match-played { opacity: 0.55; }
+  .match-live { background: #fdf1f0; box-shadow: inset 3px 0 0 #d64541; }
+  .match-live:hover { background: #fae6e4; }
+  .live-tag { margin-left: 8px; font-size: 12px; font-weight: 600; color: #c0392b; white-space: nowrap; }
+  .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #d64541; margin-right: 5px; vertical-align: middle; animation: live-pulse 1.6s ease-in-out infinite; }
+  @keyframes live-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
+  .paivitetty { font-size: 12px; color: #aaa; text-align: right; margin: -0.9rem 0 1.5rem; }
+  .paivitetty:empty { display: none; }
   .day-group { margin-bottom: 1.75rem; }
   .stage-header { font-size: 15px; font-weight: 700; color: #1a1a18; margin: 2.5rem 0 1rem; padding-top: 1.5rem; border-top: 2px solid #d8d6cc; }
   .stage-header:first-child { margin-top: 0; padding-top: 0; border-top: none; }
@@ -108,6 +116,7 @@
       <span id="veik-error"></span>
     </form>
   </div>
+  <div id="paivitetty" class="paivitetty"></div>
   <div id="schedule"></div>
 </main>
 
@@ -308,7 +317,7 @@ function otteluPisteet(v, aktK, aktV, s) {
 function laskePisteet() {
   if (!PISTEYTYS) return;
   const saldo = {};  // nimi -> juokseva summa
-  const jarj = matches.filter(m => m.veik && m.result)
+  const jarj = matches.filter(m => m.veik && m.result && !m.live)  // ei pisteitä keskeneräisistä
     .sort((a, b) => a.start - b.start || a.match.localeCompare(b.match));
   jarj.forEach(m => {
     const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
@@ -329,7 +338,7 @@ function laskePisteet() {
 // Kokonaispistetilanne laskevasti: [{nimi, pisteet}]
 function laskeTilanne() {
   const saldo = {};
-  matches.filter(m => m.veik && m.result).forEach(m => {
+  matches.filter(m => m.veik && m.result && !m.live).forEach(m => {  // ei pisteitä keskeneräisistä
     const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
@@ -458,17 +467,20 @@ function render() {
       ${ms.map(m => {
         const veik = m.veik;
         const open = expanded.has(m.match);
+        // Tulos (myös live) noudattaa Näytä/Piilota tulokset -kytkintä (spoileri);
+        // live-korostus ja "Käynnissä"-merkintä näkyvät silti aina.
+        const naytaTulos = showResults && m.result;
         return `
-        <div class="match-row${isPlayed(m) ? ' match-played' : ''}${veik ? ' has-veik' : ''}${open ? ' open' : ''}" data-match="${m.match.replace(/"/g, '&quot;')}">
+        <div class="match-row${isPlayed(m) ? ' match-played' : ''}${m.live ? ' match-live' : ''}${veik ? ' has-veik' : ''}${open ? ' open' : ''}" data-match="${m.match.replace(/"/g, '&quot;')}">
           <span class="time">${m.time}</span>
-          <span class="match-name">${m.match}${(showResults && m.result) ? ` <strong class="result">${m.result}</strong>` : ''}${veik ? ` <span class="veik-cue">${veik.length} veikkausta <span class="chev">▾</span></span>` : ''}</span>
+          <span class="match-name">${m.match}${naytaTulos ? ` <strong class="result">${m.result}</strong>` : ''}${m.live ? ' <span class="live-tag"><span class="live-dot"></span>Käynnissä</span>' : ''}${veik ? ` <span class="veik-cue">${veik.length} veikkausta <span class="chev">▾</span></span>` : ''}</span>
           ${m.ch === 'Yle'
             ? '<span class="badge badge-yle">Yle TV2</span>'
             : m.paid
               ? `<span class="badge badge-paid" title="Maksumuurin takana – vain MTV Katsomo+ Urheilu">${PIG}Katsomo+</span>`
               : '<span class="badge badge-mtv">MTV3</span>'}
         </div>
-        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik, (showResults && m.result) ? m.result : null, (showResults && m.result) ? m.pisteet : null)}</div>` : ''}`;
+        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik, (showResults && m.result && !m.live) ? m.result : null, (showResults && m.result && !m.live) ? m.pisteet : null)}</div>` : ''}`;
       }).join('')}
     </div>
     `).join('')}
@@ -577,20 +589,36 @@ fetch('pisteytys.json?ts=' + Date.now())
 
 // tulokset.json:ia päivittää GitHub Actions (hae_tulokset.py). Haetaan
 // toistuvasti, jotta avoinna olevan sivun tulokset ja pistesaldot päivittyvät.
+function naytaPaivitetty(iso) {
+  const el = document.getElementById('paivitetty');
+  if (!el || !iso) return;
+  const d = new Date(iso);
+  if (isNaN(d)) return;
+  const osat = new Intl.DateTimeFormat('fi-FI', {
+    timeZone: 'Europe/Helsinki', day: 'numeric', month: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  }).formatToParts(d).reduce((o, p) => (o[p.type] = p.value, o), {});
+  el.textContent = `Tulokset päivitetty ${osat.day}.${osat.month}. klo ${osat.hour}.${osat.minute}`;
+}
+
 function haeTulokset() {
   fetch('tulokset.json?ts=' + Date.now())
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       if (!data || !data.tulokset) return;
+      naytaPaivitetty(data.haettu);
+      // Map: ottelu -> { tulos, kesken } (kesken = ottelu käynnissä, ei vielä lopullinen)
       const tulokset = new Map(data.tulokset
-        .map(t => [t.pvm + '|' + t.ottelu, t.tulos]));
+        .map(t => [t.pvm + '|' + t.ottelu, { tulos: t.tulos, kesken: !!t.kesken }]));
       let muuttui = false;
       matches.forEach(m => {
         const pvm = new Date(m.start).toLocaleDateString('sv-SE', { timeZone: 'Europe/Helsinki' });
-        const tulos = tulokset.get(pvm + '|' + m.match);
-        if (tulos && m.result !== tulos) { m.result = tulos; muuttui = true; }
+        const r = tulokset.get(pvm + '|' + m.match);
+        if (r && (m.result !== r.tulos || !!m.live !== r.kesken)) {
+          m.result = r.tulos; m.live = r.kesken; muuttui = true;
+        }
       });
-      if (muuttui) render();  // vain kun jokin tulos oikeasti muuttui
+      if (muuttui) render();  // vain kun tulos tai live-tila oikeasti muuttui
     })
     .catch(() => {});
 }
