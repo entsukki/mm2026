@@ -87,31 +87,40 @@ def avain(pvm_fi, koti, vieras):
 
 
 def fifa_tulokset():
-    """Päättyneet ottelut FIFA:n APIsta. MatchStatus: 0=päättynyt, 3=käynnissä, 1=ei alkanut."""
+    """Päättyneet JA käynnissä olevat ottelut FIFA:n APIsta.
+    MatchStatus: 0=päättynyt, 3=käynnissä, 1=ei alkanut.
+    Käynnissä olevat merkitään lipulla kesken=True (juokseva tulos näkyy sivulla, mutta
+    selain ei laske niistä pisteitä ennen ottelun päättymistä). Peliminuuttia ei tallenneta,
+    jotta tiedosto ei muuttuisi joka haulla (minuutti tikittäisi) ja aiheuttaisi turhia committeja."""
     data = hae_json(FIFA_URL)
     tulokset = {}
     for m in data.get("Results", []):
-        if m.get("MatchStatus") != 0:
+        status = m.get("MatchStatus")
+        if status not in (0, 3):  # 0=päättynyt, 3=käynnissä; muut (ei alkanut yms.) ohi
             continue
         koti = suomeksi((m.get("Home") or {}).get("TeamName", [{}])[0].get("Description", "?"))
         vieras = suomeksi((m.get("Away") or {}).get("TeamName", [{}])[0].get("Description", "?"))
         alku_utc = datetime.fromisoformat(m["Date"].replace("Z", "+00:00"))
         alku_fi = alku_utc.astimezone(AIKAVYOHYKE)
-        tulokset[avain(alku_fi.date().isoformat(), koti, vieras)] = {
+        rivi = {
             "pvm": alku_fi.date().isoformat(),
             "aika_fi": alku_fi.strftime("%H:%M"),
             "koti": koti,
             "vieras": vieras,
-            "koti_maalit": int(m["Home"]["Score"]),
-            "vieras_maalit": int(m["Away"]["Score"]),
+            "koti_maalit": int((m.get("Home") or {}).get("Score") or 0),
+            "vieras_maalit": int((m.get("Away") or {}).get("Score") or 0),
         }
+        if status == 3:
+            rivi["kesken"] = True
+        tulokset[avain(alku_fi.date().isoformat(), koti, vieras)] = rivi
     return tulokset
 
 
 def main():
     print("Haetaan FIFA:n APIsta...")
     fifa = fifa_tulokset()
-    print(f"  {len(fifa)} päättynyttä ottelua")
+    kesken = sum(1 for f in fifa.values() if f.get("kesken"))
+    print(f"  {len(fifa)} ottelua ({len(fifa) - kesken} päättynyttä, {kesken} käynnissä)")
 
     tulokset = []
     for f in sorted(fifa.values(), key=lambda x: (x["pvm"], x["aika_fi"])):
@@ -142,7 +151,8 @@ def main():
 
     print(f"\nTallennettu {len(tulokset)} tulosta tiedostoon {TULOSTIEDOSTO}:")
     for r in tulokset:
-        print(f"  {r['pvm']} {r['aika_fi']} {r['ottelu']} {r['tulos']}")
+        merkki = " (käynnissä)" if r.get("kesken") else ""
+        print(f"  {r['pvm']} {r['aika_fi']} {r['ottelu']} {r['tulos']}{merkki}")
     return 0
 
 
