@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-16T23:30:52+03:00",
+  "haettu": "2026-06-16T23:50:39+03:00",
   "lahde": "FIFA API",
   "tuloksia": 17,
   "tulokset": [
@@ -168,10 +168,10 @@
       "aika_fi": "22:00",
       "koti": "Ranska",
       "vieras": "Senegal",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "2–0",
       "ottelu": "Ranska – Senegal"
     }
   ]
