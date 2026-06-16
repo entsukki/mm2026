@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-16T08:39:45+03:00",
+  "haettu": "2026-06-16T22:05:28+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 16,
+  "tuloksia": 17,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -162,6 +162,17 @@
       "vieras_maalit": 2,
       "tulos": "2–2",
       "ottelu": "Iran – Uusi-Seelanti"
+    },
+    {
+      "pvm": "2026-06-16",
+      "aika_fi": "22:00",
+      "koti": "Ranska",
+      "vieras": "Senegal",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Ranska – Senegal"
     }
   ]
 }
