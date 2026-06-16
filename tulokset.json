@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-16T01:27:35+03:00",
+  "haettu": "2026-06-16T03:15:35+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 14,
+  "tuloksia": 15,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -142,6 +142,16 @@
       "vieras_maalit": 1,
       "tulos": "1–1",
       "ottelu": "Belgia – Egypti"
+    },
+    {
+      "pvm": "2026-06-16",
+      "aika_fi": "01:00",
+      "koti": "Saudi-Arabia",
+      "vieras": "Uruguay",
+      "koti_maalit": 1,
+      "vieras_maalit": 1,
+      "tulos": "1–1",
+      "ottelu": "Saudi-Arabia – Uruguay"
     }
   ]
 }
