@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-17T08:40:26+03:00",
+  "haettu": "2026-06-17T08:45:31+03:00",
   "lahde": "FIFA API",
   "tuloksia": 20,
   "tulokset": [
@@ -198,10 +198,10 @@
       "aika_fi": "07:00",
       "koti": "Itävalta",
       "vieras": "Jordania",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "1–1",
+      "tulos": "2–1",
       "ottelu": "Itävalta – Jordania"
     }
   ]
