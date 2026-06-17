@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-18T00:50:34+03:00",
+  "haettu": "2026-06-18T01:05:21+03:00",
   "lahde": "FIFA API",
   "tuloksia": 22,
   "tulokset": [
@@ -220,7 +220,6 @@
       "vieras": "Kroatia",
       "koti_maalit": 4,
       "vieras_maalit": 2,
-      "kesken": true,
       "tulos": "4–2",
       "ottelu": "Englanti – Kroatia"
     }
