@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-17T02:40:35+03:00",
+  "haettu": "2026-06-17T03:05:28+03:00",
   "lahde": "FIFA API",
   "tuloksia": 18,
   "tulokset": [
@@ -179,9 +179,8 @@
       "koti": "Irak",
       "vieras": "Norja",
       "koti_maalit": 1,
-      "vieras_maalit": 3,
-      "kesken": true,
-      "tulos": "1–3",
+      "vieras_maalit": 4,
+      "tulos": "1–4",
       "ottelu": "Irak – Norja"
     }
   ]
