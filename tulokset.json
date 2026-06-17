@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-17T20:05:31+03:00",
+  "haettu": "2026-06-17T20:10:28+03:00",
   "lahde": "FIFA API",
   "tuloksia": 21,
   "tulokset": [
@@ -208,10 +208,10 @@
       "aika_fi": "20:00",
       "koti": "Portugali",
       "vieras": "Kongon dem. tasavalta",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "1–0",
       "ottelu": "Portugali – Kongon dem. tasavalta"
     }
   ]
