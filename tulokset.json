@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-18T21:00:46+03:00",
+  "haettu": "2026-06-18T22:05:25+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 25,
+  "tuloksia": 26,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -252,6 +252,17 @@
       "vieras_maalit": 1,
       "tulos": "1–1",
       "ottelu": "Tshekki – Etelä-Afrikka"
+    },
+    {
+      "pvm": "2026-06-18",
+      "aika_fi": "22:00",
+      "koti": "Sveitsi",
+      "vieras": "Bosnia ja Hertsegovina",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Sveitsi – Bosnia ja Hertsegovina"
     }
   ]
 }
