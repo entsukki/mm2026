@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-18T07:00:47+03:00",
+  "haettu": "2026-06-18T07:05:23+03:00",
   "lahde": "FIFA API",
   "tuloksia": 24,
   "tulokset": [
@@ -240,7 +240,6 @@
       "vieras": "Kolumbia",
       "koti_maalit": 1,
       "vieras_maalit": 3,
-      "kesken": true,
       "tulos": "1–3",
       "ottelu": "Uzbekistan – Kolumbia"
     }
