@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-18T20:45:31+03:00",
+  "haettu": "2026-06-18T21:00:46+03:00",
   "lahde": "FIFA API",
   "tuloksia": 25,
   "tulokset": [
@@ -250,7 +250,6 @@
       "vieras": "Etelä-Afrikka",
       "koti_maalit": 1,
       "vieras_maalit": 1,
-      "kesken": true,
       "tulos": "1–1",
       "ottelu": "Tshekki – Etelä-Afrikka"
     }
