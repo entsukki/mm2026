@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-18T23:50:29+03:00",
+  "haettu": "2026-06-18T23:55:24+03:00",
   "lahde": "FIFA API",
   "tuloksia": 26,
   "tulokset": [
@@ -259,9 +259,9 @@
       "koti": "Sveitsi",
       "vieras": "Bosnia ja Hertsegovina",
       "koti_maalit": 3,
-      "vieras_maalit": 0,
+      "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "3–0",
+      "tulos": "3–1",
       "ottelu": "Sveitsi – Bosnia ja Hertsegovina"
     }
   ]
