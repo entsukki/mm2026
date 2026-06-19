@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-19T02:55:20+03:00",
+  "haettu": "2026-06-19T03:05:21+03:00",
   "lahde": "FIFA API",
   "tuloksia": 27,
   "tulokset": [
@@ -270,7 +270,6 @@
       "vieras": "Qatar",
       "koti_maalit": 6,
       "vieras_maalit": 0,
-      "kesken": true,
       "tulos": "6–0",
       "ottelu": "Kanada – Qatar"
     }
