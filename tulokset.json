@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-19T03:05:21+03:00",
+  "haettu": "2026-06-19T04:05:21+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 27,
+  "tuloksia": 28,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -272,6 +272,17 @@
       "vieras_maalit": 0,
       "tulos": "6–0",
       "ottelu": "Kanada – Qatar"
+    },
+    {
+      "pvm": "2026-06-19",
+      "aika_fi": "04:00",
+      "koti": "Meksiko",
+      "vieras": "Etelä-Korea",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Meksiko – Etelä-Korea"
     }
   ]
 }
