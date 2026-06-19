@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-19T22:15:24+03:00",
+  "haettu": "2026-06-19T22:50:27+03:00",
   "lahde": "FIFA API",
   "tuloksia": 29,
   "tulokset": [
@@ -288,10 +288,10 @@
       "aika_fi": "22:00",
       "koti": "USA",
       "vieras": "Australia",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "2–0",
       "ottelu": "USA – Australia"
     }
   ]
