@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-20T04:20:27+03:00",
+  "haettu": "2026-06-20T05:35:20+03:00",
   "lahde": "FIFA API",
   "tuloksia": 31,
   "tulokset": [
@@ -310,7 +310,6 @@
       "vieras": "Haiti",
       "koti_maalit": 3,
       "vieras_maalit": 0,
-      "kesken": true,
       "tulos": "3–0",
       "ottelu": "Brasilia – Haiti"
     }
