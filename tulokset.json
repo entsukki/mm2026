@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-20T23:05:20+03:00",
+  "haettu": "2026-06-20T23:30:37+03:00",
   "lahde": "FIFA API",
   "tuloksia": 34,
   "tulokset": [
@@ -338,10 +338,10 @@
       "aika_fi": "23:00",
       "koti": "Saksa",
       "vieras": "Norsunluurannikko",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "1–0",
       "ottelu": "Saksa – Norsunluurannikko"
     }
   ]
