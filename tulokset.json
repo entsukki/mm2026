@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-20T06:05:24+03:00",
+  "haettu": "2026-06-20T08:10:30+03:00",
   "lahde": "FIFA API",
   "tuloksia": 32,
   "tulokset": [
@@ -320,7 +320,6 @@
       "vieras": "Paraguay",
       "koti_maalit": 0,
       "vieras_maalit": 1,
-      "kesken": true,
       "tulos": "0–1",
       "ottelu": "Turkki – Paraguay"
     }
