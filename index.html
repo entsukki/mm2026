@@ -64,13 +64,32 @@
   .modal-head h2 { font-size: 16px; font-weight: 600; }
   .modal-close { background: none; border: none; font-size: 19px; color: #aaa; cursor: pointer; line-height: 1; padding: 2px 4px; }
   .modal-close:hover { color: #1a1a18; }
-  .standings-row { display: grid; grid-template-columns: 28px 1fr auto; align-items: baseline; gap: 12px; padding: 9px 1.25rem; border-bottom: 1px solid #f0ede6; }
+  .standings-row { display: grid; grid-template-columns: 28px 1fr auto; align-items: baseline; gap: 12px; padding: 9px 1.25rem; border-bottom: 1px solid #f0ede6; cursor: pointer; }
   .standings-row:last-child { border-bottom: none; }
+  .standings-row:hover { background: #faf9f6; }
+  .standings-row.korostus { background: #f0ede6; }
   .standings-row.top .st-nimi { font-weight: 600; }
   .st-sija { font-size: 13px; color: #aaa; font-variant-numeric: tabular-nums; }
   .st-nimi { font-size: 14px; color: #1a1a18; }
+  .st-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px; vertical-align: baseline; }
   .st-pisteet { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: #1a1a18; }
   .standings-empty { padding: 1.5rem 1.25rem; color: #888; font-size: 14px; text-align: center; }
+  #standings-chart { padding: 1rem 1.1rem 0.25rem; }
+  #standings-chart:empty { display: none; }
+  .chart-svg { display: block; width: 100%; height: auto; }
+  .chart-grid { stroke: #ece9e2; stroke-width: 1; }
+  .chart-axis { stroke: #d8d6cc; stroke-width: 1; }
+  .chart-ylbl { fill: #aaa; font-size: 9px; text-anchor: end; }
+  .chart-xlbl { fill: #aaa; font-size: 9px; }
+  .chart-hint { padding: 0.25rem 1.25rem 0.5rem; font-size: 11px; color: #b0aea5; }
+  .chart-range { position: relative; height: 30px; margin: 6px 1.25rem 0; }
+  .chart-range::before { content: ''; position: absolute; left: 8px; right: 8px; top: 50%; height: 4px; transform: translateY(-50%); background: #e0ddd4; border-radius: 2px; }
+  .chart-range input[type=range] { position: absolute; left: 0; top: 0; width: 100%; height: 30px; margin: 0; background: transparent; pointer-events: none; -webkit-appearance: none; appearance: none; }
+  .chart-range input[type=range]::-webkit-slider-runnable-track { background: transparent; border: none; }
+  .chart-range input[type=range]::-moz-range-track { background: transparent; border: none; }
+  .chart-range input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 16px; height: 16px; border-radius: 50%; background: #1a1a18; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: pointer; }
+  .chart-range input[type=range]::-moz-range-thumb { pointer-events: auto; width: 16px; height: 16px; border-radius: 50%; background: #1a1a18; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); cursor: pointer; }
+  .chart-range-lbl { text-align: center; font-size: 11px; color: #888; margin-top: 2px; font-variant-numeric: tabular-nums; }
   .badge { font-size: 12px; font-weight: 500; padding: 3px 11px; border-radius: 999px; white-space: nowrap; }
   .badge-mtv { background: #fdeee8; color: #8b3315; }
   .badge-yle { background: #e0f5ec; color: #0a6644; }
@@ -126,6 +145,7 @@
       <h2>Pistetilanne</h2>
       <button class="modal-close" id="standings-close" aria-label="Sulje">✕</button>
     </div>
+    <div id="standings-chart"></div>
     <div id="standings-list"></div>
   </div>
 </div>
@@ -350,17 +370,139 @@ function laskeTilanne() {
     .sort((a, b) => b.pisteet - a.pisteet || a.nimi.localeCompare(b.nimi));
 }
 
-function avaaTilanne() {
-  const lista = laskeTilanne();
-  const el = document.getElementById('standings-list');
-  el.innerHTML = lista.length
-    ? lista.map((p, i) => `<div class="standings-row${i === 0 ? ' top' : ''}">`
+// --- Pistetilanne: kehityskuvaaja + taulukko ---
+const tilanneKorostetut = new Set();  // korostetut pelaajat (nimet); tyhjä = kaikki normaalisti
+// Modaalin avaushetkellä lasketut, jaetut kuvaajan ja taulukon kesken:
+let tilanneNimet = [], tilanneVarit = {}, tilanneSarjat = {}, tilanneN = 0;
+let ikkunaLo = 0, ikkunaHi = 0;  // näytettävä otteluväli (sarjapisteiden indeksit)
+
+// Vakaa väri per pelaaja (sijoituksen mukaan) — kuvaaja ja taulukko vastaavat toisiaan
+function pelaajaVarit(nimet) {
+  const varit = {}, n = nimet.length || 1;
+  nimet.forEach((nimi, i) => { varit[nimi] = `hsl(${Math.round(i * 360 / n)}, 68%, 45%)`; });
+  return varit;
+}
+
+// Kumulatiiviset sarjat: pelaaja -> [0, total ottelun 1 jälkeen, ...] kronologisesti
+function pisteSarjat(nimet) {
+  const pelatut = matches.filter(m => m.veik && m.result && !m.live)
+    .sort((a, b) => a.start - b.start || a.match.localeCompare(b.match));
+  const last = {}, sarja = {};
+  nimet.forEach(n => { last[n] = 0; sarja[n] = [0]; });
+  pelatut.forEach(m => nimet.forEach(n => {
+    const p = m.pisteet && m.pisteet[n];
+    if (p) last[n] = p.total;
+    sarja[n].push(last[n]);
+  }));
+  return { sarja, otteluita: pelatut.length };
+}
+
+// Piirrä SVG valitulle otteluvälille [ikkunaLo..ikkunaHi]; y-akseli skaalataan
+// näkyvään dataan, jotta kapea jakso erottuu tarkemmin (pisteet pysyvät kumulatiivisina).
+function piirraKehitys() {
+  const lo = ikkunaLo, hi = ikkunaHi;
+  if (hi <= lo) return '';
+  const W = 380, H = 200, padL = 30, padR = 12, padT = 10, padB = 20;
+  let minV = Infinity, maxV = -Infinity;
+  tilanneNimet.forEach(n => { for (let i = lo; i <= hi; i++) { const v = tilanneSarjat[n][i]; if (v < minV) minV = v; if (v > maxV) maxV = v; } });
+  if (minV === maxV) maxV = minV + 1;
+  const span = hi - lo;
+  const x = i => padL + (W - padL - padR) * (i - lo) / span;
+  const y = v => (H - padB) - (H - padT - padB) * (v - minV) / (maxV - minV);
+  const yTicks = [...new Set([Math.ceil(minV), Math.round((minV + maxV) / 2), Math.floor(maxV)])];
+  const grid = yTicks.map(t =>
+    `<line x1="${padL}" y1="${y(t).toFixed(1)}" x2="${W - padR}" y2="${y(t).toFixed(1)}" class="chart-grid"/>`
+    + `<text x="${padL - 5}" y="${(y(t) + 3).toFixed(1)}" class="chart-ylbl">${t}</text>`).join('');
+  const viivat = tilanneNimet.map(nimi => {
+    const himmea = tilanneKorostetut.size > 0 && !tilanneKorostetut.has(nimi);
+    const kor = tilanneKorostetut.has(nimi);
+    const pts = [];
+    for (let i = lo; i <= hi; i++) pts.push(`${x(i).toFixed(1)},${y(tilanneSarjat[nimi][i]).toFixed(1)}`);
+    return `<polyline points="${pts.join(' ')}" fill="none" stroke="${tilanneVarit[nimi]}" stroke-width="${kor ? 3 : 1.6}"`
+      + ` stroke-opacity="${himmea ? 0.12 : 1}" stroke-linejoin="round" stroke-linecap="round"/>`
+      + `<circle cx="${x(hi).toFixed(1)}" cy="${y(tilanneSarjat[nimi][hi]).toFixed(1)}" r="${kor ? 3.6 : 2.4}"`
+      + ` fill="${tilanneVarit[nimi]}" fill-opacity="${himmea ? 0.12 : 1}"/>`;
+  }).join('');
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Pelaajien pistekehitys">`
+    + grid
+    + `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H - padB}" class="chart-axis"/>`
+    + viivat
+    + `</svg>`;
+}
+
+// Piirrä kuvaaja-canvas + päivitä väli-otsikko (kutsutaan korostuksen ja liu'utuksen yhteydessä;
+// EI rakenna liukusäädintä uudelleen, jotta vetäminen säilyy sulavana)
+function piirraNyt() {
+  document.getElementById('chart-canvas').innerHTML = piirraKehitys();
+  const lbl = document.getElementById('chart-range-lbl');
+  if (lbl) lbl.textContent = (ikkunaLo === 0 && ikkunaHi === tilanneN)
+    ? `Kaikki ${tilanneN} ottelua`
+    : `Ottelut ${ikkunaLo + 1}–${ikkunaHi}`;
+}
+
+function renderLista(lista) {
+  document.getElementById('standings-list').innerHTML = lista.length
+    ? lista.map((p, i) => `<div class="standings-row${i === 0 ? ' top' : ''}${tilanneKorostetut.has(p.nimi) ? ' korostus' : ''}" data-nimi="${p.nimi.replace(/"/g, '&quot;')}">`
         + `<span class="st-sija">${i + 1}.</span>`
-        + `<span class="st-nimi">${p.nimi}</span>`
+        + `<span class="st-nimi"><span class="st-dot" style="background:${tilanneVarit[p.nimi]}"></span>${p.nimi}</span>`
         + `<span class="st-pisteet">${p.pisteet}</span></div>`).join('')
     : '<p class="standings-empty">Ei vielä pelattuja otteluita.</p>';
+}
+
+function avaaTilanne() {
+  laskePisteet();          // varmista tuoreet m.pisteet kuvaajaa varten
+  const lista = laskeTilanne();
+  tilanneKorostetut.clear();
+  tilanneNimet = lista.map(p => p.nimi);
+  tilanneVarit = pelaajaVarit(tilanneNimet);
+  const r = pisteSarjat(tilanneNimet);
+  tilanneSarjat = r.sarja; tilanneN = r.otteluita;
+  ikkunaLo = 0; ikkunaHi = tilanneN;
+
+  const chart = document.getElementById('standings-chart');
+  if (!lista.length || tilanneN < 1) {
+    chart.innerHTML = '';
+  } else {
+    // Liukusäädin vain jos otteluita on ≥2 (muuten ei mitään rajattavaa)
+    const slider = tilanneN >= 2 ? `<div class="chart-range">`
+        + `<input type="range" id="rng-lo" min="0" max="${tilanneN}" value="0" step="1" aria-label="Alkukohta">`
+        + `<input type="range" id="rng-hi" min="0" max="${tilanneN}" value="${tilanneN}" step="1" aria-label="Loppukohta">`
+        + `</div><div class="chart-range-lbl" id="chart-range-lbl"></div>` : '';
+    chart.innerHTML = `<div id="chart-canvas"></div>${slider}`
+      + `<p class="chart-hint">Klikkaa pelaajia korostaaksesi heidän käyränsä. Rajaa otteluväliä liukusäätimellä.</p>`;
+    if (tilanneN >= 2) wireRangeSlider();
+    piirraNyt();
+  }
+  renderLista(lista);
   document.getElementById('standings-overlay').classList.add('open');
 }
+
+// Kytke kahden kahvan liukusäädin (kaksi päällekkäistä range-inputtia)
+function wireRangeSlider() {
+  const lo = document.getElementById('rng-lo'), hi = document.getElementById('rng-hi');
+  const upd = e => {
+    let a = +lo.value, b = +hi.value;
+    if (a >= b) {  // pidä vähintään yhden ottelun väli
+      if (e && e.target === hi) a = b - 1; else b = a + 1;
+    }
+    a = Math.max(0, Math.min(a, tilanneN - 1));
+    b = Math.min(tilanneN, Math.max(b, 1));
+    lo.value = a; hi.value = b; ikkunaLo = a; ikkunaHi = b;
+    piirraNyt();
+  };
+  lo.addEventListener('input', upd);
+  hi.addEventListener('input', upd);
+}
+
+// Klikkaa pelaajariviä → korosta/poista korostus kuvaajassa (monivalinta)
+document.getElementById('standings-list').addEventListener('click', e => {
+  const row = e.target.closest('.standings-row');
+  if (!row) return;
+  const nimi = row.dataset.nimi;
+  if (tilanneKorostetut.has(nimi)) tilanneKorostetut.delete(nimi); else tilanneKorostetut.add(nimi);
+  piirraNyt();
+  renderLista(laskeTilanne());
+});
 
 function suljeTilanne() {
   document.getElementById('standings-overlay').classList.remove('open');
