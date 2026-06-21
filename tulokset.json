@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-21T20:55:20+03:00",
+  "haettu": "2026-06-21T20:58:48+03:00",
   "lahde": "FIFA API",
   "tuloksia": 37,
   "tulokset": [
@@ -368,10 +368,10 @@
       "aika_fi": "19:00",
       "koti": "Espanja",
       "vieras": "Saudi-Arabia",
-      "koti_maalit": 5,
+      "koti_maalit": 4,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "5–0",
+      "tulos": "4–0",
       "ottelu": "Espanja – Saudi-Arabia"
     }
   ]
