@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-22T20:05:27+03:00",
+  "haettu": "2026-06-22T20:40:35+03:00",
   "lahde": "FIFA API",
   "tuloksia": 41,
   "tulokset": [
@@ -408,10 +408,10 @@
       "aika_fi": "20:00",
       "koti": "Argentiina",
       "vieras": "Itävalta",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "1–0",
       "ottelu": "Argentiina – Itävalta"
     }
   ]
