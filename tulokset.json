@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-22T02:30:36+03:00",
+  "haettu": "2026-06-22T03:05:23+03:00",
   "lahde": "FIFA API",
   "tuloksia": 39,
   "tulokset": [
@@ -390,7 +390,6 @@
       "vieras": "Kap Verde",
       "koti_maalit": 2,
       "vieras_maalit": 2,
-      "kesken": true,
       "tulos": "2–2",
       "ottelu": "Uruguay – Kap Verde"
     }
