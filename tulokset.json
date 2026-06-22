@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-22T05:20:29+03:00",
+  "haettu": "2026-06-22T05:30:35+03:00",
   "lahde": "FIFA API",
   "tuloksia": 40,
   "tulokset": [
@@ -399,9 +399,9 @@
       "koti": "Uusi-Seelanti",
       "vieras": "Egypti",
       "koti_maalit": 1,
-      "vieras_maalit": 1,
+      "vieras_maalit": 2,
       "kesken": true,
-      "tulos": "1–1",
+      "tulos": "1–2",
       "ottelu": "Uusi-Seelanti – Egypti"
     }
   ]
