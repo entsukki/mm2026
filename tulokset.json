@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-23T03:10:30+03:00",
+  "haettu": "2026-06-23T03:25:24+03:00",
   "lahde": "FIFA API",
   "tuloksia": 43,
   "tulokset": [
@@ -418,10 +418,10 @@
       "aika_fi": "00:00",
       "koti": "Ranska",
       "vieras": "Irak",
-      "koti_maalit": 2,
+      "koti_maalit": 3,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "2–0",
+      "tulos": "3–0",
       "ottelu": "Ranska – Irak"
     },
     {
