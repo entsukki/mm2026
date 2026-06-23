@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-23T05:00:45+03:00",
+  "haettu": "2026-06-23T06:05:23+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 43,
+  "tuloksia": 44,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -432,6 +432,17 @@
       "vieras_maalit": 2,
       "tulos": "3–2",
       "ottelu": "Norja – Senegal"
+    },
+    {
+      "pvm": "2026-06-23",
+      "aika_fi": "06:00",
+      "koti": "Jordania",
+      "vieras": "Algeria",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Jordania – Algeria"
     }
   ]
 }
