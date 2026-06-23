@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-23T23:00:49+03:00",
+  "haettu": "2026-06-24T01:00:49+03:00",
   "lahde": "FIFA API",
   "tuloksia": 46,
   "tulokset": [
@@ -460,7 +460,6 @@
       "vieras": "Ghana",
       "koti_maalit": 0,
       "vieras_maalit": 0,
-      "kesken": true,
       "tulos": "0–0",
       "ottelu": "Englanti – Ghana"
     }
