@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-23T06:40:26+03:00",
+  "haettu": "2026-06-23T07:35:21+03:00",
   "lahde": "FIFA API",
   "tuloksia": 44,
   "tulokset": [
@@ -439,9 +439,9 @@
       "koti": "Jordania",
       "vieras": "Algeria",
       "koti_maalit": 1,
-      "vieras_maalit": 0,
+      "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "1–1",
       "ottelu": "Jordania – Algeria"
     }
   ]
