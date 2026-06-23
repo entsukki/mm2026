@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-23T21:25:28+03:00",
+  "haettu": "2026-06-23T21:55:26+03:00",
   "lahde": "FIFA API",
   "tuloksia": 45,
   "tulokset": [
@@ -448,10 +448,10 @@
       "aika_fi": "20:00",
       "koti": "Portugali",
       "vieras": "Uzbekistan",
-      "koti_maalit": 4,
+      "koti_maalit": 5,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "4–0",
+      "tulos": "5–0",
       "ottelu": "Portugali – Uzbekistan"
     }
   ]
