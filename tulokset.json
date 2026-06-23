@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-23T04:20:27+03:00",
+  "haettu": "2026-06-23T04:55:23+03:00",
   "lahde": "FIFA API",
   "tuloksia": 43,
   "tulokset": [
@@ -429,9 +429,9 @@
       "koti": "Norja",
       "vieras": "Senegal",
       "koti_maalit": 3,
-      "vieras_maalit": 1,
+      "vieras_maalit": 2,
       "kesken": true,
-      "tulos": "3–1",
+      "tulos": "3–2",
       "ottelu": "Norja – Senegal"
     }
   ]
