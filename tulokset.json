@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-24T06:40:28+03:00",
+  "haettu": "2026-06-24T07:00:45+03:00",
   "lahde": "FIFA API",
   "tuloksia": 48,
   "tulokset": [
@@ -480,7 +480,6 @@
       "vieras": "Kongon dem. tasavalta",
       "koti_maalit": 1,
       "vieras_maalit": 0,
-      "kesken": true,
       "tulos": "1–0",
       "ottelu": "Kolumbia – Kongon dem. tasavalta"
     }
