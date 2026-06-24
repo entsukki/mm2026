@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-24T07:00:45+03:00",
+  "haettu": "2026-06-24T22:00:45+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 48,
+  "tuloksia": 49,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -482,6 +482,17 @@
       "vieras_maalit": 0,
       "tulos": "1–0",
       "ottelu": "Kolumbia – Kongon dem. tasavalta"
+    },
+    {
+      "pvm": "2026-06-24",
+      "aika_fi": "22:00",
+      "koti": "Sveitsi",
+      "vieras": "Kanada",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Sveitsi – Kanada"
     }
   ]
 }
