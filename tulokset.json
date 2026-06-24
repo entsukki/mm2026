@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-25T01:30:34+03:00",
+  "haettu": "2026-06-25T01:40:27+03:00",
   "lahde": "FIFA API",
   "tuloksia": 52,
   "tulokset": [
@@ -508,10 +508,10 @@
       "aika_fi": "01:00",
       "koti": "Marokko",
       "vieras": "Haiti",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "0–1",
+      "tulos": "1–1",
       "ottelu": "Marokko – Haiti"
     },
     {
