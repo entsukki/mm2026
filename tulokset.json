@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-25T23:00:40+03:00",
+  "haettu": "2026-06-25T23:05:22+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 55,
+  "tuloksia": 56,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -546,12 +546,23 @@
     {
       "pvm": "2026-06-25",
       "aika_fi": "23:00",
-      "koti": "Ecuador",
-      "vieras": "Saksa",
+      "koti": "Curaçao",
+      "vieras": "Norsunluurannikko",
       "koti_maalit": 0,
       "vieras_maalit": 0,
       "kesken": true,
       "tulos": "0–0",
+      "ottelu": "Curaçao – Norsunluurannikko"
+    },
+    {
+      "pvm": "2026-06-25",
+      "aika_fi": "23:00",
+      "koti": "Ecuador",
+      "vieras": "Saksa",
+      "koti_maalit": 0,
+      "vieras_maalit": 1,
+      "kesken": true,
+      "tulos": "0–1",
       "ottelu": "Ecuador – Saksa"
     }
   ]
