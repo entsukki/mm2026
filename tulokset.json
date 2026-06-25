@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-25T02:53:34+03:00",
+  "haettu": "2026-06-25T03:05:24+03:00",
   "lahde": "FIFA API",
   "tuloksia": 52,
   "tulokset": [
@@ -510,7 +510,6 @@
       "vieras": "Haiti",
       "koti_maalit": 4,
       "vieras_maalit": 2,
-      "kesken": true,
       "tulos": "4–2",
       "ottelu": "Marokko – Haiti"
     },
@@ -521,7 +520,6 @@
       "vieras": "Brasilia",
       "koti_maalit": 0,
       "vieras_maalit": 3,
-      "kesken": true,
       "tulos": "0–3",
       "ottelu": "Skotlanti – Brasilia"
     }
