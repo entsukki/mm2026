@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-26T03:20:27+03:00",
+  "haettu": "2026-06-26T03:25:21+03:00",
   "lahde": "FIFA API",
   "tuloksia": 58,
   "tulokset": [
@@ -569,9 +569,9 @@
       "koti": "Tunisia",
       "vieras": "Hollanti",
       "koti_maalit": 1,
-      "vieras_maalit": 2,
+      "vieras_maalit": 3,
       "kesken": true,
-      "tulos": "1–2",
+      "tulos": "1–3",
       "ottelu": "Tunisia – Hollanti"
     },
     {
@@ -580,9 +580,9 @@
       "koti": "Japani",
       "vieras": "Ruotsi",
       "koti_maalit": 1,
-      "vieras_maalit": 0,
+      "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "1–1",
       "ottelu": "Japani – Ruotsi"
     }
   ]
