@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-26T03:15:27+03:00",
+  "haettu": "2026-06-26T03:20:27+03:00",
   "lahde": "FIFA API",
   "tuloksia": 58,
   "tulokset": [
@@ -579,10 +579,10 @@
       "aika_fi": "02:00",
       "koti": "Japani",
       "vieras": "Ruotsi",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "1–0",
       "ottelu": "Japani – Ruotsi"
     }
   ]
