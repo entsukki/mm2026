@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-26T23:30:36+03:00",
+  "haettu": "2026-06-26T23:40:26+03:00",
   "lahde": "FIFA API",
   "tuloksia": 62,
   "tulokset": [
@@ -608,10 +608,10 @@
       "aika_fi": "22:00",
       "koti": "Senegal",
       "vieras": "Irak",
-      "koti_maalit": 3,
+      "koti_maalit": 4,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "3–0",
+      "tulos": "4–0",
       "ottelu": "Senegal – Irak"
     },
     {
