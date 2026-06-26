@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-26T07:05:20+03:00",
+  "haettu": "2026-06-26T22:05:23+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 60,
+  "tuloksia": 62,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -602,6 +602,28 @@
       "vieras_maalit": 2,
       "tulos": "3–2",
       "ottelu": "Turkki – USA"
+    },
+    {
+      "pvm": "2026-06-26",
+      "aika_fi": "22:00",
+      "koti": "Senegal",
+      "vieras": "Irak",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Senegal – Irak"
+    },
+    {
+      "pvm": "2026-06-26",
+      "aika_fi": "22:00",
+      "koti": "Norja",
+      "vieras": "Ranska",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Norja – Ranska"
     }
   ]
 }
