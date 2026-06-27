@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-28T02:00:40+03:00",
+  "haettu": "2026-06-28T02:35:20+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 68,
+  "tuloksia": 70,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -682,6 +682,28 @@
       "vieras_maalit": 1,
       "tulos": "2–1",
       "ottelu": "Kroatia – Ghana"
+    },
+    {
+      "pvm": "2026-06-28",
+      "aika_fi": "02:30",
+      "koti": "Kongon dem. tasavalta",
+      "vieras": "Uzbekistan",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Kongon dem. tasavalta – Uzbekistan"
+    },
+    {
+      "pvm": "2026-06-28",
+      "aika_fi": "02:30",
+      "koti": "Kolumbia",
+      "vieras": "Portugali",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Kolumbia – Portugali"
     }
   ]
 }
