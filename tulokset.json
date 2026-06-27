@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-28T01:40:25+03:00",
+  "haettu": "2026-06-28T01:45:25+03:00",
   "lahde": "FIFA API",
   "tuloksia": 68,
   "tulokset": [
@@ -679,10 +679,10 @@
       "aika_fi": "00:00",
       "koti": "Kroatia",
       "vieras": "Ghana",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "1–1",
+      "tulos": "2–1",
       "ottelu": "Kroatia – Ghana"
     }
   ]
