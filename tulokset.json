@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-27T08:00:45+03:00",
+  "haettu": "2026-06-27T08:05:21+03:00",
   "lahde": "FIFA API",
   "tuloksia": 66,
   "tulokset": [
@@ -660,7 +660,6 @@
       "vieras": "Iran",
       "koti_maalit": 1,
       "vieras_maalit": 1,
-      "kesken": true,
       "tulos": "1–1",
       "ottelu": "Egypti – Iran"
     }
