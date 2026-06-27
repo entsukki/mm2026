@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-27T06:15:24+03:00",
+  "haettu": "2026-06-27T06:30:33+03:00",
   "lahde": "FIFA API",
   "tuloksia": 66,
   "tulokset": [
@@ -649,9 +649,9 @@
       "koti": "Uusi-Seelanti",
       "vieras": "Belgia",
       "koti_maalit": 0,
-      "vieras_maalit": 0,
+      "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "0–1",
       "ottelu": "Uusi-Seelanti – Belgia"
     },
     {
