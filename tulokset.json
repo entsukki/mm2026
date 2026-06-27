@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-27T00:05:23+03:00",
+  "haettu": "2026-06-27T03:05:21+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 62,
+  "tuloksia": 64,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -622,6 +622,28 @@
       "vieras_maalit": 4,
       "tulos": "1–4",
       "ottelu": "Norja – Ranska"
+    },
+    {
+      "pvm": "2026-06-27",
+      "aika_fi": "03:00",
+      "koti": "Uruguay",
+      "vieras": "Espanja",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Uruguay – Espanja"
+    },
+    {
+      "pvm": "2026-06-27",
+      "aika_fi": "03:00",
+      "koti": "Kap Verde",
+      "vieras": "Saudi-Arabia",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Kap Verde – Saudi-Arabia"
     }
   ]
 }
