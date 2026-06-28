@@ -54,6 +54,13 @@
   .vpisteet .selite { font-weight: 400; color: #aaa; }
   .pisteet-huom { margin-top: 12px; font-size: 12px; line-height: 1.45; color: #8a6a0f; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 6px; padding: 7px 10px; }
   #standings-huom { margin: 0 1.25rem 1rem; }
+  .bonus-block { margin: 0 0 1.75rem; padding: 13px 15px; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 8px; }
+  .bonus-head { font-size: 14px; font-weight: 700; color: #8a6a0f; margin-bottom: 4px; }
+  .bonus-selite { font-size: 12px; line-height: 1.45; color: #9a7a1f; margin-bottom: 11px; }
+  .bonus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 3px 20px; }
+  .bonus-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 1px 0; }
+  .bonus-row .bnimi { color: #555; }
+  .bonus-row .bpisteet { font-weight: 600; font-variant-numeric: tabular-nums; color: #8a6a0f; }
   #veik-row { margin: -0.9rem 0 1.5rem; align-items: center; }
   #veik-form { display: flex; align-items: center; gap: 8px; }
   #veik-pw { font-family: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 999px; outline: none; width: 150px; }
@@ -323,6 +330,10 @@ const expanded = new Set();  // avatut veikkauspaneelit (m.match)
 
 // Pisteytyslogiikka ladataan pisteytys.json:sta (lähde: TÄYTTÖOHJEET.pdf)
 let PISTEYTYS = null;
+// Lohkovaiheen ennakkobonukset (bonukset.json) — näytetään 1/16-välierät-osion
+// alla vain kun veikkaukset on avattu. Eivät vaikuta ottelukohtaiseen pistelaskuun.
+let BONUKSET = null;
+let veikNakyvissa = false;
 const STAGE_AVAIN = {
   '1/16-välierät': 'r32', 'Kahdeksannesvälierät': 'r16', 'Neljännesvälierät': 'qf', 'Välierät': 'valierat',
 };
@@ -589,6 +600,20 @@ function veikPanelHtml(list, tulos, pisteet) {
     + (pisteet ? `<div class="pisteet-huom">Pistelasku ei huomioi nyt ns. bonuspisteitä, joten näissä on merkittävä ero oikeaan pistelaskuun verrattuna.</div>` : '');
 }
 
+// Lohkovaiheen bonukset -lohko (näkyy 1/16-välierät-otsikon alla kun veikkaukset avattu)
+function bonusBlockHtml() {
+  if (!BONUKSET || !BONUKSET.bonukset) return '';
+  const rivit = [...BONUKSET.bonukset]
+    .sort((a, b) => b.bonus - a.bonus || a.nimi.localeCompare(b.nimi, 'fi'))
+    .map(b => `<div class="bonus-row"><span class="bnimi">${b.nimi}</span><span class="bpisteet">+${b.bonus} p</span></div>`)
+    .join('');
+  return `<div class="bonus-block">`
+    + `<div class="bonus-head">⭐ Bonukset lohkovaiheesta</div>`
+    + `<div class="bonus-selite">Ennakkoveikkausten bonuspisteet (mm. oikein veikatut jatkoonmenijät) lohkovaiheen päättyessä. Näitä ei lasketa mukaan ottelukohtaisiin pisteisiin yllä.</div>`
+    + `<div class="bonus-grid">${rivit}</div>`
+    + `</div>`;
+}
+
 function render() {
   laskePisteet();
   const byChannel = currentFilter === 'all' ? matches : matches.filter(m => m.ch === currentFilter);
@@ -620,6 +645,7 @@ function render() {
   if (!filtered.length) { el.innerHTML = '<p class="no-results">Ei otteluita valitulla suodattimella.</p>'; return; }
   el.innerHTML = blocks.map(b => `
     ${b.stage ? `<h2 class="stage-header">${b.stage}</h2>` : ''}
+    ${b.stage === '1/16-välierät' && veikNakyvissa ? bonusBlockHtml() : ''}
     ${[...b.days].map(([date, ms]) => `
     <div class="day-group">
       <div class="day-header">${date}</div>
@@ -701,6 +727,7 @@ async function veikKirjaudu(salasana, tallenna) {
   const data = await puraVeikkaukset(salasana); // heittää jos väärä
   if (tallenna) localStorage.setItem(VEIK_PW_KEY, salasana);
   matches.forEach(m => { const v = data.ottelut[m.match]; if (v && v.length) m.veik = v; });
+  veikNakyvissa = true;
   render();
   veikAvattuUI();
 }
@@ -710,6 +737,7 @@ document.getElementById('veik-toggle').addEventListener('click', () => {
     localStorage.removeItem(VEIK_PW_KEY);
     matches.forEach(m => delete m.veik);
     expanded.clear();
+    veikNakyvissa = false;
     render();
     veikLukittuUI();
     return;
@@ -744,6 +772,12 @@ document.getElementById('veik-form').addEventListener('submit', async e => {
 fetch('pisteytys.json?ts=' + Date.now())
   .then(r => r.ok ? r.json() : null)
   .then(data => { if (data) { PISTEYTYS = data; render(); } })
+  .catch(() => {});
+
+// Lohkovaiheen bonukset (staattinen) — haetaan kerran, näytetään kun veikkaukset avattu
+fetch('bonukset.json?ts=' + Date.now())
+  .then(r => r.ok ? r.json() : null)
+  .then(data => { if (data) { BONUKSET = data; if (veikNakyvissa) render(); } })
   .catch(() => {});
 
 // tulokset.json:ia päivittää GitHub Actions (hae_tulokset.py). Haetaan

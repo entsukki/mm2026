@@ -1,0 +1,21 @@
+{
+  "kuvaus": "Lohkovaiheen lopun bonuspisteet. Bonus = käyttäjän toimittaman lopputilanteen kokonaispisteet (perus + bonus) MIINUS sovelluksen ottelukohtaisesti laskemat peruspisteet lohkovaiheen päättyessä. Sisältää lohkovaiheen ennakkobonukset (mm. oikein veikatut jatkoonmenijät) joita sovelluksen ottelupistelasku ei huomioi.",
+  "tilanne": "Lohkovaiheen päätyttyä, ennen ensimmäistä 1/16-välierää",
+  "lahde_pvm": "2026-06-28",
+  "bonukset": [
+    { "nimi": "Kalle",  "bonus": 27, "lohko_yhteensa": 254 },
+    { "nimi": "Rauli",  "bonus": 27, "lohko_yhteensa": 243 },
+    { "nimi": "Erno",   "bonus": 25, "lohko_yhteensa": 243 },
+    { "nimi": "Paavo",  "bonus": 26, "lohko_yhteensa": 243 },
+    { "nimi": "Vili",   "bonus": 25, "lohko_yhteensa": 241 },
+    { "nimi": "Jakke",  "bonus": 27, "lohko_yhteensa": 240 },
+    { "nimi": "Keke",   "bonus": 27, "lohko_yhteensa": 240 },
+    { "nimi": "Justus", "bonus": 27, "lohko_yhteensa": 240 },
+    { "nimi": "Elska",  "bonus": 26, "lohko_yhteensa": 238 },
+    { "nimi": "Sampo",  "bonus": 25, "lohko_yhteensa": 238 },
+    { "nimi": "Pasi",   "bonus": 26, "lohko_yhteensa": 231 },
+    { "nimi": "Tuomas", "bonus": 27, "lohko_yhteensa": 228 },
+    { "nimi": "Kari",   "bonus": 27, "lohko_yhteensa": 214 },
+    { "nimi": "Joonas", "bonus": 25, "lohko_yhteensa": 207 }
+  ]
+}
