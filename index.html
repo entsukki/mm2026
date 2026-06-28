@@ -52,12 +52,12 @@
   .veik-mark { margin-left: 4px; }
   .vpisteet { margin-left: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
   .vpisteet .selite { font-weight: 400; color: #aaa; }
-  .bonus-block { margin: 0 0 1.75rem; padding: 13px 15px; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 8px; }
-  .bonus-head { font-size: 14px; font-weight: 700; color: #8a6a0f; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .bonus-block { margin: 0 0 1.75rem; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 8px; }
+  .bonus-head { font-size: 14px; font-weight: 700; color: #8a6a0f; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 13px 15px; }
   .bonus-head .chev { font-size: 12px; transition: transform 0.15s; }
-  .bonus-block.open .bonus-head { margin-bottom: 11px; }
+  .bonus-block.open .bonus-head { padding-bottom: 4px; }
   .bonus-block.open .bonus-head .chev { transform: rotate(180deg); }
-  .bonus-grid { display: none; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 3px 24px; }
+  .bonus-grid { display: none; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 3px 24px; padding: 0 15px 13px; }
   .bonus-block.open .bonus-grid { display: grid; }
   .bonus-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 1px 0; }
   .bonus-row .bnimi { color: #555; }
