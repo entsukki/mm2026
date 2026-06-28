@@ -54,7 +54,7 @@
   .vpisteet .selite { font-weight: 400; color: #aaa; }
   .bonus-block { margin: 0 0 1.75rem; padding: 13px 15px; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 8px; }
   .bonus-head { font-size: 14px; font-weight: 700; color: #8a6a0f; margin-bottom: 10px; }
-  .bonus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 3px 20px; }
+  .bonus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 3px 24px; }
   .bonus-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 1px 0; }
   .bonus-row .bnimi { color: #555; }
   .bonus-row .bpisteet { font-weight: 600; font-variant-numeric: tabular-nums; color: #8a6a0f; }
@@ -608,8 +608,11 @@ function veikPanelHtml(list, tulos, pisteet) {
 function bonusBlockHtml() {
   if (!BONUKSET || !BONUKSET.bonukset) return '';
   const rivit = [...BONUKSET.bonukset]
-    .sort((a, b) => b.bonus - a.bonus || a.nimi.localeCompare(b.nimi, 'fi'))
-    .map(b => `<div class="bonus-row"><span class="bnimi">${b.nimi}</span><span class="bpisteet">+${b.bonus} p</span></div>`)
+    .map(b => ({ ...b, summa: b.lohko_yhteensa != null ? b.lohko_yhteensa : (b.perus || 0) + b.bonus,
+                       perus: b.perus != null ? b.perus : (b.lohko_yhteensa - b.bonus) }))
+    .sort((a, b) => b.summa - a.summa || a.nimi.localeCompare(b.nimi, 'fi'))
+    .map(b => `<div class="bonus-row"><span class="bnimi">${b.nimi}</span>`
+      + `<span class="bpisteet">${b.perus} + ${b.bonus} = ${b.summa}</span></div>`)
     .join('');
   return `<div class="bonus-block">`
     + `<div class="bonus-head">⭐ Bonukset lohkovaiheesta</div>`
