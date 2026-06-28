@@ -52,8 +52,6 @@
   .veik-mark { margin-left: 4px; }
   .vpisteet { margin-left: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
   .vpisteet .selite { font-weight: 400; color: #aaa; }
-  .pisteet-huom { margin-top: 12px; font-size: 12px; line-height: 1.45; color: #8a6a0f; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 6px; padding: 7px 10px; }
-  #standings-huom { margin: 0 1.25rem 1rem; }
   .bonus-block { margin: 0 0 1.75rem; padding: 13px 15px; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 8px; }
   .bonus-head { font-size: 14px; font-weight: 700; color: #8a6a0f; margin-bottom: 4px; }
   .bonus-selite { font-size: 12px; line-height: 1.45; color: #9a7a1f; margin-bottom: 11px; }
@@ -156,7 +154,6 @@
       <h2>Pistetilanne</h2>
       <button class="modal-close" id="standings-close" aria-label="Sulje">✕</button>
     </div>
-    <div class="pisteet-huom" id="standings-huom">Pisteet sisältävät lohkovaiheen bonukset. Pudotusvaiheen jatkoonmeno- ja turnauksen lopun bonuksia (mestari, maalipörssi, maalimäärä) ei ole vielä laskettu mukaan.</div>
     <div id="standings-chart"></div>
     <div id="standings-list"></div>
   </div>
@@ -605,8 +602,7 @@ function veikPanelHtml(list, tulos, pisteet) {
     + sarake('koti', 'Kotivoitto', ryhmat.koti)
     + sarake('tasa', 'Tasapeli', ryhmat.tasa)
     + sarake('vieras', 'Vierasvoitto', ryhmat.vieras)
-    + `</div>`
-    + (pisteet ? `<div class="pisteet-huom">Pisteet sisältävät lohkovaiheen bonukset (ks. 1/16-välierät-osio). Pudotusvaiheen jatkoonmeno- ja turnauksen lopun bonuksia (mestari, maalipörssi, maalimäärä) ei ole vielä laskettu mukaan.</div>` : '');
+    + `</div>`;
 }
 
 // Lohkovaiheen bonukset -lohko (näkyy 1/16-välierät-otsikon alla kun veikkaukset avattu)
