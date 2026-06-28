@@ -156,7 +156,7 @@
       <h2>Pistetilanne</h2>
       <button class="modal-close" id="standings-close" aria-label="Sulje">✕</button>
     </div>
-    <div class="pisteet-huom" id="standings-huom">Pistelasku ei huomioi nyt ns. bonuspisteitä, joten näissä on merkittävä ero oikeaan pistelaskuun verrattuna.</div>
+    <div class="pisteet-huom" id="standings-huom">Pisteet sisältävät lohkovaiheen bonukset. Pudotusvaiheen jatkoonmeno- ja turnauksen lopun bonuksia (mestari, maalipörssi, maalimäärä) ei ole vielä laskettu mukaan.</div>
     <div id="standings-chart"></div>
     <div id="standings-list"></div>
   </div>
@@ -364,6 +364,7 @@ function otteluPisteet(v, aktK, aktV, s) {
 function laskePisteet() {
   if (!PISTEYTYS) return;
   const saldo = {};  // nimi -> juokseva summa
+  let bonusLisatty = false;  // lohkovaiheen bonukset lisätään kerran 1. pudotuspeliin siirryttäessä
   const jarj = matches.filter(m => m.veik && m.result && !m.live)  // ei pisteitä keskeneräisistä
     .sort((a, b) => a.start - b.start || a.match.localeCompare(b.match));
   jarj.forEach(m => {
@@ -371,6 +372,11 @@ function laskePisteet() {
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
     const s = vaiheAvain(m);
+    // Lohkovaiheen bonukset osaksi kertymää ensimmäisen pudotuspeliottelun "ennen"-saldoa
+    if (!bonusLisatty && s !== 'alkusarja' && BONUKSET) {
+      BONUKSET.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
+      bonusLisatty = true;
+    }
     m.pisteet = {};
     m.veik.forEach(v => {
       const before = saldo[v.nimi] || 0;
@@ -385,13 +391,16 @@ function laskePisteet() {
 // Kokonaispistetilanne laskevasti: [{nimi, pisteet}]
 function laskeTilanne() {
   const saldo = {};
+  let r32Mukana = false;  // onko yksikään pudotuspeli pelattu → lohkobonukset mukaan
   matches.filter(m => m.veik && m.result && !m.live).forEach(m => {  // ei pisteitä keskeneräisistä
     const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
     const s = vaiheAvain(m);
+    if (s !== 'alkusarja') r32Mukana = true;
     m.veik.forEach(v => { saldo[v.nimi] = (saldo[v.nimi] || 0) + otteluPisteet(v, aktK, aktV, s); });
   });
+  if (r32Mukana && BONUKSET) BONUKSET.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
   return Object.entries(saldo)
     .map(([nimi, pisteet]) => ({ nimi, pisteet }))
     .sort((a, b) => b.pisteet - a.pisteet || a.nimi.localeCompare(b.nimi));
@@ -597,7 +606,7 @@ function veikPanelHtml(list, tulos, pisteet) {
     + sarake('tasa', 'Tasapeli', ryhmat.tasa)
     + sarake('vieras', 'Vierasvoitto', ryhmat.vieras)
     + `</div>`
-    + (pisteet ? `<div class="pisteet-huom">Pistelasku ei huomioi nyt ns. bonuspisteitä, joten näissä on merkittävä ero oikeaan pistelaskuun verrattuna.</div>` : '');
+    + (pisteet ? `<div class="pisteet-huom">Pisteet sisältävät lohkovaiheen bonukset (ks. 1/16-välierät-osio). Pudotusvaiheen jatkoonmeno- ja turnauksen lopun bonuksia (mestari, maalipörssi, maalimäärä) ei ole vielä laskettu mukaan.</div>` : '');
 }
 
 // Lohkovaiheen bonukset -lohko (näkyy 1/16-välierät-otsikon alla kun veikkaukset avattu)
