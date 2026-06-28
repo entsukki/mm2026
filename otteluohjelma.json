@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-29T00:00:42+03:00",
+  "haettu": "2026-06-29T01:44:24+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -9,7 +9,9 @@
       "pvm": "2026-06-28",
       "aika_fi": "22:00",
       "koti": "Etelä-Afrikka",
-      "vieras": "Kanada"
+      "vieras": "Kanada",
+      "koti_lahde": "2A",
+      "vieras_lahde": "2B"
     },
     {
       "mno": 74,
@@ -17,7 +19,9 @@
       "pvm": "2026-06-29",
       "aika_fi": "23:30",
       "koti": "Saksa",
-      "vieras": "Paraguay"
+      "vieras": "Paraguay",
+      "koti_lahde": "1E",
+      "vieras_lahde": "3ABCDF"
     },
     {
       "mno": 75,
@@ -25,7 +29,9 @@
       "pvm": "2026-06-30",
       "aika_fi": "04:00",
       "koti": "Hollanti",
-      "vieras": "Marokko"
+      "vieras": "Marokko",
+      "koti_lahde": "1F",
+      "vieras_lahde": "2C"
     },
     {
       "mno": 76,
@@ -33,7 +39,9 @@
       "pvm": "2026-06-29",
       "aika_fi": "20:00",
       "koti": "Brasilia",
-      "vieras": "Japani"
+      "vieras": "Japani",
+      "koti_lahde": "1C",
+      "vieras_lahde": "2F"
     },
     {
       "mno": 77,
@@ -41,7 +49,9 @@
       "pvm": "2026-07-01",
       "aika_fi": "00:00",
       "koti": "Ranska",
-      "vieras": "Ruotsi"
+      "vieras": "Ruotsi",
+      "koti_lahde": "1I",
+      "vieras_lahde": "3CDFGH"
     },
     {
       "mno": 78,
@@ -49,7 +59,9 @@
       "pvm": "2026-06-30",
       "aika_fi": "20:00",
       "koti": "Norsunluurannikko",
-      "vieras": "Norja"
+      "vieras": "Norja",
+      "koti_lahde": "2E",
+      "vieras_lahde": "2I"
     },
     {
       "mno": 79,
@@ -57,7 +69,9 @@
       "pvm": "2026-07-01",
       "aika_fi": "04:00",
       "koti": "Meksiko",
-      "vieras": "Ecuador"
+      "vieras": "Ecuador",
+      "koti_lahde": "1A",
+      "vieras_lahde": "3CEFHI"
     },
     {
       "mno": 80,
@@ -65,7 +79,9 @@
       "pvm": "2026-07-01",
       "aika_fi": "19:00",
       "koti": "Englanti",
-      "vieras": "Kongon dem. tasavalta"
+      "vieras": "Kongon dem. tasavalta",
+      "koti_lahde": "1L",
+      "vieras_lahde": "3EHIJK"
     },
     {
       "mno": 81,
@@ -73,7 +89,9 @@
       "pvm": "2026-07-02",
       "aika_fi": "03:00",
       "koti": "USA",
-      "vieras": "Bosnia ja Hertsegovina"
+      "vieras": "Bosnia ja Hertsegovina",
+      "koti_lahde": "1D",
+      "vieras_lahde": "3BEFIJ"
     },
     {
       "mno": 82,
@@ -81,7 +99,9 @@
       "pvm": "2026-07-01",
       "aika_fi": "23:00",
       "koti": "Belgia",
-      "vieras": "Senegal"
+      "vieras": "Senegal",
+      "koti_lahde": "1G",
+      "vieras_lahde": "3AEHIJ"
     },
     {
       "mno": 83,
@@ -89,7 +109,9 @@
       "pvm": "2026-07-03",
       "aika_fi": "02:00",
       "koti": "Portugali",
-      "vieras": "Kroatia"
+      "vieras": "Kroatia",
+      "koti_lahde": "2K",
+      "vieras_lahde": "2L"
     },
     {
       "mno": 84,
@@ -97,7 +119,9 @@
       "pvm": "2026-07-02",
       "aika_fi": "22:00",
       "koti": "Espanja",
-      "vieras": "Itävalta"
+      "vieras": "Itävalta",
+      "koti_lahde": "1H",
+      "vieras_lahde": "2J"
     },
     {
       "mno": 85,
@@ -105,7 +129,9 @@
       "pvm": "2026-07-03",
       "aika_fi": "06:00",
       "koti": "Sveitsi",
-      "vieras": "Algeria"
+      "vieras": "Algeria",
+      "koti_lahde": "1B",
+      "vieras_lahde": "3EFGIJ"
     },
     {
       "mno": 86,
@@ -113,7 +139,9 @@
       "pvm": "2026-07-04",
       "aika_fi": "01:00",
       "koti": "Argentiina",
-      "vieras": "Kap Verde"
+      "vieras": "Kap Verde",
+      "koti_lahde": "1J",
+      "vieras_lahde": "2H"
     },
     {
       "mno": 87,
@@ -121,7 +149,9 @@
       "pvm": "2026-07-04",
       "aika_fi": "04:30",
       "koti": "Kolumbia",
-      "vieras": "Ghana"
+      "vieras": "Ghana",
+      "koti_lahde": "1K",
+      "vieras_lahde": "3DEIJL"
     },
     {
       "mno": 88,
@@ -129,7 +159,9 @@
       "pvm": "2026-07-03",
       "aika_fi": "21:00",
       "koti": "Australia",
-      "vieras": "Egypti"
+      "vieras": "Egypti",
+      "koti_lahde": "2D",
+      "vieras_lahde": "2G"
     },
     {
       "mno": 89,
@@ -137,7 +169,9 @@
       "pvm": "2026-07-05",
       "aika_fi": "00:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W74",
+      "vieras_lahde": "W77"
     },
     {
       "mno": 90,
@@ -145,7 +179,9 @@
       "pvm": "2026-07-04",
       "aika_fi": "20:00",
       "koti": "Kanada",
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W73",
+      "vieras_lahde": "W75"
     },
     {
       "mno": 91,
@@ -153,7 +189,9 @@
       "pvm": "2026-07-05",
       "aika_fi": "23:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W76",
+      "vieras_lahde": "W78"
     },
     {
       "mno": 92,
@@ -161,7 +199,9 @@
       "pvm": "2026-07-06",
       "aika_fi": "03:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W79",
+      "vieras_lahde": "W80"
     },
     {
       "mno": 93,
@@ -169,7 +209,9 @@
       "pvm": "2026-07-06",
       "aika_fi": "22:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W83",
+      "vieras_lahde": "W84"
     },
     {
       "mno": 94,
@@ -177,7 +219,9 @@
       "pvm": "2026-07-07",
       "aika_fi": "03:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W81",
+      "vieras_lahde": "W82"
     },
     {
       "mno": 95,
@@ -185,7 +229,9 @@
       "pvm": "2026-07-07",
       "aika_fi": "19:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W86",
+      "vieras_lahde": "W88"
     },
     {
       "mno": 96,
@@ -193,7 +239,9 @@
       "pvm": "2026-07-07",
       "aika_fi": "23:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W85",
+      "vieras_lahde": "W87"
     },
     {
       "mno": 97,
@@ -201,7 +249,9 @@
       "pvm": "2026-07-09",
       "aika_fi": "23:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W89",
+      "vieras_lahde": "W90"
     },
     {
       "mno": 98,
@@ -209,7 +259,9 @@
       "pvm": "2026-07-10",
       "aika_fi": "22:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W93",
+      "vieras_lahde": "W94"
     },
     {
       "mno": 99,
@@ -217,7 +269,9 @@
       "pvm": "2026-07-12",
       "aika_fi": "00:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W91",
+      "vieras_lahde": "W92"
     },
     {
       "mno": 100,
@@ -225,7 +279,9 @@
       "pvm": "2026-07-12",
       "aika_fi": "04:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W95",
+      "vieras_lahde": "W96"
     },
     {
       "mno": 101,
@@ -233,7 +289,9 @@
       "pvm": "2026-07-14",
       "aika_fi": "22:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W97",
+      "vieras_lahde": "W98"
     },
     {
       "mno": 102,
@@ -241,7 +299,9 @@
       "pvm": "2026-07-15",
       "aika_fi": "22:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W99",
+      "vieras_lahde": "W100"
     },
     {
       "mno": 103,
@@ -249,7 +309,9 @@
       "pvm": "2026-07-19",
       "aika_fi": "00:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "RU101",
+      "vieras_lahde": "RU102"
     },
     {
       "mno": 104,
@@ -257,7 +319,9 @@
       "pvm": "2026-07-19",
       "aika_fi": "22:00",
       "koti": null,
-      "vieras": null
+      "vieras": null,
+      "koti_lahde": "W101",
+      "vieras_lahde": "W102"
     }
   ]
 }
