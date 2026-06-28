@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-28T06:45:24+03:00",
+  "haettu": "2026-06-28T07:00:41+03:00",
   "lahde": "FIFA API",
   "tuloksia": 72,
   "tulokset": [
@@ -708,10 +708,9 @@
       "aika_fi": "05:00",
       "koti": "Algeria",
       "vieras": "Itävalta",
-      "koti_maalit": 2,
-      "vieras_maalit": 2,
-      "kesken": true,
-      "tulos": "2–2",
+      "koti_maalit": 3,
+      "vieras_maalit": 3,
+      "tulos": "3–3",
       "ottelu": "Algeria – Itävalta"
     },
     {
@@ -721,7 +720,6 @@
       "vieras": "Argentiina",
       "koti_maalit": 1,
       "vieras_maalit": 3,
-      "kesken": true,
       "tulos": "1–3",
       "ottelu": "Jordania – Argentiina"
     }
