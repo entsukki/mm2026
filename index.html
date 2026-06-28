@@ -72,6 +72,8 @@
   .modal-close:hover { color: #1a1a18; }
   .standings-row { display: grid; grid-template-columns: 28px 1fr auto; align-items: baseline; gap: 12px; padding: 9px 1.25rem; border-bottom: 1px solid #f0ede6; cursor: pointer; }
   .standings-row:last-child { border-bottom: none; }
+  .standings-row.sija-a { background: #ffffff; }
+  .standings-row.sija-b { background: #f4f1e8; }
   .standings-row:hover { background: #faf9f6; }
   .standings-row.korostus { background: #f0ede6; }
   .standings-row.top .st-nimi { font-weight: 600; }
@@ -473,11 +475,18 @@ function piirraNyt() {
 }
 
 function renderLista(lista) {
+  // Jaettu sija tasapisteissä (sama järjestysnumero); vieno taustaväri per sija,
+  // kaksi väriä vuorotellen niin että samalla sijalla on sama väri.
+  let edellinenPisteet = null, sija = 0, sijaRyhma = -1;
   document.getElementById('standings-list').innerHTML = lista.length
-    ? lista.map((p, i) => `<div class="standings-row${i === 0 ? ' top' : ''}${tilanneKorostetut.has(p.nimi) ? ' korostus' : ''}" data-nimi="${p.nimi.replace(/"/g, '&quot;')}">`
-        + `<span class="st-sija">${i + 1}.</span>`
+    ? lista.map((p, i) => {
+        if (p.pisteet !== edellinenPisteet) { sija = i + 1; sijaRyhma++; edellinenPisteet = p.pisteet; }
+        const variLuokka = sijaRyhma % 2 === 0 ? 'sija-a' : 'sija-b';
+        return `<div class="standings-row ${variLuokka}${i === 0 ? ' top' : ''}${tilanneKorostetut.has(p.nimi) ? ' korostus' : ''}" data-nimi="${p.nimi.replace(/"/g, '&quot;')}">`
+        + `<span class="st-sija">${sija}.</span>`
         + `<span class="st-nimi"><span class="st-dot" style="background:${tilanneVarit[p.nimi]}"></span>${p.nimi}</span>`
-        + `<span class="st-pisteet">${p.pisteet}</span></div>`).join('')
+        + `<span class="st-pisteet">${p.pisteet}</span></div>`;
+      }).join('')
     : '<p class="standings-empty">Ei vielä pelattuja otteluita.</p>';
 }
 
