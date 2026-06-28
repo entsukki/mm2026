@@ -47,6 +47,10 @@ def pudotusottelut():
             "aika_fi": alku_fi.strftime("%H:%M"),
             "koti": joukkue_nimi(m.get("Home")),
             "vieras": joukkue_nimi(m.get("Away")),
+            # Lähdeottelu kun joukkue ei vielä selvillä: esim. "W73" = ottelun 73
+            # voittaja. index.html näyttää tyhjälle paikalle vaihtoehdot (A/B).
+            "koti_lahde": m.get("PlaceHolderA"),
+            "vieras_lahde": m.get("PlaceHolderB"),
         })
     ottelut.sort(key=lambda x: x["mno"] if x["mno"] is not None else 0)
     return ottelut
