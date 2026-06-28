@@ -265,39 +265,41 @@ const matches = [
   {date:'Su 28.6.',ts:18,time:'02:30',match:'Kongon dem. tasavalta – Uzbekistan',ch:'MTV',paid:1},
   {date:'Su 28.6.',ts:18,time:'05:00',match:'Algeria – Itävalta',ch:'Yle'},
   {date:'Su 28.6.',ts:18,time:'05:00',match:'Jordania – Argentiina',ch:'Yle'},
-  // Pudotusvaihe – parit selviävät alkulohkojen päätyttyä
-  {date:'Su 28.6.',time:'22:00',match:'A-lohkon 2. – B-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
-  {date:'Ma 29.6.',time:'20:00',match:'C-lohkon 1. – F-lohkon 2.',ch:'MTV',stage:'1/16-välierät'},
-  {date:'Ma 29.6.',time:'23:30',match:'E-lohkon 1. – paras kolmonen (A/B/C/D/F)',ch:'MTV',stage:'1/16-välierät'},
-  {date:'Ti 30.6.',time:'04:00',match:'F-lohkon 1. – C-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
-  {date:'Ti 30.6.',time:'20:00',match:'E-lohkon 2. – I-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
-  {date:'Ke 1.7.',time:'00:00',match:'I-lohkon 1. – paras kolmonen (C/D/F/G/H)',ch:'Yle',stage:'1/16-välierät'},
-  {date:'Ke 1.7.',time:'04:00',match:'A-lohkon 1. – paras kolmonen (C/E/F/H/I)',ch:'Yle',stage:'1/16-välierät'},
-  {date:'Ke 1.7.',time:'19:00',match:'L-lohkon 1. – paras kolmonen (E/H/I/J/K)',ch:'MTV',stage:'1/16-välierät'},
-  {date:'Ke 1.7.',time:'23:00',match:'G-lohkon 1. – paras kolmonen (A/E/H/I/J)',ch:'MTV',stage:'1/16-välierät'},
-  {date:'To 2.7.',time:'03:00',match:'D-lohkon 1. – paras kolmonen (B/E/F/I/J)',ch:'MTV',paid:1,stage:'1/16-välierät'},
-  {date:'To 2.7.',time:'22:00',match:'H-lohkon 1. – J-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
-  {date:'Pe 3.7.',time:'02:00',match:'K-lohkon 2. – L-lohkon 2.',ch:'Yle',stage:'1/16-välierät'},
-  {date:'Pe 3.7.',time:'06:00',match:'B-lohkon 1. – paras kolmonen (E/F/G/I/J)',ch:'Yle',stage:'1/16-välierät'},
-  {date:'Pe 3.7.',time:'21:00',match:'D-lohkon 2. – G-lohkon 2.',ch:'MTV',stage:'1/16-välierät'},
-  {date:'La 4.7.',time:'01:00',match:'J-lohkon 1. – H-lohkon 2.',ch:'MTV',stage:'1/16-välierät'},
-  {date:'La 4.7.',time:'04:30',match:'K-lohkon 1. – paras kolmonen (D/E/I/J/L)',ch:'MTV',paid:1,stage:'1/16-välierät'},
-  {date:'La 4.7.',time:'20:00',match:'Kahdeksannesvälierä 1',ch:'MTV',stage:'Kahdeksannesvälierät'},
-  {date:'Su 5.7.',time:'00:00',match:'Kahdeksannesvälierä 2',ch:'MTV',stage:'Kahdeksannesvälierät'},
-  {date:'Su 5.7.',time:'23:00',match:'Kahdeksannesvälierä 3',ch:'Yle',stage:'Kahdeksannesvälierät'},
-  {date:'Ma 6.7.',time:'03:00',match:'Kahdeksannesvälierä 4',ch:'Yle',stage:'Kahdeksannesvälierät'},
-  {date:'Ma 6.7.',time:'22:00',match:'Kahdeksannesvälierä 5',ch:'MTV',stage:'Kahdeksannesvälierät'},
-  {date:'Ti 7.7.',time:'03:00',match:'Kahdeksannesvälierä 6',ch:'MTV',stage:'Kahdeksannesvälierät'},
-  {date:'Ti 7.7.',time:'19:00',match:'Kahdeksannesvälierä 7',ch:'Yle',stage:'Kahdeksannesvälierät'},
-  {date:'Ti 7.7.',time:'23:00',match:'Kahdeksannesvälierä 8',ch:'Yle',stage:'Kahdeksannesvälierät'},
-  {date:'To 9.7.',time:'23:00',match:'Neljännesvälierä 1',ch:'Yle',stage:'Neljännesvälierät'},
-  {date:'Pe 10.7.',time:'22:00',match:'Neljännesvälierä 2',ch:'MTV',stage:'Neljännesvälierät'},
-  {date:'Su 12.7.',time:'00:00',match:'Neljännesvälierä 3',ch:'Yle',stage:'Neljännesvälierät'},
-  {date:'Su 12.7.',time:'04:00',match:'Neljännesvälierä 4',ch:'MTV',stage:'Neljännesvälierät'},
-  {date:'Ti 14.7.',time:'22:00',match:'Välierä 1',ch:'Yle',stage:'Välierät'},
-  {date:'Ke 15.7.',time:'22:00',match:'Välierä 2',ch:'MTV',stage:'Välierät'},
-  {date:'Su 19.7.',time:'00:00',match:'Pronssiottelu',ch:'MTV',stage:'Pronssi- ja loppuottelu'},
-  {date:'Su 19.7.',time:'22:00',match:'Loppuottelu',ch:'Yle',stage:'Pronssi- ja loppuottelu'},
+  // Pudotusvaihe – parit selviävät alkulohkojen päätyttyä. mno = FIFA:n MatchNumber:
+  // vakaa tunniste, jolla otteluohjelma.json (hae_otteluohjelma.py) täydentää oikeat
+  // joukkuenimet ja ajat heti kun kierros ratkeaa.
+  {date:'Su 28.6.',time:'22:00',match:'A-lohkon 2. – B-lohkon 2.',ch:'Yle',stage:'1/16-välierät',mno:73},
+  {date:'Ma 29.6.',time:'20:00',match:'C-lohkon 1. – F-lohkon 2.',ch:'MTV',stage:'1/16-välierät',mno:76},
+  {date:'Ma 29.6.',time:'23:30',match:'E-lohkon 1. – paras kolmonen (A/B/C/D/F)',ch:'MTV',stage:'1/16-välierät',mno:74},
+  {date:'Ti 30.6.',time:'04:00',match:'F-lohkon 1. – C-lohkon 2.',ch:'Yle',stage:'1/16-välierät',mno:75},
+  {date:'Ti 30.6.',time:'20:00',match:'E-lohkon 2. – I-lohkon 2.',ch:'Yle',stage:'1/16-välierät',mno:78},
+  {date:'Ke 1.7.',time:'00:00',match:'I-lohkon 1. – paras kolmonen (C/D/F/G/H)',ch:'Yle',stage:'1/16-välierät',mno:77},
+  {date:'Ke 1.7.',time:'04:00',match:'A-lohkon 1. – paras kolmonen (C/E/F/H/I)',ch:'Yle',stage:'1/16-välierät',mno:79},
+  {date:'Ke 1.7.',time:'19:00',match:'L-lohkon 1. – paras kolmonen (E/H/I/J/K)',ch:'MTV',stage:'1/16-välierät',mno:80},
+  {date:'Ke 1.7.',time:'23:00',match:'G-lohkon 1. – paras kolmonen (A/E/H/I/J)',ch:'MTV',stage:'1/16-välierät',mno:82},
+  {date:'To 2.7.',time:'03:00',match:'D-lohkon 1. – paras kolmonen (B/E/F/I/J)',ch:'MTV',paid:1,stage:'1/16-välierät',mno:81},
+  {date:'To 2.7.',time:'22:00',match:'H-lohkon 1. – J-lohkon 2.',ch:'Yle',stage:'1/16-välierät',mno:84},
+  {date:'Pe 3.7.',time:'02:00',match:'K-lohkon 2. – L-lohkon 2.',ch:'Yle',stage:'1/16-välierät',mno:83},
+  {date:'Pe 3.7.',time:'06:00',match:'B-lohkon 1. – paras kolmonen (E/F/G/I/J)',ch:'Yle',stage:'1/16-välierät',mno:85},
+  {date:'Pe 3.7.',time:'21:00',match:'D-lohkon 2. – G-lohkon 2.',ch:'MTV',stage:'1/16-välierät',mno:88},
+  {date:'La 4.7.',time:'01:00',match:'J-lohkon 1. – H-lohkon 2.',ch:'MTV',stage:'1/16-välierät',mno:86},
+  {date:'La 4.7.',time:'04:30',match:'K-lohkon 1. – paras kolmonen (D/E/I/J/L)',ch:'MTV',paid:1,stage:'1/16-välierät',mno:87},
+  {date:'La 4.7.',time:'20:00',match:'Kahdeksannesvälierä 1',ch:'MTV',stage:'Kahdeksannesvälierät',mno:90},
+  {date:'Su 5.7.',time:'00:00',match:'Kahdeksannesvälierä 2',ch:'MTV',stage:'Kahdeksannesvälierät',mno:89},
+  {date:'Su 5.7.',time:'23:00',match:'Kahdeksannesvälierä 3',ch:'Yle',stage:'Kahdeksannesvälierät',mno:91},
+  {date:'Ma 6.7.',time:'03:00',match:'Kahdeksannesvälierä 4',ch:'Yle',stage:'Kahdeksannesvälierät',mno:92},
+  {date:'Ma 6.7.',time:'22:00',match:'Kahdeksannesvälierä 5',ch:'MTV',stage:'Kahdeksannesvälierät',mno:93},
+  {date:'Ti 7.7.',time:'03:00',match:'Kahdeksannesvälierä 6',ch:'MTV',stage:'Kahdeksannesvälierät',mno:94},
+  {date:'Ti 7.7.',time:'19:00',match:'Kahdeksannesvälierä 7',ch:'Yle',stage:'Kahdeksannesvälierät',mno:95},
+  {date:'Ti 7.7.',time:'23:00',match:'Kahdeksannesvälierä 8',ch:'Yle',stage:'Kahdeksannesvälierät',mno:96},
+  {date:'To 9.7.',time:'23:00',match:'Neljännesvälierä 1',ch:'Yle',stage:'Neljännesvälierät',mno:97},
+  {date:'Pe 10.7.',time:'22:00',match:'Neljännesvälierä 2',ch:'MTV',stage:'Neljännesvälierät',mno:98},
+  {date:'Su 12.7.',time:'00:00',match:'Neljännesvälierä 3',ch:'Yle',stage:'Neljännesvälierät',mno:99},
+  {date:'Su 12.7.',time:'04:00',match:'Neljännesvälierä 4',ch:'MTV',stage:'Neljännesvälierät',mno:100},
+  {date:'Ti 14.7.',time:'22:00',match:'Välierä 1',ch:'Yle',stage:'Välierät',mno:101},
+  {date:'Ke 15.7.',time:'22:00',match:'Välierä 2',ch:'MTV',stage:'Välierät',mno:102},
+  {date:'Su 19.7.',time:'00:00',match:'Pronssiottelu',ch:'MTV',stage:'Pronssi- ja loppuottelu',mno:103},
+  {date:'Su 19.7.',time:'22:00',match:'Loppuottelu',ch:'Yle',stage:'Pronssi- ja loppuottelu',mno:104},
 ];
 
 // Ottelu arkistoidaan (piilotetaan oletuksena) 4 tuntia aloitusajan jälkeen
@@ -322,6 +324,15 @@ const STAGE_AVAIN = {
   '1/16-välierät': 'r32', 'Kahdeksannesvälierät': 'r16', 'Neljännesvälierät': 'qf', 'Välierät': 'valierat',
 };
 
+// Ottelun pisteytysvaihe (pisteytys.json:n avain). Pronssi- ja loppuottelu jakavat
+// saman stage-otsikon ("Pronssi- ja loppuottelu"), joten ne erotellaan mno:n perusteella
+// (103=pronssi, 104=finaali) — muuten molemmat putoaisivat alkusarjan kertoimille.
+function vaiheAvain(m) {
+  if (m.mno === 103) return 'pronssi';
+  if (m.mno === 104) return 'finaali';
+  return m.stage ? (STAGE_AVAIN[m.stage] || 'alkusarja') : 'alkusarja';
+}
+
 // Yhden veikkauksen ottelupisteet (additiivinen) vaiheessa s
 function otteluPisteet(v, aktK, aktV, s) {
   const k = PISTEYTYS.ottelupisteet.komponentit;
@@ -345,7 +356,7 @@ function laskePisteet() {
     const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
-    const s = m.stage ? (STAGE_AVAIN[m.stage] || 'alkusarja') : 'alkusarja';
+    const s = vaiheAvain(m);
     m.pisteet = {};
     m.veik.forEach(v => {
       const before = saldo[v.nimi] || 0;
@@ -364,7 +375,7 @@ function laskeTilanne() {
     const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
-    const s = m.stage ? (STAGE_AVAIN[m.stage] || 'alkusarja') : 'alkusarja';
+    const s = vaiheAvain(m);
     m.veik.forEach(v => { saldo[v.nimi] = (saldo[v.nimi] || 0) + otteluPisteet(v, aktK, aktV, s); });
   });
   return Object.entries(saldo)
@@ -745,6 +756,48 @@ function naytaPaivitetty(iso) {
   el.textContent = `Tulokset päivitetty ${osat.day}.${osat.month}. klo ${osat.hour}.${osat.minute}`;
 }
 
+// otteluohjelma.json:ia päivittää GitHub Actions (hae_otteluohjelma.py). Tuo
+// pudotusvaiheen oikeat joukkuenimet ja ajat heti kun kierros ratkeaa; yhdistetään
+// kovakoodattuihin otteluihin FIFA:n MatchNumberin (m.mno) perusteella.
+function isoPvmFi(iso, time) {
+  // '2026-07-05' + '00:00' -> 'Su 5.7.' (Helsingin aikavyöhykkeellä otteluhetkellä)
+  const ms = Date.parse(iso + 'T' + time + ':00+03:00');
+  const osat = new Intl.DateTimeFormat('fi-FI', {
+    timeZone: 'Europe/Helsinki', weekday: 'short', day: 'numeric', month: 'numeric',
+  }).formatToParts(ms).reduce((o, p) => (o[p.type] = p.value, o), {});
+  const wd = osat.weekday.replace('.', '');  // "su" -> "Su"
+  return `${wd[0].toUpperCase()}${wd.slice(1)} ${osat.day}.${osat.month}.`;
+}
+
+function haeOhjelma() {
+  fetch('otteluohjelma.json?ts=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data || !data.ottelut) return;
+      const byMno = new Map(data.ottelut.map(o => [o.mno, o]));
+      let muuttui = false;
+      matches.forEach(m => {
+        if (!m.mno) return;
+        const o = byMno.get(m.mno);
+        if (!o) return;
+        // Joukkuenimet vasta kun molemmat selvillä – muuten säilytä yleisotsikko
+        if (o.koti && o.vieras) {
+          const uusi = `${o.koti} – ${o.vieras}`;
+          if (m.match !== uusi) { m.match = uusi; muuttui = true; }
+        }
+        // Synkkaa aika FIFA:sta (kestää uudelleenaikataulutuksen)
+        if (o.pvm && o.aika_fi) {
+          const uusiPvm = isoPvmFi(o.pvm, o.aika_fi);
+          if (m.time !== o.aika_fi || m.date !== uusiPvm) {
+            m.time = o.aika_fi; m.date = uusiPvm; m.start = matchStartMs(m); muuttui = true;
+          }
+        }
+      });
+      if (muuttui) { render(); haeTulokset(); }  // päivitä myös tulokset juuri ratkenneisiin pareihin
+    })
+    .catch(() => {});
+}
+
 function haeTulokset() {
   fetch('tulokset.json?ts=' + Date.now())
     .then(r => r.ok ? r.json() : null)
@@ -766,8 +819,9 @@ function haeTulokset() {
     })
     .catch(() => {});
 }
+haeOhjelma();   // pudotusvaiheen parit ensin, sitten tulokset osuvat oikeisiin nimiin
 haeTulokset();
-setInterval(haeTulokset, 5 * 60 * 1000);  // 5 min välein
+setInterval(() => { haeOhjelma(); haeTulokset(); }, 5 * 60 * 1000);  // 5 min välein
 </script>
 </body>
 </html>

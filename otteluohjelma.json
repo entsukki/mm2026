@@ -1,0 +1,263 @@
+{
+  "haettu": "2026-06-28T17:30:48+03:00",
+  "lahde": "FIFA API",
+  "otteluita": 32,
+  "ottelut": [
+    {
+      "mno": 73,
+      "stage": "Round of 32",
+      "pvm": "2026-06-28",
+      "aika_fi": "22:00",
+      "koti": "Etelä-Afrikka",
+      "vieras": "Kanada"
+    },
+    {
+      "mno": 74,
+      "stage": "Round of 32",
+      "pvm": "2026-06-29",
+      "aika_fi": "23:30",
+      "koti": "Saksa",
+      "vieras": "Paraguay"
+    },
+    {
+      "mno": 75,
+      "stage": "Round of 32",
+      "pvm": "2026-06-30",
+      "aika_fi": "04:00",
+      "koti": "Hollanti",
+      "vieras": "Marokko"
+    },
+    {
+      "mno": 76,
+      "stage": "Round of 32",
+      "pvm": "2026-06-29",
+      "aika_fi": "20:00",
+      "koti": "Brasilia",
+      "vieras": "Japani"
+    },
+    {
+      "mno": 77,
+      "stage": "Round of 32",
+      "pvm": "2026-07-01",
+      "aika_fi": "00:00",
+      "koti": "Ranska",
+      "vieras": "Ruotsi"
+    },
+    {
+      "mno": 78,
+      "stage": "Round of 32",
+      "pvm": "2026-06-30",
+      "aika_fi": "20:00",
+      "koti": "Norsunluurannikko",
+      "vieras": "Norja"
+    },
+    {
+      "mno": 79,
+      "stage": "Round of 32",
+      "pvm": "2026-07-01",
+      "aika_fi": "04:00",
+      "koti": "Meksiko",
+      "vieras": "Ecuador"
+    },
+    {
+      "mno": 80,
+      "stage": "Round of 32",
+      "pvm": "2026-07-01",
+      "aika_fi": "19:00",
+      "koti": "Englanti",
+      "vieras": "Kongon dem. tasavalta"
+    },
+    {
+      "mno": 81,
+      "stage": "Round of 32",
+      "pvm": "2026-07-02",
+      "aika_fi": "03:00",
+      "koti": "USA",
+      "vieras": "Bosnia ja Hertsegovina"
+    },
+    {
+      "mno": 82,
+      "stage": "Round of 32",
+      "pvm": "2026-07-01",
+      "aika_fi": "23:00",
+      "koti": "Belgia",
+      "vieras": "Senegal"
+    },
+    {
+      "mno": 83,
+      "stage": "Round of 32",
+      "pvm": "2026-07-03",
+      "aika_fi": "02:00",
+      "koti": "Portugali",
+      "vieras": "Kroatia"
+    },
+    {
+      "mno": 84,
+      "stage": "Round of 32",
+      "pvm": "2026-07-02",
+      "aika_fi": "22:00",
+      "koti": "Espanja",
+      "vieras": "Itävalta"
+    },
+    {
+      "mno": 85,
+      "stage": "Round of 32",
+      "pvm": "2026-07-03",
+      "aika_fi": "06:00",
+      "koti": "Sveitsi",
+      "vieras": "Algeria"
+    },
+    {
+      "mno": 86,
+      "stage": "Round of 32",
+      "pvm": "2026-07-04",
+      "aika_fi": "01:00",
+      "koti": "Argentiina",
+      "vieras": "Kap Verde"
+    },
+    {
+      "mno": 87,
+      "stage": "Round of 32",
+      "pvm": "2026-07-04",
+      "aika_fi": "04:30",
+      "koti": "Kolumbia",
+      "vieras": "Ghana"
+    },
+    {
+      "mno": 88,
+      "stage": "Round of 32",
+      "pvm": "2026-07-03",
+      "aika_fi": "21:00",
+      "koti": "Australia",
+      "vieras": "Egypti"
+    },
+    {
+      "mno": 89,
+      "stage": "Round of 16",
+      "pvm": "2026-07-05",
+      "aika_fi": "00:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 90,
+      "stage": "Round of 16",
+      "pvm": "2026-07-04",
+      "aika_fi": "20:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 91,
+      "stage": "Round of 16",
+      "pvm": "2026-07-05",
+      "aika_fi": "23:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 92,
+      "stage": "Round of 16",
+      "pvm": "2026-07-06",
+      "aika_fi": "03:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 93,
+      "stage": "Round of 16",
+      "pvm": "2026-07-06",
+      "aika_fi": "22:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 94,
+      "stage": "Round of 16",
+      "pvm": "2026-07-07",
+      "aika_fi": "03:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 95,
+      "stage": "Round of 16",
+      "pvm": "2026-07-07",
+      "aika_fi": "19:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 96,
+      "stage": "Round of 16",
+      "pvm": "2026-07-07",
+      "aika_fi": "23:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 97,
+      "stage": "Quarter-final",
+      "pvm": "2026-07-09",
+      "aika_fi": "23:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 98,
+      "stage": "Quarter-final",
+      "pvm": "2026-07-10",
+      "aika_fi": "22:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 99,
+      "stage": "Quarter-final",
+      "pvm": "2026-07-12",
+      "aika_fi": "00:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 100,
+      "stage": "Quarter-final",
+      "pvm": "2026-07-12",
+      "aika_fi": "04:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 101,
+      "stage": "Semi-final",
+      "pvm": "2026-07-14",
+      "aika_fi": "22:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 102,
+      "stage": "Semi-final",
+      "pvm": "2026-07-15",
+      "aika_fi": "22:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 103,
+      "stage": "Play-off for third place",
+      "pvm": "2026-07-19",
+      "aika_fi": "00:00",
+      "koti": null,
+      "vieras": null
+    },
+    {
+      "mno": 104,
+      "stage": "Final",
+      "pvm": "2026-07-19",
+      "aika_fi": "22:00",
+      "koti": null,
+      "vieras": null
+    }
+  ]
+}

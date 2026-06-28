@@ -24,14 +24,17 @@ jobs:
       - name: Hae tulokset (FIFA API + TheSportsDB-ristiintarkistus)
         run: python3 hae_tulokset.py
 
-      - name: Commitoi ja pushaa jos tulokset muuttuivat
+      - name: Hae pudotusvaiheen otteluohjelma (FIFA API)
+        run: python3 hae_otteluohjelma.py
+
+      - name: Commitoi ja pushaa jos tulokset tai otteluohjelma muuttuivat
         run: |
-          if git diff --quiet tulokset.json; then
-            echo "Ei uusia tuloksia - ei committia."
+          if git diff --quiet tulokset.json otteluohjelma.json; then
+            echo "Ei muutoksia - ei committia."
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add tulokset.json
-            git commit -m "Päivitä tulokset automaattisesti"
+            git add tulokset.json otteluohjelma.json
+            git commit -m "Päivitä tulokset ja otteluohjelma automaattisesti"
             git push
           fi
