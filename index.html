@@ -475,12 +475,14 @@ function piirraNyt() {
 }
 
 function renderLista(lista) {
-  // Jaettu sija tasapisteissä (sama järjestysnumero); vieno taustaväri per sija,
-  // kaksi väriä vuorotellen niin että samalla sijalla on sama väri.
-  let edellinenPisteet = null, sija = 0, sijaRyhma = -1;
+  // Jaettu sija tasapisteissä (sama järjestysnumero); juokseva numerointi ilman
+  // välejä (3 sijalla 1. → seuraava on 2.). Vieno taustaväri per sija, kaksi
+  // väriä vuorotellen niin että samalla sijalla on sama väri.
+  let edellinenPisteet = null, sija = 0;
   document.getElementById('standings-list').innerHTML = lista.length
     ? lista.map((p, i) => {
-        if (p.pisteet !== edellinenPisteet) { sija = i + 1; sijaRyhma++; edellinenPisteet = p.pisteet; }
+        if (p.pisteet !== edellinenPisteet) { sija++; edellinenPisteet = p.pisteet; }
+        const sijaRyhma = sija - 1;
         const variLuokka = sijaRyhma % 2 === 0 ? 'sija-a' : 'sija-b';
         return `<div class="standings-row ${variLuokka}${i === 0 ? ' top' : ''}${tilanneKorostetut.has(p.nimi) ? ' korostus' : ''}" data-nimi="${p.nimi.replace(/"/g, '&quot;')}">`
         + `<span class="st-sija">${sija}.</span>`
