@@ -651,7 +651,7 @@ function render() {
   if (!filtered.length) { el.innerHTML = '<p class="no-results">Ei otteluita valitulla suodattimella.</p>'; return; }
   el.innerHTML = blocks.map(b => `
     ${b.stage ? `<h2 class="stage-header">${b.stage}</h2>` : ''}
-    ${b.stage === '1/16-välierät' && veikNakyvissa ? bonusBlockHtml() : ''}
+    ${b.stage === '1/16-välierät' && veikNakyvissa && showResults ? bonusBlockHtml() : ''}
     ${[...b.days].map(([date, ms]) => `
     <div class="day-group">
       <div class="day-header">${date}</div>
