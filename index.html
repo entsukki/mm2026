@@ -847,14 +847,15 @@ function sivunOtsikko(nimi, lahde, byMno) {
   }
   return null;
 }
-// Ottelun otsikko: "Koti – Vieras" kun molemmat selvillä; tai osittainen
-// "Kanada – (Hollanti/Marokko)" kun toinen jo selvinnyt ja toisen vaihtoehdot
-// johdettavissa; muuten null (säilytä yleisotsikko, esim. "Kahdeksannesvälierä 1").
+// Ottelun otsikko: "Koti – Vieras" kun molemmat selvillä; tai osittainen pari
+// vaihtoehtoineen heti kun molempien puolten lähdeottelut ovat tiedossa, esim.
+// "Kanada – (Hollanti/Marokko)" tai "(Brasilia/Japani) – (Norsunluurannikko/Norja)".
+// Null = säilytä yleisotsikko (esim. "Kahdeksannesvälierä 1"), kun vaihtoehtoja
+// ei vielä pystytä määrittämään.
 function otteluOtsikko(o, byMno) {
-  if (!(o.koti || o.vieras)) return null;            // kumpikaan ei vielä selvinnyt
   const koti = sivunOtsikko(o.koti, o.koti_lahde, byMno);
   const vieras = sivunOtsikko(o.vieras, o.vieras_lahde, byMno);
-  if (!koti || !vieras) return null;                 // vaihtoehtoja ei pystytä määrittämään
+  if (!koti || !vieras) return null;
   return `${koti} – ${vieras}`;
 }
 
