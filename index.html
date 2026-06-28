@@ -53,8 +53,7 @@
   .vpisteet { margin-left: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
   .vpisteet .selite { font-weight: 400; color: #aaa; }
   .bonus-block { margin: 0 0 1.75rem; padding: 13px 15px; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 8px; }
-  .bonus-head { font-size: 14px; font-weight: 700; color: #8a6a0f; margin-bottom: 4px; }
-  .bonus-selite { font-size: 12px; line-height: 1.45; color: #9a7a1f; margin-bottom: 11px; }
+  .bonus-head { font-size: 14px; font-weight: 700; color: #8a6a0f; margin-bottom: 10px; }
   .bonus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 3px 20px; }
   .bonus-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 1px 0; }
   .bonus-row .bnimi { color: #555; }
@@ -614,7 +613,6 @@ function bonusBlockHtml() {
     .join('');
   return `<div class="bonus-block">`
     + `<div class="bonus-head">⭐ Bonukset lohkovaiheesta</div>`
-    + `<div class="bonus-selite">Ennakkoveikkausten bonuspisteet (mm. oikein veikatut jatkoonmenijät) lohkovaiheen päättyessä. Näitä ei lasketa mukaan ottelukohtaisiin pisteisiin yllä.</div>`
     + `<div class="bonus-grid">${rivit}</div>`
     + `</div>`;
 }
