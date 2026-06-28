@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-28T04:25:20+03:00",
+  "haettu": "2026-06-28T04:30:36+03:00",
   "lahde": "FIFA API",
   "tuloksia": 70,
   "tulokset": [
@@ -701,7 +701,6 @@
       "vieras": "Portugali",
       "koti_maalit": 0,
       "vieras_maalit": 0,
-      "kesken": true,
       "tulos": "0–0",
       "ottelu": "Kolumbia – Portugali"
     }
