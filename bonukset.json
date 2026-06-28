@@ -1,0 +1,21 @@
+{
+  "kuvaus": "Lohkovaiheen lopun bonuspisteet. Bonus = käyttäjän toimittaman lopputilanteen kokonaispisteet (perus + bonus) MIINUS sovelluksen ottelukohtaisesti laskemat peruspisteet lohkovaiheen päättyessä. Sisältää lohkovaiheen ennakkobonukset (mm. oikein veikatut jatkoonmenijät) joita sovelluksen ottelupistelasku ei huomioi.",
+  "tilanne": "Lohkovaiheen päätyttyä, ennen ensimmäistä 1/16-välierää",
+  "lahde_pvm": "2026-06-28",
+  "bonukset": [
+    { "nimi": "Kalle",  "perus": 227, "bonus": 27, "lohko_yhteensa": 254 },
+    { "nimi": "Rauli",  "perus": 216, "bonus": 27, "lohko_yhteensa": 243 },
+    { "nimi": "Erno",   "perus": 218, "bonus": 25, "lohko_yhteensa": 243 },
+    { "nimi": "Paavo",  "perus": 217, "bonus": 26, "lohko_yhteensa": 243 },
+    { "nimi": "Vili",   "perus": 216, "bonus": 25, "lohko_yhteensa": 241 },
+    { "nimi": "Jakke",  "perus": 213, "bonus": 27, "lohko_yhteensa": 240 },
+    { "nimi": "Keke",   "perus": 213, "bonus": 27, "lohko_yhteensa": 240 },
+    { "nimi": "Justus", "perus": 213, "bonus": 27, "lohko_yhteensa": 240 },
+    { "nimi": "Elska",  "perus": 212, "bonus": 26, "lohko_yhteensa": 238 },
+    { "nimi": "Sampo",  "perus": 213, "bonus": 25, "lohko_yhteensa": 238 },
+    { "nimi": "Pasi",   "perus": 205, "bonus": 26, "lohko_yhteensa": 231 },
+    { "nimi": "Tuomas", "perus": 201, "bonus": 27, "lohko_yhteensa": 228 },
+    { "nimi": "Kari",   "perus": 187, "bonus": 27, "lohko_yhteensa": 214 },
+    { "nimi": "Joonas", "perus": 182, "bonus": 25, "lohko_yhteensa": 207 }
+  ]
+}

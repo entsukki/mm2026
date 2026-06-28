@@ -47,13 +47,17 @@
   .veik-grp-vieras .veik-grp-head { background: #e7ecf1; color: #455f73; }
   .veik-row { display: flex; justify-content: space-between; gap: 10px; padding: 1px 0; }
   .veik-row .vnimi { color: #555; }
-  .veik-row .vtulos { font-variant-numeric: tabular-nums; font-weight: 500; color: #1a1a18; }
+  .veik-row .vtulos { font-variant-numeric: tabular-nums; font-weight: 500; color: #1a1a18; white-space: nowrap; }
   .veik-empty { color: #b3afa8; }
   .veik-mark { margin-left: 4px; }
   .vpisteet { margin-left: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
   .vpisteet .selite { font-weight: 400; color: #aaa; }
-  .pisteet-huom { margin-top: 12px; font-size: 12px; line-height: 1.45; color: #8a6a0f; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 6px; padding: 7px 10px; }
-  #standings-huom { margin: 0 1.25rem 1rem; }
+  .bonus-block { margin: 0 0 1.75rem; padding: 13px 15px; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 8px; }
+  .bonus-head { font-size: 14px; font-weight: 700; color: #8a6a0f; margin-bottom: 10px; }
+  .bonus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 3px 24px; }
+  .bonus-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 1px 0; }
+  .bonus-row .bnimi { color: #555; }
+  .bonus-row .bpisteet { font-weight: 600; font-variant-numeric: tabular-nums; color: #8a6a0f; }
   #veik-row { margin: -0.9rem 0 1.5rem; align-items: center; }
   #veik-form { display: flex; align-items: center; gap: 8px; }
   #veik-pw { font-family: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 999px; outline: none; width: 150px; }
@@ -68,8 +72,10 @@
   .modal-close:hover { color: #1a1a18; }
   .standings-row { display: grid; grid-template-columns: 28px 1fr auto; align-items: baseline; gap: 12px; padding: 9px 1.25rem; border-bottom: 1px solid #f0ede6; cursor: pointer; }
   .standings-row:last-child { border-bottom: none; }
+  .standings-row.sija-a { background: #ffffff; }
+  .standings-row.sija-b { background: #f4f1e8; }
   .standings-row:hover { background: #faf9f6; }
-  .standings-row.korostus { background: #f0ede6; }
+  .standings-row.korostus { background: #dbe9f6; box-shadow: inset 3px 0 0 #4a7bb0; }
   .standings-row.top .st-nimi { font-weight: 600; }
   .st-sija { font-size: 13px; color: #aaa; font-variant-numeric: tabular-nums; }
   .st-nimi { font-size: 14px; color: #1a1a18; }
@@ -149,7 +155,6 @@
       <h2>Pistetilanne</h2>
       <button class="modal-close" id="standings-close" aria-label="Sulje">✕</button>
     </div>
-    <div class="pisteet-huom" id="standings-huom">Pistelasku ei huomioi nyt ns. bonuspisteitä, joten näissä on merkittävä ero oikeaan pistelaskuun verrattuna.</div>
     <div id="standings-chart"></div>
     <div id="standings-list"></div>
   </div>
@@ -323,6 +328,10 @@ const expanded = new Set();  // avatut veikkauspaneelit (m.match)
 
 // Pisteytyslogiikka ladataan pisteytys.json:sta (lähde: TÄYTTÖOHJEET.pdf)
 let PISTEYTYS = null;
+// Lohkovaiheen ennakkobonukset (bonukset.json) — näytetään 1/16-välierät-osion
+// alla vain kun veikkaukset on avattu. Eivät vaikuta ottelukohtaiseen pistelaskuun.
+let BONUKSET = null;
+let veikNakyvissa = false;
 const STAGE_AVAIN = {
   '1/16-välierät': 'r32', 'Kahdeksannesvälierät': 'r16', 'Neljännesvälierät': 'qf', 'Välierät': 'valierat',
 };
@@ -353,6 +362,7 @@ function otteluPisteet(v, aktK, aktV, s) {
 function laskePisteet() {
   if (!PISTEYTYS) return;
   const saldo = {};  // nimi -> juokseva summa
+  let bonusLisatty = false;  // lohkovaiheen bonukset lisätään kerran 1. pudotuspeliin siirryttäessä
   const jarj = matches.filter(m => m.veik && m.result && !m.live)  // ei pisteitä keskeneräisistä
     .sort((a, b) => a.start - b.start || a.match.localeCompare(b.match));
   jarj.forEach(m => {
@@ -360,6 +370,11 @@ function laskePisteet() {
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
     const s = vaiheAvain(m);
+    // Lohkovaiheen bonukset osaksi kertymää ensimmäisen pudotuspeliottelun "ennen"-saldoa
+    if (!bonusLisatty && s !== 'alkusarja' && BONUKSET) {
+      BONUKSET.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
+      bonusLisatty = true;
+    }
     m.pisteet = {};
     m.veik.forEach(v => {
       const before = saldo[v.nimi] || 0;
@@ -374,13 +389,16 @@ function laskePisteet() {
 // Kokonaispistetilanne laskevasti: [{nimi, pisteet}]
 function laskeTilanne() {
   const saldo = {};
+  let r32Mukana = false;  // onko yksikään pudotuspeli pelattu → lohkobonukset mukaan
   matches.filter(m => m.veik && m.result && !m.live).forEach(m => {  // ei pisteitä keskeneräisistä
     const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
     const s = vaiheAvain(m);
+    if (s !== 'alkusarja') r32Mukana = true;
     m.veik.forEach(v => { saldo[v.nimi] = (saldo[v.nimi] || 0) + otteluPisteet(v, aktK, aktV, s); });
   });
+  if (r32Mukana && BONUKSET) BONUKSET.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
   return Object.entries(saldo)
     .map(([nimi, pisteet]) => ({ nimi, pisteet }))
     .sort((a, b) => b.pisteet - a.pisteet || a.nimi.localeCompare(b.nimi));
@@ -457,11 +475,18 @@ function piirraNyt() {
 }
 
 function renderLista(lista) {
+  // Jaettu sija tasapisteissä (sama järjestysnumero); vieno taustaväri per sija,
+  // kaksi väriä vuorotellen niin että samalla sijalla on sama väri.
+  let edellinenPisteet = null, sija = 0, sijaRyhma = -1;
   document.getElementById('standings-list').innerHTML = lista.length
-    ? lista.map((p, i) => `<div class="standings-row${i === 0 ? ' top' : ''}${tilanneKorostetut.has(p.nimi) ? ' korostus' : ''}" data-nimi="${p.nimi.replace(/"/g, '&quot;')}">`
-        + `<span class="st-sija">${i + 1}.</span>`
+    ? lista.map((p, i) => {
+        if (p.pisteet !== edellinenPisteet) { sija = i + 1; sijaRyhma++; edellinenPisteet = p.pisteet; }
+        const variLuokka = sijaRyhma % 2 === 0 ? 'sija-a' : 'sija-b';
+        return `<div class="standings-row ${variLuokka}${i === 0 ? ' top' : ''}${tilanneKorostetut.has(p.nimi) ? ' korostus' : ''}" data-nimi="${p.nimi.replace(/"/g, '&quot;')}">`
+        + `<span class="st-sija">${sija}.</span>`
         + `<span class="st-nimi"><span class="st-dot" style="background:${tilanneVarit[p.nimi]}"></span>${p.nimi}</span>`
-        + `<span class="st-pisteet">${p.pisteet}</span></div>`).join('')
+        + `<span class="st-pisteet">${p.pisteet}</span></div>`;
+      }).join('')
     : '<p class="standings-empty">Ei vielä pelattuja otteluita.</p>';
 }
 
@@ -585,8 +610,23 @@ function veikPanelHtml(list, tulos, pisteet) {
     + sarake('koti', 'Kotivoitto', ryhmat.koti)
     + sarake('tasa', 'Tasapeli', ryhmat.tasa)
     + sarake('vieras', 'Vierasvoitto', ryhmat.vieras)
-    + `</div>`
-    + (pisteet ? `<div class="pisteet-huom">Pistelasku ei huomioi nyt ns. bonuspisteitä, joten näissä on merkittävä ero oikeaan pistelaskuun verrattuna.</div>` : '');
+    + `</div>`;
+}
+
+// Lohkovaiheen bonukset -lohko (näkyy 1/16-välierät-otsikon alla kun veikkaukset avattu)
+function bonusBlockHtml() {
+  if (!BONUKSET || !BONUKSET.bonukset) return '';
+  const rivit = [...BONUKSET.bonukset]
+    .map(b => ({ ...b, summa: b.lohko_yhteensa != null ? b.lohko_yhteensa : (b.perus || 0) + b.bonus,
+                       perus: b.perus != null ? b.perus : (b.lohko_yhteensa - b.bonus) }))
+    .sort((a, b) => b.summa - a.summa || a.nimi.localeCompare(b.nimi, 'fi'))
+    .map(b => `<div class="bonus-row"><span class="bnimi">${b.nimi}</span>`
+      + `<span class="bpisteet">${b.perus} + ${b.bonus} = ${b.summa}</span></div>`)
+    .join('');
+  return `<div class="bonus-block">`
+    + `<div class="bonus-head">⭐ Bonukset lohkovaiheesta</div>`
+    + `<div class="bonus-grid">${rivit}</div>`
+    + `</div>`;
 }
 
 function render() {
@@ -620,6 +660,7 @@ function render() {
   if (!filtered.length) { el.innerHTML = '<p class="no-results">Ei otteluita valitulla suodattimella.</p>'; return; }
   el.innerHTML = blocks.map(b => `
     ${b.stage ? `<h2 class="stage-header">${b.stage}</h2>` : ''}
+    ${b.stage === '1/16-välierät' && veikNakyvissa && showResults ? bonusBlockHtml() : ''}
     ${[...b.days].map(([date, ms]) => `
     <div class="day-group">
       <div class="day-header">${date}</div>
@@ -701,6 +742,7 @@ async function veikKirjaudu(salasana, tallenna) {
   const data = await puraVeikkaukset(salasana); // heittää jos väärä
   if (tallenna) localStorage.setItem(VEIK_PW_KEY, salasana);
   matches.forEach(m => { const v = data.ottelut[m.match]; if (v && v.length) m.veik = v; });
+  veikNakyvissa = true;
   render();
   veikAvattuUI();
 }
@@ -710,6 +752,7 @@ document.getElementById('veik-toggle').addEventListener('click', () => {
     localStorage.removeItem(VEIK_PW_KEY);
     matches.forEach(m => delete m.veik);
     expanded.clear();
+    veikNakyvissa = false;
     render();
     veikLukittuUI();
     return;
@@ -744,6 +787,12 @@ document.getElementById('veik-form').addEventListener('submit', async e => {
 fetch('pisteytys.json?ts=' + Date.now())
   .then(r => r.ok ? r.json() : null)
   .then(data => { if (data) { PISTEYTYS = data; render(); } })
+  .catch(() => {});
+
+// Lohkovaiheen bonukset (staattinen) — haetaan kerran, näytetään kun veikkaukset avattu
+fetch('bonukset.json?ts=' + Date.now())
+  .then(r => r.ok ? r.json() : null)
+  .then(data => { if (data) { BONUKSET = data; if (veikNakyvissa) render(); } })
   .catch(() => {});
 
 // tulokset.json:ia päivittää GitHub Actions (hae_tulokset.py). Haetaan
