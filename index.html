@@ -52,6 +52,8 @@
   .veik-mark { margin-left: 4px; }
   .vpisteet { margin-left: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
   .vpisteet .selite { font-weight: 400; color: #aaa; }
+  .pisteet-huom { margin-top: 12px; font-size: 12px; line-height: 1.45; color: #8a6a0f; background: #fdf6e3; border: 1px solid #ecd9a3; border-radius: 6px; padding: 7px 10px; }
+  #standings-huom { margin: 0 1.25rem 1rem; }
   #veik-row { margin: -0.9rem 0 1.5rem; align-items: center; }
   #veik-form { display: flex; align-items: center; gap: 8px; }
   #veik-pw { font-family: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 999px; outline: none; width: 150px; }
@@ -147,6 +149,7 @@
       <h2>Pistetilanne</h2>
       <button class="modal-close" id="standings-close" aria-label="Sulje">✕</button>
     </div>
+    <div class="pisteet-huom" id="standings-huom">Pistelasku ei huomioi nyt ns. bonuspisteitä, joten näissä on merkittävä ero oikeaan pistelaskuun verrattuna.</div>
     <div id="standings-chart"></div>
     <div id="standings-list"></div>
   </div>
@@ -582,7 +585,8 @@ function veikPanelHtml(list, tulos, pisteet) {
     + sarake('koti', 'Kotivoitto', ryhmat.koti)
     + sarake('tasa', 'Tasapeli', ryhmat.tasa)
     + sarake('vieras', 'Vierasvoitto', ryhmat.vieras)
-    + `</div>`;
+    + `</div>`
+    + (pisteet ? `<div class="pisteet-huom">Pistelasku ei huomioi nyt ns. bonuspisteitä, joten näissä on merkittävä ero oikeaan pistelaskuun verrattuna.</div>` : '');
 }
 
 function render() {
