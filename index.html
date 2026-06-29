@@ -17,6 +17,9 @@
   .filter-btn.active { background: #1a1a18; color: #fff; border-color: #1a1a18; font-weight: 500; }
   #played-row { margin: -0.9rem 0 1.5rem; }
   .match-played { opacity: 0.55; }
+  /* Pelattu ottelu: pallokuvake rivin alkuun (oma kapea sarake, ei siirrä muita rivejä) */
+  .match-row.match-played { grid-template-columns: 18px 56px 1fr auto; }
+  .match-row.match-played::before { content: '⚽'; font-size: 13px; line-height: 1; text-align: center; }
   .match-live { background: #fdf1f0; box-shadow: inset 3px 0 0 #d64541; }
   .match-live:hover { background: #fae6e4; }
   .live-tag { margin-left: 8px; font-size: 12px; font-weight: 600; color: #c0392b; white-space: nowrap; }
