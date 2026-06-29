@@ -566,6 +566,14 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') suljeTilanne
 function togglePlayed() {
   showPlayed = !showPlayed;
   render();
+  // Pelatut paljastettaessa lista täyttyy historialla otteluiden YLÄPUOLELLE,
+  // joten kohdistetaan näkymä viimeisimpään juuri paljastettuun (pelattuun)
+  // otteluun sen sijaan että hypättäisiin historian alkuun.
+  if (showPlayed) {
+    const pelatutRivit = document.querySelectorAll('#schedule .match-row.match-played');
+    const kohde = pelatutRivit[pelatutRivit.length - 1];
+    if (kohde) kohde.scrollIntoView({ block: 'center' });
+  }
 }
 
 function toggleResults() {
