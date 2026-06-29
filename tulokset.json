@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-30T00:50:25+03:00",
+  "haettu": "2026-06-30T02:29:52+03:00",
   "lahde": "FIFA API",
   "tuloksia": 75,
   "tulokset": [
@@ -750,7 +750,6 @@
       "vieras": "Paraguay",
       "koti_maalit": 1,
       "vieras_maalit": 1,
-      "kesken": true,
       "tulos": "1–1",
       "ottelu": "Saksa – Paraguay"
     }
