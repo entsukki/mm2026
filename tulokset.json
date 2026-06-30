@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-01T00:45:27+03:00",
+  "haettu": "2026-07-01T01:15:25+03:00",
   "lahde": "FIFA API",
   "tuloksia": 78,
   "tulokset": [
@@ -778,10 +778,10 @@
       "aika_fi": "00:00",
       "koti": "Ranska",
       "vieras": "Ruotsi",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "2–0",
       "ottelu": "Ranska – Ruotsi"
     }
   ]
