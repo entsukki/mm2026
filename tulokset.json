@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-30T04:00:41+03:00",
+  "haettu": "2026-06-30T05:35:20+03:00",
   "lahde": "FIFA API",
   "tuloksia": 76,
   "tulokset": [
@@ -758,10 +758,10 @@
       "aika_fi": "04:00",
       "koti": "Hollanti",
       "vieras": "Marokko",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "1–0",
       "ottelu": "Hollanti – Marokko"
     }
   ]
