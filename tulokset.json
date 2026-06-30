@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-06-30T21:50:30+03:00",
+  "haettu": "2026-06-30T22:00:47+03:00",
   "lahde": "FIFA API",
   "tuloksia": 77,
   "tulokset": [
@@ -770,7 +770,6 @@
       "vieras": "Norja",
       "koti_maalit": 1,
       "vieras_maalit": 2,
-      "kesken": true,
       "tulos": "1–2",
       "ottelu": "Norsunluurannikko – Norja"
     }
