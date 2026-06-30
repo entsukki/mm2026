@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-06-30T06:55:19+03:00",
+  "haettu": "2026-06-30T20:00:48+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 76,
+  "tuloksia": 77,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -762,6 +762,17 @@
       "vieras_maalit": 1,
       "tulos": "1–1",
       "ottelu": "Hollanti – Marokko"
+    },
+    {
+      "pvm": "2026-06-30",
+      "aika_fi": "20:00",
+      "koti": "Norsunluurannikko",
+      "vieras": "Norja",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Norsunluurannikko – Norja"
     }
   ]
 }
