@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-01T20:40:29+03:00",
+  "haettu": "2026-07-01T20:50:33+03:00",
   "lahde": "FIFA API",
   "tuloksia": 80,
   "tulokset": [
@@ -798,10 +798,10 @@
       "aika_fi": "19:00",
       "koti": "Englanti",
       "vieras": "Kongon dem. tasavalta",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "1–1",
+      "tulos": "2–1",
       "ottelu": "Englanti – Kongon dem. tasavalta"
     }
   ]
