@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-01T05:35:19+03:00",
+  "haettu": "2026-07-01T07:05:22+03:00",
   "lahde": "FIFA API",
   "tuloksia": 79,
   "tulokset": [
@@ -790,7 +790,6 @@
       "vieras": "Ecuador",
       "koti_maalit": 2,
       "vieras_maalit": 0,
-      "kesken": true,
       "tulos": "2–0",
       "ottelu": "Meksiko – Ecuador"
     }
