@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-07-01T21:00:48+03:00",
+  "haettu": "2026-07-01T23:05:23+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 80,
+  "tuloksia": 81,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -802,6 +802,17 @@
       "vieras_maalit": 1,
       "tulos": "2–1",
       "ottelu": "Englanti – Kongon dem. tasavalta"
+    },
+    {
+      "pvm": "2026-07-01",
+      "aika_fi": "23:00",
+      "koti": "Belgia",
+      "vieras": "Senegal",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Belgia – Senegal"
     }
   ]
 }
