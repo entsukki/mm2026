@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-02T22:00:48+03:00",
+  "haettu": "2026-07-02T22:40:33+03:00",
   "lahde": "FIFA API",
   "tuloksia": 83,
   "tulokset": [
@@ -828,10 +828,10 @@
       "aika_fi": "22:00",
       "koti": "Espanja",
       "vieras": "Itävalta",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "1–0",
       "ottelu": "Espanja – Itävalta"
     }
   ]
