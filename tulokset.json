@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-07-03T00:00:49+03:00",
+  "haettu": "2026-07-03T02:05:22+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 83,
+  "tuloksia": 84,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -832,6 +832,17 @@
       "vieras_maalit": 0,
       "tulos": "3–0",
       "ottelu": "Espanja – Itävalta"
+    },
+    {
+      "pvm": "2026-07-03",
+      "aika_fi": "02:00",
+      "koti": "Portugali",
+      "vieras": "Kroatia",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Portugali – Kroatia"
     }
   ]
 }
