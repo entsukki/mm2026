@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-02T05:10:28+03:00",
+  "haettu": "2026-07-03T00:00:50+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -209,7 +209,7 @@
       "pvm": "2026-07-06",
       "aika_fi": "22:00",
       "koti": null,
-      "vieras": null,
+      "vieras": "Espanja",
       "koti_lahde": "W83",
       "vieras_lahde": "W84"
     },
