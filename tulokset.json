@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-02T05:10:28+03:00",
+  "haettu": "2026-07-02T11:53:37+03:00",
   "lahde": "FIFA API",
   "tuloksia": 82,
   "tulokset": [
@@ -808,9 +808,9 @@
       "aika_fi": "23:00",
       "koti": "Belgia",
       "vieras": "Senegal",
-      "koti_maalit": 3,
+      "koti_maalit": 2,
       "vieras_maalit": 2,
-      "tulos": "3–2",
+      "tulos": "2–2",
       "ottelu": "Belgia – Senegal"
     },
     {
