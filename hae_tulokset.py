@@ -8,6 +8,7 @@ Käyttö: python3 hae_tulokset.py
 """
 import json
 import os
+import re
 import ssl
 import sys
 import urllib.request
@@ -16,6 +17,10 @@ from zoneinfo import ZoneInfo
 
 FIFA_URL = ("https://api.fifa.com/api/v3/calendar/matches"
             "?idCompetition=17&idSeason=285023&language=en&count=200")
+# Ottelun tapahtuma-aikajana (maalit minuutteineen) — tarvitaan varsinaisen
+# peliajan tuloksen erotteluun jatkoajasta/rangaistuspotkuista.
+TIMELINE_URL = ("https://api.fifa.com/api/v3/timelines/"
+                "{comp}/{season}/{stage}/{mid}?language=en")
 TULOSTIEDOSTO = "tulokset.json"
 AIKAVYOHYKE = ZoneInfo("Europe/Helsinki")
 
@@ -86,6 +91,56 @@ def avain(pvm_fi, koti, vieras):
     return f"{pvm_fi}|{koti}|{vieras}"
 
 
+def base_minuutti(match_minute):
+    """'45'+6'' -> 45, '104'' -> 104, None -> None. Perusminuutti ennen lisäaikaa."""
+    m = re.match(r"(\d+)", str(match_minute or ""))
+    return int(m.group(1)) if m else None
+
+
+# FIFA timeline "Period": pariton = pelijakso. 3 = 1. puoliaika, 5 = 2. puoliaika
+# (molemmat sis. tuomarin lisäajan, esim. maali minuutilla "90'+3'" on jaksossa 5),
+# 7 ja 9 = jatkoajan puoliajat, 11 = rangaistuspotkukilpailu. Varsinainen peliaika =
+# jaksot ENNEN jatkoaikaa. Jakso on luotettavampi kuin minuutti: 2. puoliajan lisäajan
+# maali kuuluu jaksoon 5 riippumatta siitä näytetäänkö se muodossa "90'+3'" vai "93'".
+JATKOAJAN_JAKSO = 7
+
+
+def on_varsinaista_peliaikaa(e):
+    """True jos tapahtuma on varsinaista peliaikaa (1.–2. puoliaika lisäaikoineen).
+    Ensisijaisesti jakson (Period) mukaan; jos jaksoa ei ole, perusminuutti <= 90."""
+    p = e.get("Period")
+    if p is not None:
+        return p < JATKOAJAN_JAKSO
+    b = base_minuutti(e.get("MatchMinute"))
+    return b is not None and b <= 90
+
+
+def varsinaisen_peliajan_tulos(m):
+    """Ottelun tulos VARSINAISEN peliajan lopussa (2. puoliaika lisäaikoineen).
+    Jatkoajalla ja rangaistuspotkukilpailussa tehdyt maalit jätetään pois — kisan
+    pisteet lasketaan vain varsinaisesta peliajasta (ks. pisteytys.json huomiot).
+    Timeline-tapahtumissa on juokseva HomeGoals/AwayGoals (rankkarikisan maalit
+    ovat erikseen HomePenaltyGoals/AwayPenaltyGoals, eivät mukana). Palauttaa
+    (koti, vieras) tai None jos aikajanaa ei saatu."""
+    url = TIMELINE_URL.format(comp=m["IdCompetition"], season=m["IdSeason"],
+                              stage=m["IdStage"], mid=m["IdMatch"])
+    try:
+        tl = hae_json(url)
+    except Exception as e:  # verkko/HTTP-virhe: palataan lopputulokseen (itsekorjautuu seuraavalla ajolla)
+        print(f"  VAROITUS: timeline-haku epäonnistui (IdMatch {m.get('IdMatch')}): {e}", file=sys.stderr)
+        return None
+    koti = vieras = 0
+    loytyi = False
+    for e in tl.get("Event", []):
+        if not on_varsinaista_peliaikaa(e):
+            continue  # jatkoaika (jakso 7/9) ja rankkarit (11) pois
+        if e.get("HomeGoals") is not None:
+            koti = max(koti, int(e["HomeGoals"])); loytyi = True
+        if e.get("AwayGoals") is not None:
+            vieras = max(vieras, int(e["AwayGoals"])); loytyi = True
+    return (koti, vieras) if loytyi else None
+
+
 def fifa_tulokset():
     """Päättyneet JA käynnissä olevat ottelut FIFA:n APIsta.
     MatchStatus: 0=päättynyt, 3=käynnissä, 1=ei alkanut.
@@ -102,13 +157,23 @@ def fifa_tulokset():
         vieras = suomeksi((m.get("Away") or {}).get("TeamName", [{}])[0].get("Description", "?"))
         alku_utc = datetime.fromisoformat(m["Date"].replace("Z", "+00:00"))
         alku_fi = alku_utc.astimezone(AIKAVYOHYKE)
+        koti_maalit = int((m.get("Home") or {}).get("Score") or 0)
+        vieras_maalit = int((m.get("Away") or {}).get("Score") or 0)
+        # Pudotuspelissä lopputulos (Score) sisältää jatkoajan maalit. Kisan pisteet
+        # lasketaan vain varsinaisesta peliajasta, joten päättyneille otteluille jotka
+        # menivät jatkoajalle/rankkareihin (ResultType != 1 tai rankkarikisa) haetaan
+        # 90 min tulos aikajanalta. Normaalit ottelut (ResultType 1) eivät hae timelinea.
+        if status == 0 and (m.get("ResultType") != 1 or m.get("HomeTeamPenaltyScore") is not None):
+            reg = varsinaisen_peliajan_tulos(m)
+            if reg is not None:
+                koti_maalit, vieras_maalit = reg
         rivi = {
             "pvm": alku_fi.date().isoformat(),
             "aika_fi": alku_fi.strftime("%H:%M"),
             "koti": koti,
             "vieras": vieras,
-            "koti_maalit": int((m.get("Home") or {}).get("Score") or 0),
-            "vieras_maalit": int((m.get("Away") or {}).get("Score") or 0),
+            "koti_maalit": koti_maalit,
+            "vieras_maalit": vieras_maalit,
         }
         if status == 3:
             rivi["kesken"] = True
