@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-02T03:45:27+03:00",
+  "haettu": "2026-07-02T04:50:30+03:00",
   "lahde": "FIFA API",
   "tuloksia": 82,
   "tulokset": [
@@ -818,10 +818,10 @@
       "aika_fi": "03:00",
       "koti": "USA",
       "vieras": "Bosnia ja Hertsegovina",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "2–0",
       "ottelu": "USA – Bosnia ja Hertsegovina"
     }
   ]
