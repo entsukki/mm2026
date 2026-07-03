@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-03T06:15:25+03:00",
+  "haettu": "2026-07-03T07:10:33+03:00",
   "lahde": "FIFA API",
   "tuloksia": 85,
   "tulokset": [
@@ -848,10 +848,10 @@
       "aika_fi": "06:00",
       "koti": "Sveitsi",
       "vieras": "Algeria",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "2–0",
       "ottelu": "Sveitsi – Algeria"
     }
   ]
