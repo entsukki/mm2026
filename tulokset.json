@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-04T01:30:48+03:00",
+  "haettu": "2026-07-04T02:20:35+03:00",
   "lahde": "FIFA API",
   "tuloksia": 87,
   "tulokset": [
@@ -869,9 +869,9 @@
       "koti": "Argentiina",
       "vieras": "Kap Verde",
       "koti_maalit": 1,
-      "vieras_maalit": 0,
+      "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "1–1",
       "ottelu": "Argentiina – Kap Verde"
     }
   ]
