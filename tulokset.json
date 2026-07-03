@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-03T03:15:28+03:00",
+  "haettu": "2026-07-03T03:30:42+03:00",
   "lahde": "FIFA API",
   "tuloksia": 84,
   "tulokset": [
@@ -838,10 +838,10 @@
       "aika_fi": "02:00",
       "koti": "Portugali",
       "vieras": "Kroatia",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "0–1",
+      "tulos": "1–1",
       "ottelu": "Portugali – Kroatia"
     }
   ]
