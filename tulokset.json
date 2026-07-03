@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-03T21:15:25+03:00",
+  "haettu": "2026-07-03T22:20:35+03:00",
   "lahde": "FIFA API",
   "tuloksia": 86,
   "tulokset": [
@@ -858,10 +858,10 @@
       "aika_fi": "21:00",
       "koti": "Australia",
       "vieras": "Egypti",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "0–1",
+      "tulos": "1–1",
       "ottelu": "Australia – Egypti"
     }
   ]
