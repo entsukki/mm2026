@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-05T01:35:24+03:00",
+  "haettu": "2026-07-05T02:05:24+03:00",
   "lahde": "FIFA API",
   "tuloksia": 90,
   "tulokset": [
@@ -900,7 +900,6 @@
       "vieras": "Ranska",
       "koti_maalit": 0,
       "vieras_maalit": 1,
-      "kesken": true,
       "tulos": "0–1",
       "ottelu": "Paraguay – Ranska"
     }
