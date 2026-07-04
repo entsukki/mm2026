@@ -335,14 +335,20 @@ const expanded = new Set();  // avatut veikkauspaneelit (m.match)
 
 // Pisteytyslogiikka ladataan pisteytys.json:sta (lähde: TÄYTTÖOHJEET.pdf)
 let PISTEYTYS = null;
-// Lohkovaiheen ennakkobonukset (bonukset.json) — näytetään 1/16-välierät-osion
-// alla vain kun veikkaukset on avattu. Eivät vaikuta ottelukohtaiseen pistelaskuun.
-let BONUKSET = null;
+// Kierrosbonukset (ennakko-/jatkoonpääsybonukset): lisätään pistesaldoon kun kyseinen
+// pudotusvaihe alkaa, ja näytetään lohkona vaiheotsikon alla vain kun veikkaukset on
+// avattu. Eivät vaikuta ottelukohtaiseen pistelaskuun. Kukin lataa datansa omasta
+// tiedostostaan; 'auki' = lohko auki/supussa (oletus: supussa).
 let veikNakyvissa = false;
-let bonusAuki = false;  // "Bonukset lohkovaiheesta" -lohko auki/supussa (oletus: supussa)
+const BONUSKIERROKSET = [
+  { avain: 'r32', tiedosto: 'bonukset.json',     otsikko: 'Bonukset lohkovaiheesta',   vaiheOtsikko: '1/16-välierät',        data: null, auki: false },
+  { avain: 'r16', tiedosto: 'bonukset_r16.json', otsikko: 'Bonukset R32-kierroksesta', vaiheOtsikko: 'Kahdeksannesvälierät', data: null, auki: false },
+];
 const STAGE_AVAIN = {
   '1/16-välierät': 'r32', 'Kahdeksannesvälierät': 'r16', 'Neljännesvälierät': 'qf', 'Välierät': 'valierat',
 };
+// Vaiheiden järjestys kierrosbonusten laukaisuun (alkusarja pienin)
+const VAIHE_RANK = { alkusarja: 0, r32: 1, r16: 2, qf: 3, valierat: 4, pronssi: 5, finaali: 5 };
 
 // Ottelun pisteytysvaihe (pisteytys.json:n avain). Pronssi- ja loppuottelu jakavat
 // saman stage-otsikon ("Pronssi- ja loppuottelu"), joten ne erotellaan mno:n perusteella
@@ -370,7 +376,7 @@ function otteluPisteet(v, aktK, aktV, s) {
 function laskePisteet() {
   if (!PISTEYTYS) return;
   const saldo = {};  // nimi -> juokseva summa
-  let bonusLisatty = false;  // lohkovaiheen bonukset lisätään kerran 1. pudotuspeliin siirryttäessä
+  const bonusLisatty = new Set();  // kierrosbonukset lisätään kerran ko. vaiheen 1. ottelussa
   const jarj = matches.filter(m => m.veik && m.result && !m.live)  // ei pisteitä keskeneräisistä
     .sort((a, b) => a.start - b.start || a.match.localeCompare(b.match));
   jarj.forEach(m => {
@@ -378,11 +384,14 @@ function laskePisteet() {
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
     const s = vaiheAvain(m);
-    // Lohkovaiheen bonukset osaksi kertymää ensimmäisen pudotuspeliottelun "ennen"-saldoa
-    if (!bonusLisatty && s !== 'alkusarja' && BONUKSET) {
-      BONUKSET.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
-      bonusLisatty = true;
-    }
+    // Kierrosbonukset osaksi kertymää ko. vaiheen ensimmäisen ottelun "ennen"-saldoa
+    const rank = VAIHE_RANK[s] || 0;
+    BONUSKIERROKSET.forEach(kr => {
+      if (!bonusLisatty.has(kr.avain) && kr.data && rank >= VAIHE_RANK[kr.avain]) {
+        kr.data.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
+        bonusLisatty.add(kr.avain);
+      }
+    });
     m.pisteet = {};
     m.veik.forEach(v => {
       const before = saldo[v.nimi] || 0;
@@ -397,16 +406,18 @@ function laskePisteet() {
 // Kokonaispistetilanne laskevasti: [{nimi, pisteet}]
 function laskeTilanne() {
   const saldo = {};
-  let r32Mukana = false;  // onko yksikään pudotuspeli pelattu → lohkobonukset mukaan
+  let maxRank = 0;  // korkein pelattu pudotusvaihe → mitkä kierrosbonukset mukaan
   matches.filter(m => m.veik && m.result && !m.live).forEach(m => {  // ei pisteitä keskeneräisistä
     const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
     const s = vaiheAvain(m);
-    if (s !== 'alkusarja') r32Mukana = true;
+    maxRank = Math.max(maxRank, VAIHE_RANK[s] || 0);
     m.veik.forEach(v => { saldo[v.nimi] = (saldo[v.nimi] || 0) + otteluPisteet(v, aktK, aktV, s); });
   });
-  if (r32Mukana && BONUKSET) BONUKSET.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
+  BONUSKIERROKSET.forEach(kr => {
+    if (kr.data && maxRank >= VAIHE_RANK[kr.avain]) kr.data.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
+  });
   return Object.entries(saldo)
     .map(([nimi, pisteet]) => ({ nimi, pisteet }))
     .sort((a, b) => b.pisteet - a.pisteet || a.nimi.localeCompare(b.nimi));
@@ -631,18 +642,22 @@ function veikPanelHtml(list, tulos, pisteet) {
     + `</div>`;
 }
 
-// Lohkovaiheen bonukset -lohko (näkyy 1/16-välierät-otsikon alla kun veikkaukset avattu)
-function bonusBlockHtml() {
-  if (!BONUKSET || !BONUKSET.bonukset) return '';
-  const rivit = [...BONUKSET.bonukset]
-    .map(b => ({ ...b, summa: b.lohko_yhteensa != null ? b.lohko_yhteensa : (b.perus || 0) + b.bonus,
-                       perus: b.perus != null ? b.perus : (b.lohko_yhteensa - b.bonus) }))
-    .sort((a, b) => b.summa - a.summa || a.nimi.localeCompare(b.nimi, 'fi'))
+// Kierrosbonus-lohko (näkyy vaiheotsikkonsa alla kun veikkaukset avattu). Jos datassa on
+// perus/lohko_yhteensa (esim. lohkovaihe), näytetään "perus + bonus = summa"; muuten "+bonus".
+function bonusBlockHtml(kr) {
+  if (!kr || !kr.data || !kr.data.bonukset) return '';
+  const rivit = [...kr.data.bonukset]
+    .map(b => {
+      const summa = b.lohko_yhteensa != null ? b.lohko_yhteensa : (b.perus != null ? b.perus + b.bonus : null);
+      const perus = b.perus != null ? b.perus : (b.lohko_yhteensa != null ? b.lohko_yhteensa - b.bonus : null);
+      return { nimi: b.nimi, bonus: b.bonus, perus, summa };
+    })
+    .sort((a, b) => (b.summa != null ? b.summa : b.bonus) - (a.summa != null ? a.summa : a.bonus) || a.nimi.localeCompare(b.nimi, 'fi'))
     .map(b => `<div class="bonus-row"><span class="bnimi">${b.nimi}</span>`
-      + `<span class="bpisteet">${b.perus} + ${b.bonus} = ${b.summa}</span></div>`)
+      + `<span class="bpisteet">${b.summa != null ? `${b.perus} + ${b.bonus} = ${b.summa}` : `+${b.bonus}`}</span></div>`)
     .join('');
-  return `<div class="bonus-block${bonusAuki ? ' open' : ''}">`
-    + `<div class="bonus-head">⭐ Bonukset lohkovaiheesta <span class="chev">▾</span></div>`
+  return `<div class="bonus-block${kr.auki ? ' open' : ''}" data-bonus="${kr.avain}">`
+    + `<div class="bonus-head">⭐ ${kr.otsikko} <span class="chev">▾</span></div>`
     + `<div class="bonus-grid">${rivit}</div>`
     + `</div>`;
 }
@@ -678,7 +693,7 @@ function render() {
   if (!filtered.length) { el.innerHTML = '<p class="no-results">Ei otteluita valitulla suodattimella.</p>'; return; }
   el.innerHTML = blocks.map(b => `
     ${b.stage ? `<h2 class="stage-header">${b.stage}</h2>` : ''}
-    ${b.stage === '1/16-välierät' && veikNakyvissa && showResults ? bonusBlockHtml() : ''}
+    ${veikNakyvissa && showResults ? BONUSKIERROKSET.filter(kr => kr.vaiheOtsikko === b.stage).map(bonusBlockHtml).join('') : ''}
     ${[...b.days].map(([date, ms]) => `
     <div class="day-group">
       <div class="day-header">${date}</div>
@@ -710,11 +725,13 @@ document.querySelector('.pig-legend').innerHTML = PIG;
 
 // Veikkauspaneelin avaus/sulku (delegoitu, säilyy uudelleenrenderöinnissä)
 document.getElementById('schedule').addEventListener('click', e => {
-  // "Bonukset lohkovaiheesta" -lohkon avaus/sulku väkäsestä
+  // Kierrosbonus-lohkon avaus/sulku väkäsestä (tila muistetaan per kierros)
   const bhead = e.target.closest('.bonus-head');
   if (bhead) {
-    bonusAuki = !bonusAuki;
-    bhead.closest('.bonus-block').classList.toggle('open', bonusAuki);
+    const block = bhead.closest('.bonus-block');
+    const kr = BONUSKIERROKSET.find(k => k.avain === block.dataset.bonus);
+    if (kr) kr.auki = !kr.auki;
+    block.classList.toggle('open', kr ? kr.auki : false);
     return;
   }
   const row = e.target.closest('.match-row.has-veik');
@@ -814,11 +831,13 @@ fetch('pisteytys.json?ts=' + Date.now())
   .then(data => { if (data) { PISTEYTYS = data; render(); } })
   .catch(() => {});
 
-// Lohkovaiheen bonukset (staattinen) — haetaan kerran, näytetään kun veikkaukset avattu
-fetch('bonukset.json?ts=' + Date.now())
-  .then(r => r.ok ? r.json() : null)
-  .then(data => { if (data) { BONUKSET = data; if (veikNakyvissa) render(); } })
-  .catch(() => {});
+// Kierrosbonukset (staattisia) — haetaan kukin kerran, näytetään kun veikkaukset avattu
+BONUSKIERROKSET.forEach(kr => {
+  fetch(kr.tiedosto + '?ts=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(data => { if (data) { kr.data = data; if (veikNakyvissa) render(); } })
+    .catch(() => {});
+});
 
 // tulokset.json:ia päivittää GitHub Actions (hae_tulokset.py). Haetaan
 // toistuvasti, jotta avoinna olevan sivun tulokset ja pistesaldot päivittyvät.

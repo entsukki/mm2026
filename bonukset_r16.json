@@ -1,0 +1,77 @@
+{
+  "kuvaus": "R32-kierroksen jälkeiset ennakkobonukset. perus = veikkaajan kertymä R32-kierroksen päättyessä (lohko-ottelupisteet + R32-ottelupisteet + lohkovaiheen bonus). bonus = tulostaulukon kokonaispisteet MIINUS perus = R16-jatkoonpääsy + pudotuspelien tasapelien 'kumpi jatkoon' -valinnat, joita sovelluksen ottelupistelasku ei huomioi. Lisätään pistesaldoon kun kahdeksannesvälierät alkavat.",
+  "tilanne": "R32-kierroksen päätyttyä (ennen ensimmäistä kahdeksannesvälierää)",
+  "lahde_pvm": "2026-07-04",
+  "bonukset": [
+    {
+      "nimi": "Justus",
+      "perus": 343,
+      "bonus": 33
+    },
+    {
+      "nimi": "Sampo",
+      "perus": 343,
+      "bonus": 31
+    },
+    {
+      "nimi": "Vili",
+      "perus": 330,
+      "bonus": 38
+    },
+    {
+      "nimi": "Elska",
+      "perus": 334,
+      "bonus": 31
+    },
+    {
+      "nimi": "Erno",
+      "perus": 338,
+      "bonus": 27
+    },
+    {
+      "nimi": "Paavo",
+      "perus": 328,
+      "bonus": 30
+    },
+    {
+      "nimi": "Rauli",
+      "perus": 323,
+      "bonus": 35
+    },
+    {
+      "nimi": "Keke",
+      "perus": 324,
+      "bonus": 31
+    },
+    {
+      "nimi": "Kari",
+      "perus": 315,
+      "bonus": 34
+    },
+    {
+      "nimi": "Jakke",
+      "perus": 316,
+      "bonus": 25
+    },
+    {
+      "nimi": "Kalle",
+      "perus": 315,
+      "bonus": 24
+    },
+    {
+      "nimi": "Tuomas",
+      "perus": 304,
+      "bonus": 22
+    },
+    {
+      "nimi": "Pasi",
+      "perus": 303,
+      "bonus": 20
+    },
+    {
+      "nimi": "Joonas",
+      "perus": 281,
+      "bonus": 33
+    }
+  ]
+}
