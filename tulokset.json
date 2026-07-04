@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-04T04:45:27+03:00",
+  "haettu": "2026-07-04T05:50:34+03:00",
   "lahde": "FIFA API",
   "tuloksia": 88,
   "tulokset": [
@@ -878,10 +878,10 @@
       "aika_fi": "04:30",
       "koti": "Kolumbia",
       "vieras": "Ghana",
-      "koti_maalit": 1,
+      "koti_maalit": 2,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "1–0",
+      "tulos": "2–0",
       "ottelu": "Kolumbia – Ghana"
     }
   ]
