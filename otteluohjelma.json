@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-04T03:50:35+03:00",
+  "haettu": "2026-07-04T06:40:34+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -239,7 +239,7 @@
       "pvm": "2026-07-07",
       "aika_fi": "23:00",
       "koti": "Sveitsi",
-      "vieras": null,
+      "vieras": "Kolumbia",
       "koti_lahde": "W85",
       "vieras_lahde": "W87"
     },
