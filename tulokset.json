@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-07-04T22:05:20+03:00",
+  "haettu": "2026-07-05T00:05:20+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 89,
+  "tuloksia": 90,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -892,6 +892,17 @@
       "vieras_maalit": 3,
       "tulos": "0–3",
       "ottelu": "Kanada – Marokko"
+    },
+    {
+      "pvm": "2026-07-05",
+      "aika_fi": "00:00",
+      "koti": "Paraguay",
+      "vieras": "Ranska",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Paraguay – Ranska"
     }
   ]
 }
