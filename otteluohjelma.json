@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-04T00:05:23+03:00",
+  "haettu": "2026-07-04T03:50:35+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -228,7 +228,7 @@
       "stage": "Round of 16",
       "pvm": "2026-07-07",
       "aika_fi": "19:00",
-      "koti": null,
+      "koti": "Argentiina",
       "vieras": "Egypti",
       "koti_lahde": "W86",
       "vieras_lahde": "W88"
