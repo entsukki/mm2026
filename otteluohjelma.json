@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-04T22:10:33+03:00",
+  "haettu": "2026-07-05T02:15:28+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -248,7 +248,7 @@
       "stage": "Quarter-final",
       "pvm": "2026-07-09",
       "aika_fi": "23:00",
-      "koti": null,
+      "koti": "Ranska",
       "vieras": "Marokko",
       "koti_lahde": "W89",
       "vieras_lahde": "W90"
