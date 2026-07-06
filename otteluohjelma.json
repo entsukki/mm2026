@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-06T01:10:35+03:00",
+  "haettu": "2026-07-06T03:10:37+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -197,7 +197,7 @@
       "mno": 92,
       "stage": "Round of 16",
       "pvm": "2026-07-06",
-      "aika_fi": "03:00",
+      "aika_fi": "04:00",
       "koti": "Meksiko",
       "vieras": "Englanti",
       "koti_lahde": "W79",
