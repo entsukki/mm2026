@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-07-06T01:05:22+03:00",
+  "haettu": "2026-07-06T04:00:54+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 91,
+  "tuloksia": 92,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -912,6 +912,17 @@
       "vieras_maalit": 2,
       "tulos": "1–2",
       "ottelu": "Brasilia – Norja"
+    },
+    {
+      "pvm": "2026-07-06",
+      "aika_fi": "04:00",
+      "koti": "Meksiko",
+      "vieras": "Englanti",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Meksiko – Englanti"
     }
   ]
 }
