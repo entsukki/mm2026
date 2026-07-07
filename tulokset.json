@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-07-07T21:10:52+03:00",
+  "haettu": "2026-07-07T23:01:14+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 95,
+  "tuloksia": 96,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -952,6 +952,17 @@
       "vieras_maalit": 2,
       "tulos": "3–2",
       "ottelu": "Argentiina – Egypti"
+    },
+    {
+      "pvm": "2026-07-07",
+      "aika_fi": "23:00",
+      "koti": "Sveitsi",
+      "vieras": "Kolumbia",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Sveitsi – Kolumbia"
     }
   ]
 }
