@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-07T03:01:03+03:00",
+  "haettu": "2026-07-07T03:10:44+03:00",
   "lahde": "FIFA API",
   "tuloksia": 94,
   "tulokset": [
@@ -939,9 +939,9 @@
       "koti": "USA",
       "vieras": "Belgia",
       "koti_maalit": 0,
-      "vieras_maalit": 0,
+      "vieras_maalit": 1,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "0–1",
       "ottelu": "USA – Belgia"
     }
   ]
