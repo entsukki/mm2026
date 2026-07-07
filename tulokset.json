@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-07-07T00:05:25+03:00",
+  "haettu": "2026-07-07T03:01:03+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 93,
+  "tuloksia": 94,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -932,6 +932,17 @@
       "vieras_maalit": 1,
       "tulos": "0–1",
       "ottelu": "Portugali – Espanja"
+    },
+    {
+      "pvm": "2026-07-07",
+      "aika_fi": "03:00",
+      "koti": "USA",
+      "vieras": "Belgia",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "USA – Belgia"
     }
   ]
 }
