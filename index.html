@@ -51,6 +51,10 @@
   .veik-row { display: flex; justify-content: space-between; gap: 10px; padding: 1px 0; }
   .veik-row .vnimi { color: #555; }
   .veik-row .vtulos { font-variant-numeric: tabular-nums; font-weight: 500; color: #1a1a18; white-space: nowrap; }
+  /* Käynnissä olevassa ottelussa oikeassa juuri nyt (merkki täsmää live-tilanteeseen) */
+  .veik-row.veik-live-oikein { background: #e6f4ea; box-shadow: inset 3px 0 0 #2e9e5b; border-radius: 4px; padding: 1px 6px; }
+  .veik-row.veik-live-oikein .vnimi { color: #2e6b45; font-weight: 600; }
+  .veik-row.veik-live-oikein .vtulos { color: #1e7a44; }
   .veik-empty { color: #b3afa8; }
   .veik-mark { margin-left: 4px; }
   .vpisteet { margin-left: 6px; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -626,13 +630,21 @@ function filter(type, btn) {
   render();
 }
 
-function veikPanelHtml(list, tulos, pisteet) {
+function veikPanelHtml(list, tulos, pisteet, liveTulos) {
   // tulos: oikea lopputulos "k–v" jos näkyvissä ja tiedossa, muuten null (ei spoilaa)
   // pisteet: m.pisteet (nimi -> {before,delta,total}) kun saldo näytetään, muuten null
+  // liveTulos: käynnissä olevan ottelun tämänhetkinen tulos "k–v"; korostaa vihreällä
+  //   ne veikkaukset, joiden merkki (koti/tasa/vieras) täsmää juuri nyt. Ei näytä
+  //   tarkkaa tulosta/emojia (ei spoilaa lopputulosta) ja näkyy aina live-ottelussa.
   let aktK = null, aktV = null, aktUlos = null;
   if (tulos) {
     const mm = tulos.match(/(\d+)\s*[–-]\s*(\d+)/);
     if (mm) { aktK = +mm[1]; aktV = +mm[2]; aktUlos = aktK > aktV ? 'koti' : aktK < aktV ? 'vieras' : 'tasa'; }
+  }
+  let liveUlos = null;
+  if (liveTulos) {
+    const lm = liveTulos.match(/(\d+)\s*[–-]\s*(\d+)/);
+    if (lm) { const lk = +lm[1], lv = +lm[2]; liveUlos = lk > lv ? 'koti' : lk < lv ? 'vieras' : 'tasa'; }
   }
   const merkki = v => {
     if (aktK === null) return '';
@@ -654,7 +666,8 @@ function veikPanelHtml(list, tulos, pisteet) {
         ? lista.map(v => {
             const p = pisteet && pisteet[v.nimi];
             const saldo = p ? ` <span class="vpisteet">${p.total} <span class="selite">(${p.before}+${p.delta})</span></span>` : '';
-            return `<div class="veik-row"><span class="vnimi">${v.nimi}${saldo}</span><span class="vtulos">${v.koti}–${v.vieras}${merkki(v)}</span></div>`;
+            const oikeinNyt = liveUlos && (v.koti > v.vieras ? 'koti' : v.koti < v.vieras ? 'vieras' : 'tasa') === liveUlos;
+            return `<div class="veik-row${oikeinNyt ? ' veik-live-oikein' : ''}"><span class="vnimi">${v.nimi}${saldo}</span><span class="vtulos">${v.koti}–${v.vieras}${merkki(v)}</span></div>`;
           }).join('')
         : '<div class="veik-empty">–</div>')
     + `</div>`;
@@ -737,7 +750,7 @@ function render() {
               ? `<span class="badge badge-paid" title="Maksumuurin takana – vain MTV Katsomo+ Urheilu">${PIG}Katsomo+</span>`
               : '<span class="badge badge-mtv">MTV3</span>'}
         </div>
-        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik, (showResults && m.result && !m.live) ? m.result : null, (showResults && m.result && !m.live) ? m.pisteet : null)}</div>` : ''}`;
+        ${veik ? `<div class="veik-panel${open ? ' open' : ''}">${veikPanelHtml(veik, (showResults && m.result && !m.live) ? m.result : null, (showResults && m.result && !m.live) ? m.pisteet : null, (m.live && m.result) ? m.result : null)}</div>` : ''}`;
       }).join('')}
     </div>
     `).join('')}
