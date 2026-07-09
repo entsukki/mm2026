@@ -10,5 +10,8 @@ __pycache__/
 # Selkokielinen veikkausdata: ei versionhallintaan (vain salattu veikkaukset.enc.json)
 veikkaukset.json
 
+# Paikalliset salaisuudet (salauksen salasana + Sheetin CSV-URL): ei versionhallintaan
+.env
+
 # Paikallinen kansio: ei mitään sen sisältöä versionhallintaan
 git-ignore/
