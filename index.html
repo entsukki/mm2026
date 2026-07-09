@@ -343,6 +343,7 @@ let veikNakyvissa = false;
 const BONUSKIERROKSET = [
   { avain: 'r32', tiedosto: 'bonukset.json',     otsikko: 'Bonukset lohkovaiheesta',   vaiheOtsikko: '1/16-välierät',        data: null, auki: false },
   { avain: 'r16', tiedosto: 'bonukset_r16.json', otsikko: 'Bonukset R32-kierroksesta', vaiheOtsikko: 'Kahdeksannesvälierät', data: null, auki: false },
+  { avain: 'qf',  tiedosto: 'bonukset_qf.json',  otsikko: 'Bonukset R16-kierroksesta', vaiheOtsikko: 'Neljännesvälierät',   data: null, auki: false },
 ];
 const STAGE_AVAIN = {
   '1/16-välierät': 'r32', 'Kahdeksannesvälierät': 'r16', 'Neljännesvälierät': 'qf', 'Välierät': 'valierat',
@@ -357,6 +358,19 @@ function vaiheAvain(m) {
   if (m.mno === 103) return 'pronssi';
   if (m.mno === 104) return 'finaali';
   return m.stage ? (STAGE_AVAIN[m.stage] || 'alkusarja') : 'alkusarja';
+}
+
+// Onko kokonainen pudotusvaihe (rank) pelattu loppuun: kaikki sen ottelut ratkenneet
+// eikä yksikään käynnissä. Alkusarja = rank 0.
+function vaiheValmis(rank) {
+  const ott = matches.filter(m => (VAIHE_RANK[vaiheAvain(m)] || 0) === rank);
+  return ott.length > 0 && ott.every(m => m.result && !m.live);
+}
+// Kierrosbonus lasketaan mukaan heti kun se vaihe, jossa bonus ansaittiin, on
+// pelattu loppuun (= tätä bonusvaihetta edeltävä rank valmis) — ei tarvitse odottaa
+// seuraavan vaiheen ensimmäistä ottelua.
+function bonusAktiivinen(kr) {
+  return vaiheValmis((VAIHE_RANK[kr.avain] || 0) - 1);
 }
 
 // Yhden veikkauksen ottelupisteet (additiivinen) vaiheessa s
@@ -401,22 +415,32 @@ function laskePisteet() {
       saldo[v.nimi] = total;
     });
   });
+  // Bonuskierros, jonka ansaintavaihe on pelattu loppuun mutta seuraava vaihe ei
+  // vielä alkanut (esim. R16 valmis, QF ei alkanut): näytetään jo nyt taittamalla
+  // viimeisen pelatun ottelun loppusaldoon, jotta kuvaaja ja taulukko täsmäävät.
+  const viim = jarj[jarj.length - 1];
+  BONUSKIERROKSET.forEach(kr => {
+    if (!bonusLisatty.has(kr.avain) && kr.data && bonusAktiivinen(kr)) {
+      kr.data.bonukset.forEach(b => {
+        if (viim && viim.pisteet && viim.pisteet[b.nimi]) viim.pisteet[b.nimi].total += b.bonus;
+      });
+      bonusLisatty.add(kr.avain);
+    }
+  });
 }
 
 // Kokonaispistetilanne laskevasti: [{nimi, pisteet}]
 function laskeTilanne() {
   const saldo = {};
-  let maxRank = 0;  // korkein pelattu pudotusvaihe → mitkä kierrosbonukset mukaan
   matches.filter(m => m.veik && m.result && !m.live).forEach(m => {  // ei pisteitä keskeneräisistä
     const mm = m.result.match(/(\d+)\s*[–-]\s*(\d+)/);
     if (!mm) return;
     const aktK = +mm[1], aktV = +mm[2];
     const s = vaiheAvain(m);
-    maxRank = Math.max(maxRank, VAIHE_RANK[s] || 0);
     m.veik.forEach(v => { saldo[v.nimi] = (saldo[v.nimi] || 0) + otteluPisteet(v, aktK, aktV, s); });
   });
   BONUSKIERROKSET.forEach(kr => {
-    if (kr.data && maxRank >= VAIHE_RANK[kr.avain]) kr.data.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
+    if (kr.data && bonusAktiivinen(kr)) kr.data.bonukset.forEach(b => { saldo[b.nimi] = (saldo[b.nimi] || 0) + b.bonus; });
   });
   return Object.entries(saldo)
     .map(([nimi, pisteet]) => ({ nimi, pisteet }))
