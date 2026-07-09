@@ -654,7 +654,7 @@ function veikPanelHtml(list, tulos, pisteet, liveTulos) {
     if (v.koti - v.vieras === aktK - aktV) return ' <span class="veik-mark" title="Maaliero oikein">🎯</span>';
     const ulos = v.koti > v.vieras ? 'koti' : v.koti < v.vieras ? 'vieras' : 'tasa';
     if (ulos === aktUlos) return ' <span class="veik-mark" title="Voittaja oikein">👍</span>';
-    return ' <span class="veik-mark" title="Ohi meni – ei merkkiä, maalieroa eikä tulosta">🫏</span>';
+    return ' <span class="veik-mark" title="Ohi meni – ei merkkiä, maalieroa eikä tulosta">💩</span>';
   };
   const ryhmat = { koti: [], tasa: [], vieras: [] };
   list.forEach(v => {
