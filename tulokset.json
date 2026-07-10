@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-10T22:01:01+03:00",
+  "haettu": "2026-07-10T22:30:54+03:00",
   "lahde": "FIFA API",
   "tuloksia": 98,
   "tulokset": [
@@ -978,10 +978,10 @@
       "aika_fi": "22:00",
       "koti": "Espanja",
       "vieras": "Belgia",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "1–0",
       "ottelu": "Espanja – Belgia"
     }
   ]
