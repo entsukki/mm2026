@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-11T00:05:27+03:00",
+  "haettu": "2026-07-12T02:50:49+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -298,7 +298,7 @@
       "stage": "Semi-final",
       "pvm": "2026-07-15",
       "aika_fi": "22:00",
-      "koti": null,
+      "koti": "Englanti",
       "vieras": null,
       "koti_lahde": "W99",
       "vieras_lahde": "W100"
