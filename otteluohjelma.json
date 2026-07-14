@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-14T21:50:57+03:00",
+  "haettu": "2026-07-15T00:05:25+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -308,7 +308,7 @@
       "stage": "Bronze final",
       "pvm": "2026-07-19",
       "aika_fi": "00:00",
-      "koti": null,
+      "koti": "Ranska",
       "vieras": null,
       "koti_lahde": "RU101",
       "vieras_lahde": "RU102"
@@ -318,7 +318,7 @@
       "stage": "Final",
       "pvm": "2026-07-19",
       "aika_fi": "22:00",
-      "koti": null,
+      "koti": "Espanja",
       "vieras": null,
       "koti_lahde": "W101",
       "vieras_lahde": "W102"
