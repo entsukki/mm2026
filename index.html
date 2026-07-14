@@ -319,8 +319,8 @@ const matches = [
   {date:'Su 12.7.',time:'04:00',match:'Neljännesvälierä 4',ch:'MTV',stage:'Neljännesvälierät',mno:100},
   {date:'Ti 14.7.',time:'22:00',match:'Välierä 1',ch:'Yle',stage:'Välierät',mno:101},
   {date:'Ke 15.7.',time:'22:00',match:'Välierä 2',ch:'MTV',stage:'Välierät',mno:102},
-  {date:'Su 19.7.',time:'00:00',match:'Pronssiottelu',ch:'MTV',stage:'Pronssi- ja loppuottelu',mno:103},
-  {date:'Su 19.7.',time:'22:00',match:'Loppuottelu',ch:'Yle',stage:'Pronssi- ja loppuottelu',mno:104},
+  {date:'Su 19.7.',time:'00:00',match:'Pronssiottelu',ch:'MTV',stage:'Pronssiottelu',mno:103},
+  {date:'Su 19.7.',time:'22:00',match:'Loppuottelu',ch:'Yle',stage:'Finaali',mno:104},
 ];
 
 // Ottelu arkistoidaan (piilotetaan oletuksena) 4 tuntia aloitusajan jälkeen
@@ -358,9 +358,10 @@ const STAGE_AVAIN = {
 // Vaiheiden järjestys kierrosbonusten laukaisuun (alkusarja pienin)
 const VAIHE_RANK = { alkusarja: 0, r32: 1, r16: 2, qf: 3, valierat: 4, pronssi: 5, finaali: 5 };
 
-// Ottelun pisteytysvaihe (pisteytys.json:n avain). Pronssi- ja loppuottelu jakavat
-// saman stage-otsikon ("Pronssi- ja loppuottelu"), joten ne erotellaan mno:n perusteella
-// (103=pronssi, 104=finaali) — muuten molemmat putoaisivat alkusarjan kertoimille.
+// Ottelun pisteytysvaihe (pisteytys.json:n avain). Pronssi- ja loppuottelulla on omat
+// stage-otsikkonsa ("Pronssiottelu"/"Finaali"), mutta koska ne eivät ole STAGE_AVAIN-
+// taulussa, pisteytysvaihe erotellaan mno:n perusteella (103=pronssi, 104=finaali) —
+// muuten molemmat putoaisivat alkusarjan kertoimille.
 function vaiheAvain(m) {
   if (m.mno === 103) return 'pronssi';
   if (m.mno === 104) return 'finaali';
@@ -912,10 +913,12 @@ function isoPvmFi(iso, time) {
 }
 
 // Yhden puolen otsikko: joukkueen nimi jos selvillä; muuten "(vaihtoehto1/vaihtoehto2)"
-// jos lähde on jonkin ottelun voittaja (esim. "W75") ja sen ottelun parit ovat tiedossa.
+// jos lähde on jonkin ottelun voittaja ("W75") tai häviäjä/runner-up ("RU101", esim.
+// pronssiottelu) ja sen ottelun parit ovat tiedossa. Kummassakin tapauksessa tarkka
+// joukkue ratkeaa vasta ottelussa, joten näytetään molemmat vaihtoehdot.
 function sivunOtsikko(nimi, lahde, byMno) {
   if (nimi) return nimi;
-  const mm = /^W(\d+)$/.exec(lahde || '');
+  const mm = /^(?:W|RU)(\d+)$/.exec(lahde || '');
   if (mm) {
     const l = byMno.get(+mm[1]);
     if (l && l.koti && l.vieras) return `(${l.koti}/${l.vieras})`;
