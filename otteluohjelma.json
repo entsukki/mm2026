@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-12T06:50:50+03:00",
+  "haettu": "2026-07-14T21:50:57+03:00",
   "lahde": "FIFA API",
   "otteluita": 32,
   "ottelut": [
@@ -305,7 +305,7 @@
     },
     {
       "mno": 103,
-      "stage": "Play-off for third place",
+      "stage": "Bronze final",
       "pvm": "2026-07-19",
       "aika_fi": "00:00",
       "koti": null,
