@@ -11,6 +11,7 @@ import os
 import re
 import ssl
 import sys
+import time
 import urllib.request
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -77,13 +78,24 @@ def ssl_konteksti():
 SSL_CTX = ssl_konteksti()
 
 
-def hae_json(url):
+def hae_json(url, yrityksia=3, odotus=3):
+    """Hae JSON. Ohimenevä verkkovirhe (timeout ym.) uudelleenyritetään muutaman
+    kerran, jottei yksittäinen hidas vastaus kaada koko ajoa — seuraava yritys
+    onnistuu yleensä. Viimeisen yrityksen virhe nostetaan kutsujalle."""
     req = urllib.request.Request(url, headers={
         "Accept": "application/json",
         "User-Agent": "mm2026-tuloshaku/1.0 (github.com/entsukki/mm2026)",
     })
-    with urllib.request.urlopen(req, timeout=20, context=SSL_CTX) as vastaus:
-        return json.load(vastaus)
+    for yritys in range(1, yrityksia + 1):
+        try:
+            with urllib.request.urlopen(req, timeout=20, context=SSL_CTX) as vastaus:
+                return json.load(vastaus)
+        except Exception as e:
+            if yritys == yrityksia:
+                raise
+            print(f"  VAROITUS: haku epäonnistui (yritys {yritys}/{yrityksia}): {e} — "
+                  f"uudelleenyritys {odotus} s kuluttua", file=sys.stderr)
+            time.sleep(odotus)
 
 
 def avain(pvm_fi, koti, vieras):
