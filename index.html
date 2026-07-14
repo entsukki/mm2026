@@ -656,7 +656,10 @@ function veikPanelHtml(list, tulos, pisteet, liveTulos) {
     if (v.koti - v.vieras === aktK - aktV) return ' <span class="veik-mark" title="Maaliero oikein">🎯</span>';
     const ulos = v.koti > v.vieras ? 'koti' : v.koti < v.vieras ? 'vieras' : 'tasa';
     if (ulos === aktUlos) return ' <span class="veik-mark" title="Voittaja oikein">👍</span>';
-    return ' <span class="veik-mark" title="Ohi meni – ei merkkiä, maalieroa eikä tulosta">💩</span>';
+    // Voittaja, maaliero ja tulos pielessä, mutta oikea joukkueen maalimäärä antaa silti
+    // pisteen (per_joukkue) — erotellaan tämä täydestä ohilaukauksesta.
+    if (v.koti === aktK || v.vieras === aktV) return ' <span class="veik-mark" title="Toinen maalimäärä oikein – piste tuli">🎲</span>';
+    return ' <span class="veik-mark" title="Ohi meni – ei ainuttakaan pistettä">💩</span>';
   };
   const ryhmat = { koti: [], tasa: [], vieras: [] };
   list.forEach(v => {
