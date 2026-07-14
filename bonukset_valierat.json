@@ -1,0 +1,77 @@
+{
+  "kuvaus": "QF-kierroksen jälkeiset ennakkobonukset. perus = veikkaajan kertymä QF-kierroksen päättyessä (lohko-ottelupisteet + R32-ottelupisteet + R16-ottelupisteet + QF-ottelupisteet + lohkovaiheen bonus + R32-kierroksen bonus + R16-kierroksen bonus). bonus = tulostaulukon kokonaispisteet MIINUS perus = välierä-jatkoonpääsy + pudotuspelien tasapelien 'kumpi jatkoon' -valinnat, joita sovelluksen ottelupistelasku ei huomioi. Lisätään pistesaldoon kun välierät alkavat.",
+  "tilanne": "QF-kierroksen (neljännesvälierät) päätyttyä (ennen ensimmäistä välierää)",
+  "lahde_pvm": "2026-07-12",
+  "bonukset": [
+    {
+      "nimi": "Justus",
+      "perus": 482,
+      "bonus": 8
+    },
+    {
+      "nimi": "Sampo",
+      "perus": 471,
+      "bonus": 12
+    },
+    {
+      "nimi": "Keke",
+      "perus": 470,
+      "bonus": 12
+    },
+    {
+      "nimi": "Vili",
+      "perus": 469,
+      "bonus": 12
+    },
+    {
+      "nimi": "Erno",
+      "perus": 468,
+      "bonus": 8
+    },
+    {
+      "nimi": "Rauli",
+      "perus": 457,
+      "bonus": 16
+    },
+    {
+      "nimi": "Kari",
+      "perus": 454,
+      "bonus": 12
+    },
+    {
+      "nimi": "Elska",
+      "perus": 450,
+      "bonus": 12
+    },
+    {
+      "nimi": "Paavo",
+      "perus": 447,
+      "bonus": 12
+    },
+    {
+      "nimi": "Kalle",
+      "perus": 435,
+      "bonus": 16
+    },
+    {
+      "nimi": "Jakke",
+      "perus": 427,
+      "bonus": 8
+    },
+    {
+      "nimi": "Pasi",
+      "perus": 409,
+      "bonus": 12
+    },
+    {
+      "nimi": "Tuomas",
+      "perus": 393,
+      "bonus": 8
+    },
+    {
+      "nimi": "Joonas",
+      "perus": 388,
+      "bonus": 8
+    }
+  ]
+}
