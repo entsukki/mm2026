@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-15T22:01:12+03:00",
+  "haettu": "2026-07-15T23:20:52+03:00",
   "lahde": "FIFA API",
   "tuloksia": 102,
   "tulokset": [
@@ -1018,10 +1018,10 @@
       "aika_fi": "22:00",
       "koti": "Englanti",
       "vieras": "Argentiina",
-      "koti_maalit": 0,
+      "koti_maalit": 1,
       "vieras_maalit": 0,
       "kesken": true,
-      "tulos": "0–0",
+      "tulos": "1–0",
       "ottelu": "Englanti – Argentiina"
     }
   ]
