@@ -1,5 +1,5 @@
 {
-  "haettu": "2026-07-19T01:30:43+03:00",
+  "haettu": "2026-07-19T01:50:35+03:00",
   "lahde": "FIFA API",
   "tuloksia": 103,
   "tulokset": [
@@ -1029,9 +1029,9 @@
       "koti": "Ranska",
       "vieras": "Englanti",
       "koti_maalit": 3,
-      "vieras_maalit": 4,
+      "vieras_maalit": 5,
       "kesken": true,
-      "tulos": "3–4",
+      "tulos": "3–5",
       "ottelu": "Ranska – Englanti"
     }
   ]
