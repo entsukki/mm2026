@@ -1,0 +1,77 @@
+{
+  "kuvaus": "Välieräkierroksen jälkeiset ennakkobonukset. perus = veikkaajan kertymä välieräkierroksen päättyessä (lohko- + R32- + R16- + QF- + välierä-ottelupisteet + lohkovaiheen, R32-, R16- ja QF-kierroksen bonukset). bonus = tulostaulukon kokonaispisteet MIINUS perus = finaaliin ja pronssiotteluun jatkoonpääsy (+ pudotuspelien tasapelien 'kumpi jatkoon' -valinnat; tällä kierroksella ei tasapelivalintoja koska välierät ratkesivat varsinaisella peliajalla). Lisätään pistesaldoon kun pronssiottelu/finaali alkaa.",
+  "tilanne": "Välieräkierroksen päätyttyä (ennen pronssiottelua ja finaalia)",
+  "lahde_pvm": "2026-07-16",
+  "bonukset": [
+    {
+      "nimi": "Justus",
+      "perus": 491,
+      "bonus": 11
+    },
+    {
+      "nimi": "Rauli",
+      "perus": 491,
+      "bonus": 11
+    },
+    {
+      "nimi": "Sampo",
+      "perus": 485,
+      "bonus": 5
+    },
+    {
+      "nimi": "Keke",
+      "perus": 483,
+      "bonus": 0
+    },
+    {
+      "nimi": "Vili",
+      "perus": 482,
+      "bonus": 6
+    },
+    {
+      "nimi": "Erno",
+      "perus": 478,
+      "bonus": 0
+    },
+    {
+      "nimi": "Paavo",
+      "perus": 476,
+      "bonus": 0
+    },
+    {
+      "nimi": "Kari",
+      "perus": 467,
+      "bonus": 0
+    },
+    {
+      "nimi": "Elska",
+      "perus": 464,
+      "bonus": 17
+    },
+    {
+      "nimi": "Kalle",
+      "perus": 452,
+      "bonus": 0
+    },
+    {
+      "nimi": "Pasi",
+      "perus": 445,
+      "bonus": 0
+    },
+    {
+      "nimi": "Jakke",
+      "perus": 436,
+      "bonus": 6
+    },
+    {
+      "nimi": "Tuomas",
+      "perus": 421,
+      "bonus": 0
+    },
+    {
+      "nimi": "Joonas",
+      "perus": 397,
+      "bonus": 11
+    }
+  ]
+}
