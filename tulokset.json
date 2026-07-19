@@ -1,7 +1,7 @@
 {
-  "haettu": "2026-07-19T02:05:25+03:00",
+  "haettu": "2026-07-19T22:10:31+03:00",
   "lahde": "FIFA API",
-  "tuloksia": 103,
+  "tuloksia": 104,
   "tulokset": [
     {
       "pvm": "2026-06-11",
@@ -1032,6 +1032,17 @@
       "vieras_maalit": 6,
       "tulos": "4–6",
       "ottelu": "Ranska – Englanti"
+    },
+    {
+      "pvm": "2026-07-19",
+      "aika_fi": "22:00",
+      "koti": "Espanja",
+      "vieras": "Argentiina",
+      "koti_maalit": 0,
+      "vieras_maalit": 0,
+      "kesken": true,
+      "tulos": "0–0",
+      "ottelu": "Espanja – Argentiina"
     }
   ]
 }
